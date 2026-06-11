@@ -1,0 +1,6 @@
+{
+  "name": "shiv-shakti-super-mart",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
