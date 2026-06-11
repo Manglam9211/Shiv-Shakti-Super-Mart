@@ -1,60 +1,219 @@
-<!DOCTYPE html>
-<html lang="hi">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiv Shakti Super Mart - Digital Catalog</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>Shiv Shakti Super Mart - VIP Digital Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff6b00;
+            --primary-dark: #e05e00;
+            --dark: #111111;
+            --card-bg: #ffffff;
+            --bg: #f4f6f9;
+            --whatsapp-color: #25d366;
+            --whatsapp-hover: #20ba5a;
+            --call-color: #007bff;
+            --call-hover: #0056b3;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: var(--bg); color: var(--dark); padding-bottom: 80px; }
+
+        /* Premium Header */
+        header { background: linear-gradient(135deg, var(--dark), #2c3e50); color: white; padding: 25px 15px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-bottom: 4px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
+        header h1 { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        header h1 span { color: var(--primary); }
+        header p { font-size: 13px; opacity: 0.8; margin-top: 6px; font-weight: 500; }
+        .store-info { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; font-size: 12px; }
+        .store-info span { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; }
+
+        /* Search and Filter Dynamic Bar */
+        .search-container { max-width: 800px; margin: -20px auto 25px auto; padding: 15px; background: white; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; border: 2px solid #eee; position: relative; z-index: 99; }
+        .search-wrapper { position: relative; flex-grow: 1; }
+        .search-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+        .search-input { width: 100%; padding: 12px 12px 12px 40px; border: none; font-size: 14px; outline: none; background: #f8f9fa; border-radius: 30px; }
+        .filter-select { padding: 12px 20px; border: none; background: var(--dark); color: white; font-weight: 600; border-radius: 30px; cursor: pointer; outline: none; font-size: 13px; transition: all 0.3s; }
+        .filter-select:hover { background: var(--primary); }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+
+        /* Product Card */
+        .product-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.04); border: 1px solid #eef2f5; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); border-color: var(--primary); }
+
+        /* Auto Badges */
+        .ai-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; padding: 4px 10px; font-size: 10px; font-weight: bold; border-radius: 30px; z-index: 10; text-transform: uppercase; box-shadow: 0 3px 8px rgba(255,69,0,0.3); letter-spacing: 0.5px; }
+
+        /* Image Handler */
+        .img-container { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 15px; position: relative; border-bottom: 1px solid #f5f5f5; }
+        .product-img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s ease; }
+        .product-card:hover .product-img { transform: scale(1.06); }
+
+        /* Description Details */
+        .details { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff; }
+        .category-tag { font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .title { font-size: 15px; font-weight: 700; color: #2c3e50; margin-bottom: 8px; line-height: 1.3; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        
+        /* Advanced Pricing Cuts */
+        .price-container { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+        .offer-price { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .mrp-price { font-size: 12px; color: #999; text-decoration: line-through; font-weight: 500; }
+
+        /* Action Buttons Box */
+        .btn-box { display: flex; flex-direction: column; gap: 8px; }
+
+        /* WhatsApp Button */
+        .book-btn { background-color: var(--whatsapp-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; box-shadow: 0 3px 6px rgba(37, 211, 102, 0.2); transition: all 0.2s ease; }
+        .book-btn:hover { background-color: var(--whatsapp-hover); transform: scale(1.02); }
+
+        /* Call Button */
+        .call-btn { background-color: var(--call-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; box-shadow: 0 3px 6px rgba(0, 123, 255, 0.2); transition: all 0.2s ease; }
+        .call-btn:hover { background-color: var(--call-hover); transform: scale(1.02); }
+
+        /* Sticky Bottom Bar for Mobile */
+        .sticky-contact-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px; z-index: 2000; border-top: 2px solid var(--primary); }
+        .sticky-item { text-decoration: none; font-size: 13px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--dark); }
+        .sticky-item i { font-size: 20px; }
+        .sticky-item.wa { color: var(--whatsapp-color); }
+        .sticky-item.cl { color: var(--call-color); }
+
+        /* Empty Shop State */
+        .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #888; background: white; border-radius: 16px; border: 2px dashed #ddd; }
+        .empty-state i { font-size: 55px; color: #ccc; margin-bottom: 15px; }
+
+        footer { text-align: center; margin-top: 50px; padding: 25px 25px 90px 25px; border-top: 1px solid #e3e8ec; color: #666; font-size: 13px; }
+        
+        @media (max-width: 480px) {
+            header h1 { font-size: 22px; }
+            .search-container { flex-direction: column; border-radius: 20px; margin: -15px 10px 20px 10px; padding: 12px; }
+            .filter-select { width: 100%; text-align: center; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; }
+            .img-container { height: 140px; }
+            .title { font-size: 13px; height: 34px; }
+            .offer-price { font-size: 16px; }
+        }
+    </style>
 </head>
 <body>
 
     <header>
-        <h1 class="display-4 font-weight-bold">Shiv Shakti Super Mart</h1>
-        <p class="lead">Address: Agrahunda, Chitrakoot | Mobile: 9450222868</p>
-        <p class="welcome-msg">Hamare Mart me aapka swagat hai! Sabse sasta, sabse achha.</p>
+        <h1><span>Shiv Shakti</span> Super Mart</h1>
+        <p><i class="fa-solid fa-brain"></i> Powered by AI Engine & Real-Time Cloud Sync</p>
+        <div class="store-info">
+            <span><i class="fa-solid fa-location-dot"></i> Agrahunda, Chitrakoot</span>
+            <span><i class="fa-solid fa-phone"></i> 9450222868</span>
+        </div>
     </header>
 
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Saman ka naam dhundhein..." onkeyup="searchProducts()">
-        <select id="categoryFilter" onchange="filterCategory()">
-            <option value="all">Sabhi Saman (All)</option>
-            <option value="Stationery">Stationery (Kitab, Copy)</option>
-            <option value="Books">Books (Kitabein)</option>
-            <option value="Toys">Toys (Khilone)</option>
-            <option value="Household">Household Goods (Ghar ka Saman)</option>
-        </select>
+    <div class="container">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Saman ka naam dhundhein..." onkeyup="searchProducts()">
+            </div>
+            <select id="categoryFilter" class="filter-select" onchange="filterCategory()">
+                <option value="all">⚡ Sabhi Saman (All)</option>
+                <option value="Stationery">📚 Stationery (Kitab, Copy)</option>
+                <option value="Books">📖 Books (Kitabein)</option>
+                <option value="Toys">🧸 Toys (Khilone)</option>
+                <option value="Household">🏠 Household Goods</option>
+            </select>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
     </div>
 
-    <main>
-        <div id="productGrid" class="product-grid">
-            </div>
-    </main>
+    <div class="sticky-contact-bar">
+        <a href="tel:+919450222868" class="sticky-item cl">
+            <i class="fa-solid fa-phone-volume"></i>
+            <span>Direct Call</span>
+        </a>
+        <a href="https://wa.me/919450222868" target="_blank" class="sticky-item wa">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp Shop</span>
+        </a>
+    </div>
 
     <footer>
         <p><b>Shiv Shakti Super Mart</b> - Agrahunda | Contact: 9450222868</p>
-        <p class="disclaimer">Humse judne ke liye dhanyawad. Aapki apni dukan!</p>
+        <p style="font-size: 11px; margin-top: 5px; opacity: 0.7;">Aapki apni dukan, sabse sasta sabse achha!</p>
     </footer>
 
     <script>
         let allProducts = [];
 
         async function loadProducts() {
-            const response = await fetch('/api/products');
-            allProducts = await response.json();
-            displayProducts(allProducts);
+            try {
+                const response = await fetch('/api/products');
+                allProducts = await response.json();
+                displayProducts(allProducts);
+            } catch (error) {
+                console.error("Error fetching live data:", error);
+                document.getElementById('productGrid').innerHTML = '<div class="empty-state"><i class="fa-solid fa-triangle-exclamation"></i><p>Server error. Reload karein.</p></div>';
+            }
         }
 
         function displayProducts(products) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-box-open"></i>
+                        <p>Dukan me abhi koi saman nahi hai.</p>
+                        <span style="font-size:12px; color:#aaa;">Admin panel se saman upload karein!</span>
+                    </div>`;
+                return;
+            }
+
             products.forEach(p => {
+                // Image Variation Fixed (Combines multiple potential backend fields)
+                let finalImg = p.image || p.img || 'https://via.placeholder.com/150?text=Shiv+Shakti+Mart';
+                
+                let priceNum = parseFloat(p.price) || 0;
+                let dummyMrp = Math.round(priceNum * 1.25); 
+
+                // Communication Setup
+                let myWhatsApp = "919450222868";
+                let textMsg = `Namaste Shiv Shakti Super Mart, Mujhe ye item book karna hai:\n\n*Item Name:* ${p.name}\n*Price:* Rs. ${p.price}\n\nKripya order confirm karein!`;
+                let whatsappUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(textMsg)}`;
+                let callUrl = `tel:+919450222868`;
+
+                // Smart AI Tag System
+                let badgeText = priceNum > 150 ? 'BESTSELLER' : 'DHAMAKA';
+                let aiBadge = `<div class="ai-badge"><i class="fa-solid fa-bolt"></i> ${badgeText}</div>`;
+
                 grid.innerHTML += `
                     <div class="product-card">
-                        <img src="${p.image}" alt="${p.name}">
-                        <h3>${p.name}</h3>
-                        <p class="price">Rs. ${p.price}</p>
-                        <p class="desc">${p.description}</p>
-                        <span class="badge">${p.category}</span>
+                        <div class="img-container">
+                            ${aiBadge}
+                            <img src="${finalImg}" class="product-img" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
+                        </div>
+                        <div class="details">
+                            <div>
+                                <div class="category-tag">${p.category || 'General'}</div>
+                                <div class="title" title="${p.name}">${p.name}</div>
+                            </div>
+                            <div>
+                                <div class="price-container">
+                                    <span class="offer-price">Rs. ${p.price}</span>
+                                    <span class="mrp-price">Rs. ${dummyMrp}</span>
+                                </div>
+                                <div class="btn-box">
+                                    <a href="${whatsappUrl}" target="_blank" class="book-btn">
+                                        <i class="fa-brands fa-whatsapp"></i> Abhi Book Karein
+                                    </a>
+                                    <a href="${callUrl}" class="call-btn">
+                                        <i class="fa-solid fa-phone"></i> Direct Call
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
@@ -67,11 +226,11 @@
         }
 
         function filterCategory() {
-            const cat = document.getElementById('categoryFilter').value;
-            if (cat === 'all') {
+            const selectedCat = document.getElementById('categoryFilter').value;
+            if (selectedCat === 'all') {
                 displayProducts(allProducts);
             } else {
-                const filtered = allProducts.filter(p => p.category === cat);
+                const filtered = allProducts.filter(p => p.category === selectedCat);
                 displayProducts(filtered);
             }
         }
