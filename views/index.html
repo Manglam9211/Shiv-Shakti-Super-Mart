@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiv Shakti Super Mart - Digital Catalog</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1 class="display-4 font-weight-bold">Shiv Shakti Super Mart</h1>
+        <p class="lead">Address: Agrahunda, Chitrakoot | Mobile: 9450222868</p>
+        <p class="welcome-msg">Hamare Mart me aapka swagat hai! Sabse sasta, sabse achha.</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Saman ka naam dhundhein..." onkeyup="searchProducts()">
+        <select id="categoryFilter" onchange="filterCategory()">
+            <option value="all">Sabhi Saman (All)</option>
+            <option value="Stationery">Stationery (Kitab, Copy)</option>
+            <option value="Books">Books (Kitabein)</option>
+            <option value="Toys">Toys (Khilone)</option>
+            <option value="Household">Household Goods (Ghar ka Saman)</option>
+        </select>
+    </div>
+
+    <main>
+        <div id="productGrid" class="product-grid">
+            </div>
+    </main>
+
+    <footer>
+        <p><b>Shiv Shakti Super Mart</b> - Agrahunda | Contact: 9450222868</p>
+        <p class="disclaimer">Humse judne ke liye dhanyawad. Aapki apni dukan!</p>
+    </footer>
+
+    <script>
+        let allProducts = [];
+
+        async function loadProducts() {
+            const response = await fetch('/api/products');
+            allProducts = await response.json();
+            displayProducts(allProducts);
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.image}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p class="price">Rs. ${p.price}</p>
+                        <p class="desc">${p.description}</p>
+                        <span class="badge">${p.category}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function searchProducts() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
+            displayProducts(filtered);
+        }
+
+        function filterCategory() {
+            const cat = document.getElementById('categoryFilter').value;
+            if (cat === 'all') {
+                displayProducts(allProducts);
+            } else {
+                const filtered = allProducts.filter(p => p.category === cat);
+                displayProducts(filtered);
+            }
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
