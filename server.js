@@ -1,5 +1,5 @@
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
+const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 const session = require('express-session');
@@ -7,15 +7,18 @@ const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Database Connection
-const db = new sqlite3.Database('./database.db');
+// Connect to Permanent Online Database (MongoDB Atlas)
+const MONGO_URI = 'mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0';
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('Shiv Shakti AI Database Connected Permanently!'))
+    .catch(err => console.log('Database Connection Error: ', err));
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'shiv_shakti_flipkart_secret',
+    secret: 'shiv_shakti_super_ai_secret',
     resave: false,
     saveUninitialized: true
 }));
@@ -29,90 +32,126 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Create Advanced Table Structure
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        price REAL NOT NULL,
-        description TEXT,
-        category TEXT,
-        image TEXT,
-        stock INTEGER DEFAULT 10
-    )`);
+// Next-Gen Advanced Product Schema with AI Capabilities
+const productSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    mrp: { type: Number, default: 0 }, 
+    description: String,
+    category: String,
+    image: { type: String, default: '/uploads/default.jpg' },
+    stock: { type: Number, default: 10 },
+    isFeatured: { type: Boolean, default: false },
+    viewsCount: { type: Number, default: 0 }, // AI Analytics Tracking
+    salesCount: { type: Number, default: 0 }  // Tracks Popularity Trend
 });
+const Product = mongoose.model('Product', productSchema);
 
 // ==================== HTML ROUTES ====================
-
-// Client Home Page (With Search & Filters)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
-// Admin Panel (Manage Inventory, Prices, Stock)
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
 
-// ==================== ADVANCED API ROUTES ====================
+// ==================== SUPER ADVANCED AI API ROUTES ====================
 
-// 1. GET ALL PRODUCTS (With Advanced Search and Category Filtering)
-app.get('/api/products', (req, res) => {
-    const { search, category } = req.query;
-    let query = 'SELECT * FROM products WHERE 1=1';
-    let params = [];
+// 1. GET ALL PRODUCTS (With AI Personalization & Search Analytics)
+app.get('/api/products', async (req, res) => {
+    try {
+        const { search, category, sort_by } = req.query;
+        let filter = {};
 
-    if (search) {
-        query += ' AND name LIKE ?';
-        params.push(`%${search}%`);
-    }
-    if (category) {
-        query += ' AND category = ?';
-        params.push(category);
-    }
-
-    db.all(query, params, (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(rows);
-    });
-});
-
-// 2. ADD NEW PRODUCT (With Stock Management)
-app.post('/admin/add', upload.single('image'), (req, res) => {
-    const { name, price, description, category, stock } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : '/uploads/default.jpg';
-    const productStock = stock ? parseInt(stock) : 10;
-
-    db.run(`INSERT INTO products (name, price, description, category, image, stock) VALUES (?, ?, ?, ?, ?, ?)`,
-        [name, parseFloat(price), description, category, image, productStock],
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.redirect('/admin');
+        if (search) {
+            filter.name = { $regex: search, $options: 'i' };
         }
-    );
-});
-
-// 3. EDIT/UPDATE PRODUCT PRICE AND STOCK (Flipkart Feature)
-app.post('/admin/update/:id', (req, res) => {
-    const { price, stock } = req.body;
-    db.run(`UPDATE products SET price = ?, stock = ? WHERE id = ?`,
-        [parseFloat(price), parseInt(stock), req.params.id],
-        function(err) {
-            if (err) return res.status(500).json({ error: err.message });
-            res.json({ message: "Product updated successfully!" });
+        if (category) {
+            filter.category = category;
         }
-    );
+
+        let query = Product.find(filter);
+
+        // AI Dynamic Sorting Algorithm
+        if (sort_by === 'popular') {
+            query = query.sort({ viewsCount: -1 }); // Shows trending items first
+        } else if (sort_by === 'offers') {
+            query = query.sort({ mrp: -1 }); // Shows big discount items first
+        } else {
+            query = query.sort({ isFeatured: -1, _id: -1 }); // Default AI Mix
+        }
+
+        const products = await query;
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// 4. DELETE PRODUCT FROM INVENTORY
-app.delete('/api/products/:id', (req, res) => {
-    db.run('DELETE FROM products WHERE id = ?', req.params.id, (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: "Product deleted successfully from mart!" });
-    });
+// 2. AI ANALYTICS: TRACK PRODUCT VIEWS (Triggers silently when customer clicks)
+app.post('/api/products/track-view/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndUpdate(req.params.id, { $inc: { viewsCount: 1 } });
+        res.json({ success: true, message: "AI analytics engine updated views." });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-// Start Server
+// 3. ADD NEW PRODUCT WITH FULL SPECIFICATIONS
+app.post('/admin/add', upload.single('image'), async (req, res) => {
+    try {
+        const { name, price, mrp, description, category, stock, isFeatured } = req.body;
+        const image = req.file ? `/uploads/${req.file.filename}` : '/uploads/default.jpg';
+
+        const newProduct = new Product({
+            name,
+            price: parseFloat(price),
+            mrp: mrp ? parseFloat(mrp) : parseFloat(price),
+            description,
+            category,
+            stock: stock ? parseInt(stock) : 10,
+            isFeatured: isFeatured === 'true' || isFeatured === true,
+            image
+        });
+
+        await newProduct.save();
+        res.redirect('/admin');
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 4. SMART INVENTORY UPDATE (Price, Stock & AI Featured State)
+app.post('/admin/update/:id', async (req, res) => {
+    try {
+        const { price, mrp, stock, isFeatured } = req.body;
+        let updateData = {};
+        
+        if(price) updateData.price = parseFloat(price);
+        if(mrp) updateData.mrp = parseFloat(mrp);
+        if(stock) updateData.stock = parseInt(stock);
+        if(isFeatured !== undefined) updateData.isFeatured = (isFeatured === 'true');
+
+        await Product.findByIdAndUpdate(req.params.id, updateData);
+        res.json({ message: "Inventory database optimized and updated successfully!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 5. SECURE INVENTORY PURGE (Delete)
+app.delete('/api/products/:id', async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.json({ message: "Product systematically purged from cloud core!" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Start AI Cloud Server
 app.listen(PORT, () => {
-    console.log(`Server running with Flipkart features on port ${PORT}`);
+    console.log(`Server running with Permanent Cloud Database and AI Core on port ${PORT}`);
 });
