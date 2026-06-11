@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiv Shakti Super Mart - VIP Digital Store</title>
+    <title>Shiv Shakti Super Mart - Ultimate VIP Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,6 +16,8 @@
             --whatsapp-hover: #20ba5a;
             --call-color: #007bff;
             --call-hover: #0056b3;
+            --danger-color: #dc3545;
+            --danger-hover: #bd2130;
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -26,36 +28,42 @@
         header h1 { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         header h1 span { color: var(--primary); }
         header p { font-size: 13px; opacity: 0.8; margin-top: 6px; font-weight: 500; }
+        
         .store-info { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; font-size: 12px; }
-        .store-info span { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; }
+        .store-info span { background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 20px; cursor: pointer; }
+
+        /* Modern Modify: Admin Floating Dashboard Control */
+        .admin-toggle-box { max-width: 1200px; margin: 15px auto 0 auto; padding: 0 15px; text-align: right; }
+        .admin-mode-btn { background: #6c757d; color: white; border: none; padding: 6px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .admin-mode-btn.active { background: var(--primary); box-shadow: 0 0 10px rgba(255,107,0,0.4); }
 
         /* Search and Filter Dynamic Bar */
-        .search-container { max-width: 800px; margin: -20px auto 25px auto; padding: 15px; background: white; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; border: 2px solid #eee; position: relative; z-index: 99; }
+        .search-container { max-width: 800px; margin: 15px auto 25px auto; padding: 15px; background: white; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 10px; border: 2px solid #eee; position: relative; z-index: 99; }
         .search-wrapper { position: relative; flex-grow: 1; }
         .search-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
         .search-input { width: 100%; padding: 12px 12px 12px 40px; border: none; font-size: 14px; outline: none; background: #f8f9fa; border-radius: 30px; }
         .filter-select { padding: 12px 20px; border: none; background: var(--dark); color: white; font-weight: 600; border-radius: 30px; cursor: pointer; outline: none; font-size: 13px; transition: all 0.3s; }
         .filter-select:hover { background: var(--primary); }
 
-        /* Container */
+        /* Main Container & Grid */
         .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
 
-        /* Product Card */
+        /* Premium E-Commerce Card */
         .product-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.04); border: 1px solid #eef2f5; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; }
         .product-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); border-color: var(--primary); }
 
-        /* Auto Badges */
-        .ai-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; padding: 4px 10px; font-size: 10px; font-weight: bold; border-radius: 30px; z-index: 10; text-transform: uppercase; box-shadow: 0 3px 8px rgba(255,69,0,0.3); letter-spacing: 0.5px; }
+        /* AI Auto Badges */
+        .ai-badge { position: absolute; top: 12px; left: 12px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; padding: 4px 10px; font-size: 10px; font-weight: bold; border-radius: 30px; z-index: 10; text-transform: uppercase; box-shadow: 0 3px 8px rgba(255,69,0,0.3); }
 
-        /* Image Handler */
+        /* Image Handler (100% Fixed Photo Problem) */
         .img-container { width: 100%; height: 170px; background: #ffffff; display: flex; align-items: center; justify-content: center; padding: 15px; position: relative; border-bottom: 1px solid #f5f5f5; }
         .product-img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.5s ease; }
         .product-card:hover .product-img { transform: scale(1.06); }
 
         /* Description Details */
         .details { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: #ffffff; }
-        .category-tag { font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .category-tag { font-size: 10px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 4px; }
         .title { font-size: 15px; font-weight: 700; color: #2c3e50; margin-bottom: 8px; line-height: 1.3; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
         
         /* Advanced Pricing Cuts */
@@ -63,18 +71,18 @@
         .offer-price { font-size: 18px; font-weight: 800; color: var(--primary); }
         .mrp-price { font-size: 12px; color: #999; text-decoration: line-through; font-weight: 500; }
 
-        /* Action Buttons Box */
+        /* Action Buttons */
         .btn-box { display: flex; flex-direction: column; gap: 8px; }
+        .book-btn { background-color: var(--whatsapp-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: all 0.2s; }
+        .book-btn:hover { background-color: var(--whatsapp-hover); }
+        .call-btn { background-color: var(--call-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: all 0.2s; }
+        .call-btn:hover { background-color: var(--call-hover); }
 
-        /* WhatsApp Button */
-        .book-btn { background-color: var(--whatsapp-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; box-shadow: 0 3px 6px rgba(37, 211, 102, 0.2); transition: all 0.2s ease; }
-        .book-btn:hover { background-color: var(--whatsapp-hover); transform: scale(1.02); }
+        /* Modify Feature: Ultimate Delete Button for Admin Panel */
+        .delete-btn { background-color: var(--danger-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 6px; margin-top: 5px; transition: all 0.2s; box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2); }
+        .delete-btn:hover { background-color: var(--danger-hover); }
 
-        /* Call Button */
-        .call-btn { background-color: var(--call-color); color: white; border: none; padding: 10px; width: 100%; border-radius: 10px; font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; box-shadow: 0 3px 6px rgba(0, 123, 255, 0.2); transition: all 0.2s ease; }
-        .call-btn:hover { background-color: var(--call-hover); transform: scale(1.02); }
-
-        /* Sticky Bottom Bar for Mobile */
+        /* Sticky Bottom Mobile Bar */
         .sticky-contact-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px; z-index: 2000; border-top: 2px solid var(--primary); }
         .sticky-item { text-decoration: none; font-size: 13px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--dark); }
         .sticky-item i { font-size: 20px; }
@@ -89,7 +97,7 @@
         
         @media (max-width: 480px) {
             header h1 { font-size: 22px; }
-            .search-container { flex-direction: column; border-radius: 20px; margin: -15px 10px 20px 10px; padding: 12px; }
+            .search-container { flex-direction: column; border-radius: 20px; margin: 15px 10px 20px 10px; padding: 12px; }
             .filter-select { width: 100%; text-align: center; }
             .product-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; }
             .img-container { height: 140px; }
@@ -102,12 +110,18 @@
 
     <header>
         <h1><span>Shiv Shakti</span> Super Mart</h1>
-        <p><i class="fa-solid fa-brain"></i> Powered by AI Engine & Real-Time Cloud Sync</p>
+        <p><i class="fa-solid fa-brain"></i> Powered by AI Engine & Real-Time Admin Panel Sync</p>
         <div class="store-info">
             <span><i class="fa-solid fa-location-dot"></i> Agrahunda, Chitrakoot</span>
-            <span><i class="fa-solid fa-phone"></i> 9450222868</span>
+            <span onclick="toggleAdminMode()"><i class="fa-solid fa-user-gear"></i> Control Panel</span>
         </div>
     </header>
+
+    <div class="admin-toggle-box">
+        <button id="adminToggleBtn" class="admin-mode-btn" onclick="toggleAdminMode()">
+            <i class="fa-solid fa-lock"></i> Admin Mode: OFF
+        </button>
+    </div>
 
     <div class="container">
         <div class="search-container">
@@ -145,7 +159,9 @@
 
     <script>
         let allProducts = [];
+        let isAdminMode = false; // Controls the visibility of Delete Option
 
+        // 1. Fetch live data from backend MongoDB
         async function loadProducts() {
             try {
                 const response = await fetch('/api/products');
@@ -157,6 +173,7 @@
             }
         }
 
+        // 2. Render System with variables security
         function displayProducts(products) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
@@ -172,13 +189,13 @@
             }
 
             products.forEach(p => {
-                // Image Variation Fixed (Combines multiple potential backend fields)
+                // FIXED 100% PHOTO ISSUE: Handled 'p.img' and 'p.image' both variations dynamically
                 let finalImg = p.image || p.img || 'https://via.placeholder.com/150?text=Shiv+Shakti+Mart';
                 
                 let priceNum = parseFloat(p.price) || 0;
                 let dummyMrp = Math.round(priceNum * 1.25); 
 
-                // Communication Setup
+                // Booking Gateway URLs
                 let myWhatsApp = "919450222868";
                 let textMsg = `Namaste Shiv Shakti Super Mart, Mujhe ye item book karna hai:\n\n*Item Name:* ${p.name}\n*Price:* Rs. ${p.price}\n\nKripya order confirm karein!`;
                 let whatsappUrl = `https://wa.me/${myWhatsApp}?text=${encodeURIComponent(textMsg)}`;
@@ -188,8 +205,11 @@
                 let badgeText = priceNum > 150 ? 'BESTSELLER' : 'DHAMAKA';
                 let aiBadge = `<div class="ai-badge"><i class="fa-solid fa-bolt"></i> ${badgeText}</div>`;
 
+                // Handle conditional display style for delete button based on Admin Switch
+                let deleteStyle = isAdminMode ? 'display: flex;' : 'display: none;';
+
                 grid.innerHTML += `
-                    <div class="product-card">
+                    <div class="product-card" id="card-${p._id || p.id}">
                         <div class="img-container">
                             ${aiBadge}
                             <img src="${finalImg}" class="product-img" alt="${p.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
@@ -211,6 +231,9 @@
                                     <a href="${callUrl}" class="call-btn">
                                         <i class="fa-solid fa-phone"></i> Direct Call
                                     </a>
+                                    <button class="delete-btn" style="${deleteStyle}" onclick="deleteProduct('${p._id || p.id}')">
+                                        <i class="fa-solid fa-trash-can"></i> Saman Hatayein
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -219,12 +242,53 @@
             });
         }
 
+        // 3. Admin Dashboard Toggle Feature
+        function toggleAdminMode() {
+            isAdminMode = !isAdminMode;
+            const btn = document.getElementById('adminToggleBtn');
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            
+            if(isAdminMode) {
+                btn.innerHTML = '<i class="fa-solid fa-unlock"></i> Admin Mode: ON';
+                btn.classList.add('active');
+                deleteButtons.forEach(b => b.style.display = 'flex');
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-lock"></i> Admin Mode: OFF';
+                btn.classList.remove('active');
+                deleteButtons.forEach(b => b.style.display = 'none');
+            }
+        }
+
+        // 4. NEW MODIFIED FEATURE: Live Delete Function calling backend
+        async function deleteProduct(productId) {
+            if(confirm("Kya aap sach me is saman ko apni dukan se hatana chahte hain?")) {
+                try {
+                    const response = await fetch(`/api/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if(response.ok) {
+                        alert("Saman kamyabi se hata diya gaya hai!");
+                        // Reload data instantly without refresh
+                        loadProducts();
+                    } else {
+                        alert("Saman hatane me dikkat aayi. Kripya dobara koshish karein.");
+                    }
+                } catch (error) {
+                    console.error("Delete Error:", error);
+                    alert("Server error! Delete function fail ho gaya.");
+                }
+            }
+        }
+
+        // Real-Time Search Search Engine
         function searchProducts() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term));
             displayProducts(filtered);
         }
 
+        // Live Category Filters
         function filterCategory() {
             const selectedCat = document.getElementById('categoryFilter').value;
             if (selectedCat === 'all') {
