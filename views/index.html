@@ -4,151 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shiv Shakti Super Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #ff6b00; --dark: #111; --light: #fff; --grey: #f4f6f9; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background: var(--grey); color: var(--dark); padding-bottom: 70px; }
-        .ai-festive-banner { background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; text-align: center; padding: 10px; font-weight: bold; font-size: 14px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: none; }
-        header { background: #fff; padding: 15px; text-align: center; border-bottom: 3px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        header h1 { color: var(--primary); font-size: 24px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .toolbar { max-width: 1200px; margin: 15px auto; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
-        .search-box { position: relative; width: 100%; }
-        .search-box input { width: 100%; padding: 12px 40px 12px 15px; border: 2px solid #ddd; border-radius: 30px; outline: none; font-size: 15px; }
-        .search-box .voice-btn { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--primary); font-size: 18px; cursor: pointer; }
-        .lang-switch { text-align: right; }
-        .lang-btn { background: var(--dark); color: white; border: none; padding: 6px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .card { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border: 1px solid #eee; text-align: center; position: relative; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
-        .badge-demand { position: absolute; top: 10px; left: 10px; background: red; color: white; font-size: 10px; padding: 4px 8px; border-radius: 20px; font-weight: bold; z-index: 5; }
-        .img-container { width: 100%; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .card img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .card h3 { font-size: 15px; margin-bottom: 5px; height: 35px; overflow: hidden; }
-        .card .price-tag { margin: 5px 0; }
-        .card .original-price { text-decoration: line-through; color: #888; font-size: 12px; margin-right: 5px; }
-        .card .sale-price { color: var(--primary); font-weight: bold; font-size: 16px; }
-        .card .desc { font-size: 12px; color: #666; margin-bottom: 10px; height: 32px; overflow: hidden; }
-        .btn-book { background: #25d366; color: white; text-decoration: none; display: block; padding: 8px; border-radius: 25px; font-weight: bold; font-size: 13px; }
-        .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px; box-shadow: 0 -3px 10px rgba(0,0,0,0.1); border-top: 2px solid var(--primary); z-index: 999; }
-        .sticky-item { text-decoration: none; color: var(--dark); font-size: 12px; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-        .sticky-item i { font-size: 18px; }
-        @media(max-width: 480px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 5px; } }
+        .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 50; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 pb-24 font-sans text-gray-800">
 
-<div id="aiBanner" class="ai-festive-banner">✨ Welcome to Shiv Shakti Super Mart ✨</div>
-
-<header>
-    <h1 id="mainTitle"><i class="fa-solid fa-shop"></i> Shiv Shakti Super Mart</h1>
-</header>
-
-<div class="toolbar">
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Saman ka naam khojein (e.g. Wiper)..." onkeyup="searchProducts()">
-        <button class="voice-btn" onclick="startVoiceSearch()"><i class="fa-solid fa-microphone"></i></button>
+    <div id="ai-banner" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white text-center py-2 text-sm font-bold tracking-wide shadow-md hidden select-none">
+        <span id="banner-text">✨ Welcome to Shiv Shakti Super Mart ✨</span>
     </div>
-    <div class="lang-switch">
-        <button class="lang-btn" id="langBtn" onclick="toggleLanguage()">Language: EN</button>
-    </div>
-</div>
 
-<div class="container">
-    <div id="productGrid" class="grid"></div>
-</div>
-
-<div class="sticky-bar">
-    <a href="tel:+919450222868" class="sticky-item" style="color: #007bff;"><i class="fa-solid fa-phone"></i><span>Direct Call</span></a>
-    <a href="https://wa.me/919450222868" target="_blank" class="sticky-item" style="color: #25d366;"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp Shop</span></a>
-</div>
-
-<script>
-    let allProducts = [];
-    let currentLang = 'HI';
-
-    async function loadStore() {
-        const res = await fetch('/api/products');
-        allProducts = await res.json();
+    <header class="bg-slate-900 text-white px-4 pt-6 pb-6 rounded-b-[20px] shadow-lg text-center relative">
+        <h1 class="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+            Shiv Shakti <span class="text-white font-normal text-2xl">Super Mart</span>
+        </h1>
+        <p class="text-xs text-gray-400 mt-1 flex items-center justify-center gap-1">
+            🧠 Powered by AI Engine & Real-Time Admin Panel Sync
+        </p>
         
-        const bannerRes = await fetch('/api/ai-banner');
-        const bannerData = await bannerRes.json();
-        if(bannerData.active && bannerData.text) {
-            const el = document.getElementById('aiBanner');
-            el.innerText = bannerData.text;
-            el.style.display = 'block';
+        <div class="flex justify-center gap-3 mt-4 text-xs">
+            <span class="bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700 flex items-center gap-1">
+                📍 Agrahunda, Chitrakoot
+            </span>
+            <a href="/admin" class="bg-slate-800/80 hover:bg-slate-700 px-3 py-1.5 rounded-full border border-slate-700 flex items-center gap-1 transition">
+                👤 Control Panel
+            </a>
+        </div>
+
+        <button id="lang-btn" onclick="toggleLanguage()" class="absolute top-4 right-4 bg-orange-500/20 hover:bg-orange-500 text-orange-300 hover:text-white px-2 py-1 rounded text-xs border border-orange-500/30 transition">
+            EN
+        </button>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 mt-6">
+        
+        <div class="relative flex items-center mb-4">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 text-gray-400"></i>
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein" class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl shadow-sm border border-gray-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm">
+            <button onclick="startVoiceSearch()" class="absolute right-3 p-2 text-orange-500 hover:bg-orange-50 rounded-full transition" title="Voice Search">
+                <i class="fa-solid fa-microphone text-base"></i>
+            </button>
+        </div>
+
+        <div class="relative mb-6">
+            <button id="category-trigger" onclick="toggleCategoryMenu()" class="w-full bg-neutral-900 text-white py-3.5 px-5 rounded-2xl font-bold flex items-center justify-between shadow-md hover:bg-neutral-800 transition">
+                <span id="cat-title">⚡ Sabhi Saman (All)</span>
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+            <div id="category-menu" class="hidden mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden absolute w-full z-30">
+                <button onclick="selectCategory('All')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-medium text-sm border-b border-gray-50 flex items-center gap-2"><i class="fa-solid fa-border-all text-orange-500"></i> Sabhi Saman (All)</button>
+                <button onclick="selectCategory('General')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-medium text-sm border-b border-gray-50 flex items-center gap-2"><i class="fa-solid fa-basket-shopping text-orange-500"></i> General Grocery</button>
+                <button onclick="selectCategory('Stationery')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-medium text-sm border-b border-gray-50 flex items-center gap-2"><i class="fa-solid fa-book text-orange-500"></i> Stationery & Books</button>
+                <button onclick="selectCategory('Toys')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-medium text-sm border-b border-gray-50 flex items-center gap-2"><i class="fa-solid fa-gamepad text-orange-500"></i> Toys & Games</button>
+                <button onclick="selectCategory('Household')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-house-laptop text-orange-500"></i> Household Goods</button>
+            </div>
+        </div>
+
+        <div id="products-container" class="grid grid-cols-2 gap-4">
+            </div>
+    </main>
+
+    <div class="sticky-bar grid grid-cols-2 text-center py-2 border-t border-gray-150">
+        <a href="tel:9450222868" class="text-blue-600 font-bold text-xs flex flex-col items-center justify-center gap-0.5">
+            <i class="fa-solid fa-phone-volume text-xl"></i> Direct Call
+        </a>
+        <a href="https://wa.me/9450222868" target="_blank" class="text-emerald-600 font-bold text-xs flex flex-col items-center justify-center gap-0.5">
+            <i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp Shop
+        </a>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let currentCategory = 'All';
+        let currentLang = 'HI';
+
+        const dict = {
+            HI: { search: "Saman ka naam dhundhein", call: "Call", shop: "WhatsApp", mrp: "Rs. " },
+            EN: { search: "Search for any item...", call: "Call", shop: "WhatsApp", mrp: "MRP: " }
+        };
+
+        async function fetchConfigAndProducts() {
+            try {
+                const bRes = await fetch('/api/ai-banner');
+                const banner = await bRes.json();
+                if(banner && banner.active) {
+                    document.getElementById('banner-text').innerText = banner.text;
+                    document.getElementById('ai-banner').classList.remove('hidden');
+                }
+                
+                const pRes = await fetch('/api/products');
+                allProducts = await pRes.json();
+                renderProducts();
+            } catch(e) { console.error(e); }
         }
-        renderProducts(allProducts);
-    }
 
-    function renderProducts(products) {
-        const grid = document.getElementById('productGrid');
-        grid.innerHTML = '';
-        
-        products.forEach(p => {
-            let imgUrl = p.image || 'https://via.placeholder.com/150?text=No+Image';
-            let calculatedMRP = Math.round(p.price * 1.25);
-            let isHighDemand = p.clicks > 5;
+        function toggleCategoryMenu() {
+            document.getElementById('category-menu').classList.toggle('hidden');
+        }
 
-            grid.innerHTML += `
-                <div class="card">
-                    ${isHighDemand ? `<div class="badge-demand"><i class="fa-solid fa-fire"></i> Demand High</div>` : ''}
-                    <div class="img-container">
-                        <img src="${imgUrl}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
+        function selectCategory(cat) {
+            currentCategory = cat;
+            document.getElementById('cat-title').innerText = cat === 'All' ? '⚡ Sabhi Saman (All)' : `⚡ ${cat}`;
+            toggleCategoryMenu();
+            renderProducts();
+        }
+
+        function filterProducts() { renderProducts(); }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'HI' ? 'EN' : 'HI';
+            document.getElementById('lang-btn').innerText = currentLang === 'HI' ? 'EN' : 'HI';
+            document.getElementById('search-input').placeholder = dict[currentLang].search;
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            const query = document.getElementById('search-input').value.toLowerCase();
+
+            const filtered = allProducts.filter(p => {
+                const matchCat = (currentCategory === 'All' || p.category === currentCategory);
+                const matchQuery = p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query));
+                return matchCat && matchQuery;
+            });
+
+            filtered.forEach(p => {
+                const calculatedMRP = Math.round(p.price * 1.25);
+                const isHighDemand = p.clicks >= 5;
+
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-3xl overflow-hidden shadow-xs border border-gray-100 flex flex-col relative transition-transform duration-200 active:scale-95";
+                
+                card.innerHTML = `
+                    ${isHighDemand ? 
+                        `<span class="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] font-black Richmond px-2 py-0.5 rounded-full shadow-sm z-10 tracking-wide uppercase flex items-center gap-0.5"><i class="fa-solid fa-fire text-[8px]"></i> DEMAND HIGH</span>` : 
+                        `<span class="absolute top-2 left-2 bg-orange-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full z-10 shadow-xs flex items-center gap-0.5"><i class="fa-solid fa-bolt text-[8px]"></i> BESTSELLER</span>`
+                    }
+                    <div class="w-full pt-[100%] relative bg-gray-50 overflow-hidden">
+                        <img src="${p.image || 'https://via.placeholder.com/150'}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
                     </div>
-                    <h3>${p.name}</h3>
-                    <p class="desc">${p.description || ''}</p>
-                    <div class="price-tag">
-                        <span class="original-price">₹${calculatedMRP}</span>
-                        <span class="sale-price">₹${p.price}</span>
+                    <div class="p-3 flex-1 flex flex-col">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">${p.category || 'General'}</span>
+                        <h3 class="font-bold text-gray-900 text-sm leading-tight mb-2 line-clamp-2 h-9">${p.name}</h3>
+                        <div class="mt-auto">
+                            <div class="flex items-baseline gap-1 mb-3">
+                                <span class="text-lg font-black text-orange-600">₹${p.price}</span>
+                                <span class="text-[10px] text-gray-400 line-through">${dict[currentLang].mrp}${calculatedMRP}</span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <a href="tel:9450222868" class="bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 text-[11px] font-bold py-2 px-1 rounded-xl shadow-xs flex items-center justify-center gap-1 transition">
+                                    <i class="fa-solid fa-phone text-[10px]"></i> ${dict[currentLang].call}
+                                </a>
+                                <button onclick="registerClick('${p._id}', '${p.name}')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-bold py-2 px-1 rounded-xl shadow-xs flex items-center justify-center gap-1 transition">
+                                    <i class="fa-brands fa-whatsapp text-xs"></i> ${dict[currentLang].shop}
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <a href="https://wa.me/919450222868?text=Hello%20Shakti%20Mart,%20mujhe%20ye%20saman%20chahie:%20${encodeURIComponent(p.name)}" 
-                       class="btn-book" onclick="trackClick('${p._id}')">
-                        <i class="fa-brands fa-whatsapp"></i> Book Karein
-                    </a>
-                </div>
-            `;
-        });
-    }
+                `;
+                container.appendChild(card);
+            });
+        }
 
-    function startVoiceSearch() {
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-            const recognition = new Speech();
-            recognition.lang = 'hi-IN';
-            alert("Boliye, AI sun raha hai...");
-            recognition.start();
-            recognition.onresult = function(event) {
-                document.getElementById('searchInput').value = event.results[0][0].transcript;
-                searchProducts();
+        async function registerClick(id, name) {
+            try {
+                await fetch(`/api/products/click/${id}`, { method: 'POST' });
+                const msg = encodeURIComponent(`Hi! Mujhe Shiv Shakti Super Mart se ye saman chahiye:\n📦 Saman: ${name}\n\nKripya mera order confirm karein.`);
+                window.open(`https://wa.me/9450222868?text=${msg}`, '_blank');
+                fetchConfigAndProducts();
+            } catch(e) { console.error(e); }
+        }
+
+        function startVoiceSearch() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return alert("Apka browser voice search support nahi karta.");
+            const rec = new SpeechRecognition(); rec.lang = 'hi-IN';
+            rec.onstart = () => { document.getElementById('search-input').placeholder = "🎤 Aap boliye..."; };
+            rec.onresult = (e) => {
+                document.getElementById('search-input').value = e.results[0][0].transcript;
+                document.getElementById('search-input').placeholder = dict[currentLang].search;
+                filterProducts();
             };
-        } else { alert("Voice search not supported."); }
-    }
-
-    function searchProducts() {
-        let query = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
-        renderProducts(filtered);
-    }
-
-    async function trackClick(id) {
-        await fetch(`/api/products/click/${id}`, { method: 'POST' });
-    }
-
-    function toggleLanguage() {
-        if(currentLang === 'HI') {
-            document.getElementById('searchInput').placeholder = "Search products here...";
-            document.getElementById('mainTitle').innerHTML = '<i class="fa-solid fa-shop"></i> Shiv Shakti Super Mart';
-            document.getElementById('langBtn').innerText = "Language: HI";
-            currentLang = 'EN';
-        } else {
-            document.getElementById('searchInput').placeholder = "Saman ka naam khojein (e.g. Wiper)...";
-            document.getElementById('mainTitle').innerHTML = '<i class="fa-solid fa-shop"></i> शिव शक्ति सुपरमार्ट';
-            document.getElementById('langBtn').innerText = "Language: EN";
-            currentLang = 'HI';
+            rec.start();
         }
-    }
-    window.onload = loadStore;
-</script>
+
+        window.onload = fetchConfigAndProducts;
+    </script>
 </body>
 </html>
