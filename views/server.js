@@ -13,14 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Configuration
+// Cloudinary Configuration Locked
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Windows 7 Friendly Error-Free Storage Engine
+// Windows 7 Safe Storage Configuration
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -29,7 +29,7 @@ const storage = new CloudinaryStorage({
   }
 });
 
-// Safely handle both single and multiple uploads without crashing
+// BULLETPROOF: .any() accepts ALL form field names without "Unexpected field" error
 const upload = multer({ storage: storage }).any();
 
 // Database Connection
@@ -38,7 +38,7 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Database Schema Setup
+// Database Schemas
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
@@ -56,26 +56,30 @@ const bannerSchema = new mongoose.Schema({
 });
 const Banner = mongoose.model('Banner', bannerSchema);
 
-// Frontend Routes
+// Page Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
 app.get('/api/ai-banner', async (req, res) => {
   try {
     let banner = await Banner.findOne();
-    if (!banner) banner = await Banner.create({});
+    if (!banner) banner = await Banner.create({ text: "Welcome to Shiv Shakti Super Mart", active: false });
     res.json(banner);
-  } catch (e) { res.json({ text: "Welcome to Shiv Shakti Super Mart", active: false }); }
+  } catch (e) { 
+    res.json({ text: "Welcome to Shiv Shakti Super Mart", active: false }); 
+  }
 });
 
 app.get('/api/products', async (req, res) => {
   try {
     const products = await Product.find({});
-    res.json(products);
-  } catch (e) { res.status(500).json([]); }
+    res.json(products || []);
+  } catch (e) { 
+    res.status(200).json([]); 
+  }
 });
 
-// AI Marketing Blast Generator
+// AI Marketing Blast Route
 app.get('/api/ai-marketing/blast', async (req, res) => {
   try {
     const products = await Product.find({});
@@ -89,18 +93,18 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// Super Safe Upload Route with Multi-Layer Protection
+// 🚀 FIXED UPLOAD ROUTE WITH ANY FIELD LOGIC
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Multer Error caught successfully");
+      console.error("Multer file catch error:", err);
       return res.redirect('/admin?status=error');
     }
     
     try {
       const { name, price, costPrice, category } = req.body;
       
-      // Extract image paths safely from files array
+      // Collect all files regardless of field name (images or image)
       let imageUrls = [];
       if (req.files && req.files.length > 0) {
         imageUrls = req.files.map(file => file.path);
@@ -118,7 +122,7 @@ app.post('/api/products', (req, res) => {
       await newProduct.save();
       res.redirect('/admin?status=success');
     } catch (error) {
-      console.error("DB Save Error caught safely");
+      console.error("Database save error:", error);
       res.redirect('/admin?status=error');
     }
   });
@@ -133,4 +137,4 @@ app.delete('/api/products/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server blasting live on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
