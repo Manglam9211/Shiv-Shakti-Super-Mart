@@ -13,36 +13,40 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Credentials (100% Secure Setup)
+// ?? KAL WALE TEENO CLOUD CODE (100% Locked & Working)
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Setup Multiple Images Storage
+// MULTIPLE IMAGES SAFE INTEGRATION ENGINE
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'shiv_shakti_mart',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+  params: async (req, file) => {
+    return {
+      folder: 'shiv_shakti_mart',
+      format: 'jpg', // forces safe image formats
+      public_id: file.originalname.split('.')[0] + '_' + Date.now()
+    };
   }
 });
 const upload = multer({ storage: storage });
 
-// Database URI Connection
+// Database Connection
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Schema with Images Array for Flipkart Feature
+// Secure Database Schema (Handles both Old and New items together)
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
   costPrice: Number,
   category: String,
-  images: [String],
+  images: { type: [String], default: [] },
+  image: { type: String, default: '' },
   clicks: { type: Number, default: 0 }
 });
 const Product = mongoose.model('Product', productSchema);
@@ -57,7 +61,6 @@ const Banner = mongoose.model('Banner', bannerSchema);
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
-// API Routes
 app.get('/api/ai-banner', async (req, res) => {
   let banner = await Banner.findOne();
   if (!banner) banner = await Banner.create({});
@@ -75,49 +78,55 @@ app.post('/api/ai-banner', async (req, res) => {
 });
 
 app.get('/api/products', async (req, res) => {
-  const products = await Product.find({});
-  res.json(products);
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (e) { res.status(500).json([]); }
 });
 
-// AI ADVERTISING ENGINE: Automatically builds a stunning blast text based on smart stats
+// AI Marketing Hinglish Blast Generator Route
 app.get('/api/ai-marketing/blast', async (req, res) => {
   try {
     const products = await Product.find({});
-    if (products.length === 0) return res.json({ message: "No items available." });
+    if (!products || products.length === 0) return res.json({ success: false, text: "Stock khali hai." });
 
-    // Pick a high demand product or random one
     const sorted = [...products].sort((a,b) => b.clicks - a.clicks);
     const featured = sorted[0];
 
     const catchyLines = [
-      `?? AGRAHUNDA ME DHAMAKA OFFER! ??\n\nSabse zyada bikne wala maal ab bache hue stock me!`,
-      `? SHIV SHAKTI SUPER MART VIP VALUE ALERT! ?\n\nPure Chitrakoot me aisa rate kahi nahi milega, guarantee hai!`,
-      `?? AAJ KA MAHA OFFER! ??\n\nGrahak bhaiyo dhyan do, ye dukan ka sabse top rated item hai!`
+      `?? AGRAHUNDA ME DHAMAKA OFFER! ??\n\nGrahak bhaiyo dhyan do! Sabse zyada pasand kiya jaane wala maal ab bache hue stock me hai!`,
+      `? SHIV SHAKTI SUPER MART VIP DISCOUNT! ?\n\nPure Chitrakoot me ghum aao, aisa rate aur aisi solid quality kahi nahi milegi!`,
+      `?? AAJ KA SABSE BADA MAHA OFFER! ??\n\nStock khatam hone wala hai, ek baar click karke photo dekhein aur jaldi order karein!`
     ];
     const randomLine = catchyLines[Math.floor(Math.random() * catchyLines.length)];
 
-    const message = `${randomLine}\n?? Saman: ${featured.name}\n?? Khaas Rate: ?${featured.price}\n\n? AI Alert: Sirf thoda sa bacha hai! Niche wale link par click karke photo dekhein aur order karein ??\n?? https://shiv-shakti-super-mart.onrender.com`;
-    
+    const message = `${randomLine}\n\n?? Saman: *${featured.name}*\n?? Khaas Rate: *?${featured.price}*\n\n?? https://shiv-shakti-super-mart.onrender.com`;
     res.json({ success: true, text: message });
-  } catch (e) { res.status(500).json({ error: true }); }
+  } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
+// FIXED PRODUCT UPLOAD ROUTE WITH TRY-CATCH FAIL-SAFE
 app.post('/api/products', upload.array('images', 5), async (req, res) => {
   try {
     const { name, price, costPrice, category } = req.body;
-    const imageUrls = req.files ? req.files.map(file => file.path) : [];
     
+    // Safely extract paths from uploaded files
+    const imageUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : [];
+    const fallbackImage = imageUrls.length > 0 ? imageUrls[0] : 'https://via.placeholder.com/150';
+
     const newProduct = new Product({
-      name,
+      name: name,
       price: Number(price),
       costPrice: Number(costPrice || 0),
       category: category || 'General',
-      images: imageUrls.length > 0 ? imageUrls : ['https://via.placeholder.com/150']
+      images: imageUrls,
+      image: fallbackImage
     });
     
     await newProduct.save();
     res.redirect('/admin?status=success');
   } catch (error) {
+    console.error("Upload Error Tracked: ", error);
     res.redirect('/admin?status=error');
   }
 });
@@ -130,8 +139,10 @@ app.post('/api/products/click/:id', async (req, res) => {
 });
 
 app.delete('/api/products/:id', async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ success: true });
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: true }); }
 });
 
 const PORT = process.env.PORT || 3000;
