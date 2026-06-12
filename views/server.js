@@ -2,8 +2,8 @@
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
@@ -13,23 +13,15 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Credentials Locked
+// Cloudinary Configuration Fixed
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Windows 7 Secure Storage Configuration
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'shiv_shakti_mart',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
-  }
-});
-
-const upload = multer({ storage: storage }).any();
+// Safe Local Disk Storage to bypass windows 7 transmission lag
+const upload = multer({ dest: '/tmp/' }).any();
 
 // Secure Database Connection
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
@@ -37,7 +29,7 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Database Schema
+// Database Schema Setup
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
@@ -49,7 +41,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// Page Routes
+// Universal Frontend Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -76,23 +68,31 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// 🚀 100% FIXED RAW POST ENGINE
+// 🚀 MASTER OMNI-UPLOAD DIRECT TRANSMISSION ENGINE
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
-      return res.status(500).json({ error: true, message: "Multer upload failed" });
+      console.error("Local upload error caught safely:", err);
+      return res.status(500).json({ error: true, message: "Local upload failed" });
     }
     
     try {
       const { name, price, costPrice, category } = req.body;
-      
-      // Extract cloud links from incoming files safely
       let uploadedUrls = [];
+
+      // Stream each file directly to Cloudinary bypassing third party middleware lag
       if (req.files && req.files.length > 0) {
-        uploadedUrls = req.files.map(file => file.path);
+        for (const file of req.files) {
+          const result = await cloudinary.uploader.upload(file.path, {
+            folder: 'shakti_mart_fresh_gallery'
+          });
+          uploadedUrls.push(result.secure_url);
+          // Delete temporary file from render server to save memory
+          try { fs.unlinkSync(file.path); } catch (e) {}
+        }
       }
 
-      const mainSingleImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
+      const backupImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
 
       const newProduct = new Product({
         name: name || "Naya Saman",
@@ -100,14 +100,15 @@ app.post('/api/products', (req, res) => {
         costPrice: Number(costPrice || 0),
         category: category || 'General',
         images: uploadedUrls,
-        image: mainSingleImage,
+        image: backupImage,
         clicks: 0
       });
       
       await newProduct.save();
       return res.status(200).json({ success: true });
     } catch (error) {
-      return res.status(500).json({ error: true, message: "Database save failed" });
+      console.error("Direct transmission database error:", error);
+      return res.status(500).json({ error: true, message: "Database saving crashed" });
     }
   });
 });
@@ -120,4 +121,4 @@ app.delete('/api/products/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server blasting live on port ${PORT}`));
