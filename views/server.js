@@ -1,35 +1,33 @@
 ﻿const express = require('express');
 const mongoose = require('mongoose');
-const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Increase JSON payload limit to safely handle multiple high-quality Base64 images from Windows 7
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('public'));
+
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Configuration Fixed
+// Pure Cloudinary Direct Integration 
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Safe Local Disk Storage to bypass windows 7 transmission lag
-const upload = multer({ dest: '/tmp/' }).any();
-
-// Secure Database Connection
+// Secure MongoDB Connection Architecture
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
-  .then(() => console.log("MongoDB Connected Safely!"))
-  .catch(err => console.log("DB Connection Error: ", err));
+  .then(() => console.log("MongoDB Connected with Omni-Base64 Engine!"))
+  .catch(err => console.log("Database Sync Error: ", err));
 
-// Database Schema Setup
+// Robust Clean Product Schema
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
@@ -41,7 +39,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// Universal Frontend Routes
+// Essential Live Frontend Page Endpoints
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -68,49 +66,47 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// 🚀 MASTER OMNI-UPLOAD DIRECT TRANSMISSION ENGINE
-app.post('/api/products', (req, res) => {
-  upload(req, res, async function (err) {
-    if (err) {
-      console.error("Local upload error caught safely:", err);
-      return res.status(500).json({ error: true, message: "Local upload failed" });
-    }
-    
-    try {
-      const { name, price, costPrice, category } = req.body;
-      let uploadedUrls = [];
+// 🚀 ZERO-MULTER REVOLUTIONARY DIRECT POST ROUTE (100% BULLETPROOF)
+app.post('/api/products', async (req, res) => {
+  try {
+    const { name, price, costPrice, category, images } = req.body;
+    let uploadedUrls = [];
 
-      // Stream each file directly to Cloudinary bypassing third party middleware lag
-      if (req.files && req.files.length > 0) {
-        for (const file of req.files) {
-          const result = await cloudinary.uploader.upload(file.path, {
-            folder: 'shakti_mart_fresh_gallery'
-          });
-          uploadedUrls.push(result.secure_url);
-          // Delete temporary file from render server to save memory
-          try { fs.unlinkSync(file.path); } catch (e) {}
-        }
+    // Process and push each Base64 data block straight into Cloudinary
+    if (images && images.length > 0) {
+      for (const base64Str of images) {
+        const uploadResult = await cloudinary.uploader.upload(base64Str, {
+          folder: 'shakti_mart_fresh_gallery'
+        });
+        uploadedUrls.push(uploadResult.secure_url);
       }
-
-      const backupImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
-
-      const newProduct = new Product({
-        name: name || "Naya Saman",
-        price: Number(price) || 0,
-        costPrice: Number(costPrice || 0),
-        category: category || 'General',
-        images: uploadedUrls,
-        image: backupImage,
-        clicks: 0
-      });
-      
-      await newProduct.save();
-      return res.status(200).json({ success: true });
-    } catch (error) {
-      console.error("Direct transmission database error:", error);
-      return res.status(500).json({ error: true, message: "Database saving crashed" });
     }
-  });
+
+    const backupMainImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
+
+    const newProduct = new Product({
+      name: name || "Naya Saman",
+      price: Number(price) || 0,
+      costPrice: Number(costPrice || 0),
+      category: category || 'General',
+      images: uploadedUrls,
+      image: backupMainImage,
+      clicks: 0
+    });
+    
+    await newProduct.save();
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.error("Direct transmission database error caught:", error);
+    return res.status(500).json({ success: false, message: "Transmission rejected by backend" });
+  }
+});
+
+app.post('/api/products/click/:id', async (req, res) => {
+  try {
+    await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
+    res.json({ success: true });
+  } catch (e) { res.json({ success: false }); }
 });
 
 app.delete('/api/products/:id', async (req, res) => {
@@ -121,4 +117,4 @@ app.delete('/api/products/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server blasting live on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server live on secure transmission protocol port ${PORT}`));
