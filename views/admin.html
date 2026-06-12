@@ -76,7 +76,7 @@
                     <textarea id="p-desc" placeholder="Saman ki khoobi ya details likhein..." rows="3" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo)</label>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5-6 Photo)</label>
                     <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
                 </div>
                 <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
@@ -176,10 +176,7 @@
             }
 
             try {
-                const response = await fetch('/api/products', {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch('/api/products', { method: 'POST', body: formData });
                 const result = await response.json();
 
                 if (response.ok && result.success) {

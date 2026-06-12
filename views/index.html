@@ -6,8 +6,15 @@
     <title>Shiv Shakti Super Mart - Agrahunda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Flipkart Style Custom Scrollbar */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body class="bg-slate-50 min-h-screen font-sans pb-24 antialiased text-slate-800">
+<body class="bg-[#f1f3f6] min-h-screen font-sans pb-24 antialiased text-slate-800">
 
     <div class="bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white p-5 rounded-b-[32px] shadow-lg max-w-md mx-auto">
         <div class="flex items-center justify-between mb-3">
@@ -16,55 +23,64 @@
                     Shiv Shakti <span class="text-slate-900 font-extrabold">Super Mart</span>
                 </h1>
                 <p class="text-xs text-orange-950 font-bold flex items-center gap-1 mt-1 bg-white/20 px-2 py-0.5 rounded-full w-max">
-                    <i class="fa-solid fa-brain"></i> Real-Time Cloud Sync Active
+                    <i class="fa-solid fa-brain"></i> AI Engine Core Live Sync
                 </p>
             </div>
         </div>
         <div class="flex items-center gap-4 text-xs font-bold text-orange-950 mt-2">
             <span><i class="fa-solid fa-location-dot text-slate-900"></i> Agrahunda, Chitrakoot</span>
-            <a href="tel:9450222868" class="ml-auto flex items-center gap-1 bg-slate-900 text-white px-2.5 py-1 rounded-lg"><i class="fa-solid fa-phone text-[10px]"></i> 9450222868</a>
+            <a href="tel:9450222868" class="ml-auto flex items-center gap-1 bg-slate-900 text-white px-2.5 py-1 rounded-lg shadow-sm"><i class="fa-solid fa-phone text-[10px]"></i> 9450222868</a>
         </div>
     </div>
 
-    <div class="max-w-md mx-auto px-4 pt-5">
-        <div class="relative mb-5 shadow-sm rounded-2xl overflow-hidden border border-slate-200">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400 text-sm"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-white pl-11 pr-4 py-3.5 text-sm text-slate-900 outline-none font-medium placeholder-slate-400">
+    <div class="max-w-md mx-auto px-4 pt-4">
+        
+        <div class="relative mb-5 shadow-md rounded-2xl overflow-hidden border border-slate-200 bg-white flex items-center">
+            <i class="fa-solid fa-magnifying-glass text-slate-400 text-sm ml-4"></i>
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-white pl-3 pr-12 py-3.5 text-sm text-slate-900 outline-none font-medium placeholder-slate-400">
+            <button onclick="startVoiceSearch()" id="mike-btn" class="absolute right-4 text-orange-500 hover:text-orange-600 text-base p-1 transition"><i class="fa-solid fa-microphone"></i></button>
         </div>
 
-        <div class="bg-slate-950 text-white p-4 rounded-2xl flex items-center justify-between font-black text-sm shadow-md mb-6">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Sabhi Saman (All)</span>
-            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+        <div class="mb-6 relative z-30">
+            <label class="text-[10px] uppercase font-black text-slate-400 tracking-wider block mb-2 px-1">Shop by Department:</label>
+            <select id="category-filter" onchange="filterProducts()" class="w-full bg-slate-950 text-white p-4 rounded-2xl flex items-center justify-between font-black text-sm shadow-md cursor-pointer outline-none appearance-none border border-white/10">
+                <option value="All">⚡ Sabhi Saman (All Category)</option>
+                <option value="General">📦 General Grocery</option>
+                <option value="Stationery">📚 Stationery & Books</option>
+                <option value="Toys">🧸 Toys & Games</option>
+                <option value="Household">🧹 Household Goods</option>
+            </select>
+            <div class="pointer-events-none absolute bottom-4 right-4 text-slate-400"><i class="fa-solid fa-chevron-down text-xs"></i></div>
         </div>
 
         <div id="customer-products-grid" class="grid grid-cols-2 gap-4">
             </div>
     </div>
 
-    <div id="product-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col justify-between hidden p-4 animate-fade-in">
+    <div id="product-lightbox" class="fixed inset-0 bg-black/95 z-50 flex flex-col justify-between hidden p-4 animate-fade-in">
         <div class="flex items-center justify-between text-white pt-2">
             <span id="lightbox-category" class="text-xs uppercase tracking-widest font-black text-orange-400">Category</span>
             <button onclick="closeLightbox()" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
-        <div class="w-full max-w-sm mx-auto aspect-square bg-slate-900/40 rounded-3xl overflow-hidden border border-white/5 flex items-center justify-center p-2 relative">
+        <div class="w-full max-w-sm mx-auto aspect-square bg-white rounded-3xl overflow-hidden flex items-center justify-center p-2 relative shadow-2xl">
             <img id="lightbox-main-img" src="" class="w-full h-full object-contain transition-all duration-300">
         </div>
 
         <div class="w-full max-w-sm mx-auto bg-slate-900 p-5 rounded-[32px] border border-white/5 shadow-2xl mb-4 text-left">
             <h2 id="lightbox-title" class="text-xl font-black text-white tracking-tight">Saman Ka Naam</h2>
-            <p id="lightbox-desc" class="text-xs text-slate-400 mt-1 font-medium leading-relaxed">Description listing here...</p>
+            <p id="lightbox-desc" class="text-xs text-slate-400 mt-1 font-medium leading-relaxed"></p>
             
             <div class="mt-4">
                 <p class="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2">Alag-Alag Angle Se Dekhein:</p>
-                <div id="lightbox-thumbs-container" class="flex items-center gap-2 overflow-x-auto pb-1">
+                <div id="lightbox-thumbs-container" class="flex items-center gap-2 overflow-x-auto pb-1 hide-scrollbar">
                     </div>
             </div>
 
             <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
                 <div>
                     <span class="text-[9px] uppercase font-black tracking-widest text-slate-500 block">Khaas Rate</span>
-                    <span id="lightbox-price" class="text-2xl font-black text-orange-500">Rs. 0</span>
+                    <span id="lightbox-price" class="text-2xl font-black text-orange-400">Rs. 0</span>
                 </div>
                 <button id="lightbox-wa-btn" class="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-black text-xs shadow-md uppercase tracking-wider flex items-center gap-2">
                     <i class="fa-brands fa-whatsapp text-sm"></i> Abhi Order Karein
@@ -92,7 +108,7 @@
                 const pRes = await fetch('/api/products');
                 allProducts = await pRes.json();
                 renderCustomerGrid(allProducts);
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Storefront dynamic initialization fail:", e); }
         }
 
         function renderCustomerGrid(products) {
@@ -111,13 +127,12 @@
                 else if(p.images && p.images.length > 0) thumbUrl = p.images[0];
 
                 const card = document.createElement('div');
-                card.className = "bg-white border border-slate-100 rounded-3xl p-3 flex flex-col justify-between gap-2.5 shadow-sm relative cursor-pointer";
+                card.className = "bg-white border border-slate-200 rounded-3xl p-3 flex flex-col justify-between gap-2.5 shadow-sm relative";
                 
-                // 🌟 CLICK TARGET FIXED: Image click triggers the big Multi-Angle Pop-up!
                 card.innerHTML = `
-                    <div onclick="openLightbox('${p._id}')">
-                        <div class="w-full pt-[100%] relative bg-slate-50 rounded-2xl overflow-hidden mb-2 border border-slate-100">
-                            <span class="absolute left-2 top-2 bg-orange-500 text-white font-black text-[8px] uppercase tracking-wider px-2 py-0.5 rounded-md z-10 shadow-sm"><i class="fa-solid fa-star text-[7px]"></i> Live</span>
+                    <div onclick="openLightbox('${p._id}')" class="cursor-pointer">
+                        <div class="w-full pt-[100%] relative bg-[#f9f9f9] rounded-2xl overflow-hidden mb-2 border border-slate-100">
+                            <span class="absolute left-2 top-2 bg-orange-500 text-white font-black text-[8px] uppercase tracking-wider px-2 py-0.5 rounded-md z-10 shadow-sm flex items-center gap-1"><i class="fa-solid fa-bolt text-[7px]"></i> BESTSELLER</span>
                             <img src="${thumbUrl}" class="absolute inset-0 w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/150'">
                         </div>
                         <div class="px-0.5">
@@ -140,7 +155,6 @@
             });
         }
 
-        // 🌟 LIGHTBOX LOGIC: Loads all images/angles uploaded by you live
         function openLightbox(id) {
             const p = allProducts.find(item => item._id === id);
             if(!p) return;
@@ -150,26 +164,21 @@
             document.getElementById('lightbox-desc').innerText = p.description || 'Is saman ka koi vivran nahi hai.';
             document.getElementById('lightbox-price').innerText = `Rs. ${p.price}`;
             
-            // Gather all available image links safely
             let allImgs = [];
             if(p.images && p.images.length > 0) allImgs = p.images;
             else if(p.image) allImgs = [p.image];
             else allImgs = ['https://via.placeholder.com/150'];
 
-            // Set main image view
             const mainImgElement = document.getElementById('lightbox-main-img');
             mainImgElement.src = allImgs[0];
 
-            // Render different angle thumbnails dynamically
             const thumbsContainer = document.getElementById('lightbox-thumbs-container');
             thumbsContainer.innerHTML = '';
             
             allImgs.forEach((imgUrl, index) => {
                 const thumbBtn = document.createElement('button');
-                thumbBtn.className = `w-12 h-12 rounded-xl overflow-hidden border-2 flex-shrink-0 p-0.5 bg-white ${index === 0 ? 'border-orange-500' : 'border-white/10'}`;
+                thumbBtn.className = `w-12 h-12 rounded-xl overflow-hidden border-2 flex-shrink-0 p-0.5 bg-white ${index === 0 ? 'border-orange-500' : 'border-slate-700'}`;
                 thumbBtn.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain">`;
-                
-                // Clicking angle thumbnail switches main view smoothly
                 thumbBtn.onclick = () => {
                     mainImgElement.src = imgUrl;
                     Array.from(thumbsContainer.children).forEach(child => child.classList.remove('border-orange-500'));
@@ -178,17 +187,11 @@
                 thumbsContainer.appendChild(thumbBtn);
             });
 
-            // Sync order button inside lightbox
-            document.getElementById('lightbox-wa-btn').onclick = () => {
-                registerProductClick(p._id, p.name);
-            };
-
+            document.getElementById('lightbox-wa-btn').onclick = () => { registerProductClick(p._id, p.name); };
             document.getElementById('product-lightbox').classList.remove('hidden');
         }
 
-        function closeLightbox() {
-            document.getElementById('product-lightbox').classList.add('hidden');
-        }
+        function closeLightbox() { document.getElementById('product-lightbox').classList.add('hidden'); }
 
         async function registerProductClick(id, name) {
             try {
@@ -200,8 +203,36 @@
 
         function filterProducts() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = allProducts.filter(p => (p.name || '').toLowerCase().includes(query));
+            const catFilter = document.getElementById('category-filter').value;
+            
+            const filtered = allProducts.filter(p => {
+                const matchesSearch = (p.name || '').toLowerCase().includes(query);
+                const matchesCat = (catFilter === 'All' || p.category === catFilter);
+                return matchesSearch && matchesCat;
+            });
             renderCustomerGrid(filtered);
+        }
+
+        // FLIPKART INTELLIGENCE: Restored Voice search mic loop
+        function startVoiceSearch() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { alert("Voice search not supported."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'hi-IN';
+            
+            const mikeIcon = document.getElementById('mike-btn');
+            mikeIcon.classList.add('animate-bounce', 'text-red-600');
+            
+            recognition.start();
+            recognition.onresult = function(event) {
+                const resultText = event.results[0][0].transcript;
+                document.getElementById('search-input').value = resultText.replace(/[.।]/g, '').trim();
+                filterProducts();
+                mikeIcon.classList.remove('animate-bounce', 'text-red-600');
+            };
+            recognition.onerror = function() {
+                mikeIcon.classList.remove('animate-bounce', 'text-red-600');
+            };
         }
 
         window.addEventListener('DOMContentLoaded', initializeStorefront);
