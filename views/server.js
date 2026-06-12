@@ -1,4 +1,4 @@
-﻿const express = require('express');
+﻿const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -30,14 +30,15 @@ const storage = new CloudinaryStorage({
   }
 });
 
+// ANY FIELD TUNNEL: लपकेगा हर नाम का फ़ोटो पैकेट
 const upload = multer({ storage: storage }).any();
 
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
-  .then(() => console.log("Database Engine Synced to Yesterday 11PM Core"))
-  .catch(err => console.log("Database Connection Error: ", err));
+  .then(() => console.log("Database connected safely to 11PM Core"))
+  .catch(err => console.log("Database Error: ", err));
 
-// Product Schema Layout
+// DUAL LOCK SCHEMA: दोनों रास्तों (image और images) को एक साथ सपोर्ट करेगा
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
@@ -50,33 +51,25 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// 🌟 RESTORED BANNER ENGINE SCHEMA (Tied with Admin Control)
 const bannerSchema = new mongoose.Schema({
-  text: { type: String, default: "💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item! 💥" },
-  active: { type: Boolean, default: true }
+  text: { type: String, default: "💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item! 💥" }
 });
 const Banner = mongoose.model('Banner', bannerSchema);
 
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
-// 🌟 READ BANNER API
 app.get('/api/ai-banner', async (req, res) => {
   try {
     let banner = await Banner.findOne({});
-    if(!banner) {
-      banner = new Banner();
-      await banner.save();
-    }
+    if(!banner) { banner = new Banner(); await banner.save(); }
     res.json(banner);
-  } catch(e) { res.json({ text: "Welcome to Shiv Shakti Super Mart", active: true }); }
+  } catch(e) { res.json({ text: "Welcome to Shiv Shakti Super Mart" }); }
 });
 
-// 🌟 UPDATE BANNER API
 app.post('/api/ai-banner', async (req, res) => {
   try {
-    const { text } = req.body;
-    await Banner.findOneAndUpdate({}, { text: text }, { upsert: true });
+    await Banner.findOneAndUpdate({}, { text: req.body.text }, { upsert: true });
     res.json({ success: true });
   } catch(e) { res.status(500).json({ success: false }); }
 });
@@ -102,7 +95,7 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
       `🎉 *WEEKEND LOOT BAZAAR* 🎉\n\nपूरे चित्रकूट में ऐसा दाम कहीं नहीं मिलेगा! इस स्पेशल ऑफर सीधा हमारी दुकान से:\n\n⭐ बेस्ट सेलर: *${bestSellerItem.name}*\n🤑 लूट लो रेट: *₹${bestSellerItem.price}*\n\nघर बैठे व्हाट्सएप पर दुकान खोलने के लिए तुरंत यहाँ क्लिक करें 👇\n👉 ${shopUrl}`,
       `👑 *AGRAHUNDA GRAPEVINE: CUSTOMER CHOICE* 👑\n\nहमारी दुकान का सबसे ज्यादा बिकने वाला सामान अब फिर से स्टॉक में आ गया है!\n\n🔥 आइटम का नाम: *${bestSellerItem.name}*\n✨ वीआईपी रेट: *₹${bestSellerItem.price}*\n\nऑर्डर के लिए लिंक खोलें 👇\n👉 ${shopUrl}`,
       `🚨 *LIMITED STOCK EMERGENCY ALERT* 🚨\n\n*${bestSellerItem.name}* का stock बहुत तेजी से खत्म हो रहा है।\n\n💰 स्पेशल डिस्काउंट रेट: *₹${bestSellerItem.price}*\n\nव्हाट्सएप शॉप पर जाकर अपना ऑर्डर पक्का लॉक करें 👇\n👉 ${shopUrl}`,
-      `💥 *SHIV SHAKTI FESTIVAL DHAMAKA* 💥\n\nशिव शक्ति मार्ट लाया है सबसे तगड़ा ऑफर:\n\n📦 आइटम: *${bestSellerItem.name}*\n💸 सीधा दाम: *₹${bestSellerItem.price}*\n\nदुकान का लाइव रेट कार्ड देखने के लिए लिंक खोलें 👇\n👉 ${shopUrl}`,
+      `💥 *SHIV SHAKTI FESTIVAL DHAMAKA* 💥\n\nशिव शक्ति भारती लाया है सबसे तगड़ा ऑफर:\n\n📦 आइटम: *${bestSellerItem.name}*\n💸 सीधा दाम: *₹${bestSellerItem.price}*\n\nदुकान का लाइव रेट कार्ड देखने के लिए लिंक खोलें 👇\n👉 ${shopUrl}`,
       `🤑 *सस्ते का बादशाह: SUPER SAVER DEAL* 🤑\n\nआज की सबसे तगड़ी बचत सिर्फ आपके लिए:\n\n🔥 सामान: *${bestSellerItem.name}*\n👉 हमारा रेट: *₹${bestSellerItem.price}*\n\nतुरंत लिंक पर क्लिक करो और खुद देखो 👇\n👉 ${shopUrl}`
     ];
 
@@ -111,13 +104,14 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "AI Engine error" }); }
 });
 
-// MULTIPART SAVE TUNNEL
+// BULLETPROOF MULTI-ANGLE SAVING ENGINE (image AND images DUAL CAPTURE)
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
-    if (err) return res.status(500).json({ success: false, message: "Upload stream failed" });
+    if (err) return res.status(500).json({ success: false, message: "Upload failed" });
     try {
       const { name, price, costPrice, category, description } = req.body;
       let uploadedUrls = [];
+      
       if (req.files && req.files.length > 0) {
         uploadedUrls = req.files.map(file => file.path);
       }
@@ -129,8 +123,8 @@ app.post('/api/products', (req, res) => {
         costPrice: Number(costPrice || 0),
         category: category || 'General',
         description: description || '',
-        images: uploadedUrls,
-        image: backupMainImage,
+        images: uploadedUrls, // Saved to array for lightbox slider
+        image: backupMainImage, // Saved to primary string reference
         clicks: 0
       });
       await newProduct.save();

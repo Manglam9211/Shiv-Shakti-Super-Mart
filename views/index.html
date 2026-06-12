@@ -15,7 +15,7 @@
 </head>
 <body class="bg-[#f1f3f6] min-h-screen font-sans pb-24 antialiased text-slate-800">
 
-    <div id="top-flash-banner" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white text-center py-2 px-4 text-xs font-black tracking-wide shadow-lg overflow-hidden">
+    <div class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white text-center py-2 px-4 text-xs font-black tracking-wide shadow-lg overflow-hidden">
         <marquee scrollamount="4" id="banner-text-loader">💥 Loading Live Shop Offers... 💥</marquee>
     </div>
 
@@ -78,7 +78,6 @@
         let allProducts = [];
         async function initializeStorefront() {
             try {
-                // 🌟 SYNC LIVE BANNER TEXT FROM DATABASE
                 const bRes = await fetch('/api/ai-banner');
                 const bData = await bRes.json();
                 if(bData && bData.text) {
@@ -91,6 +90,7 @@
             } catch (e) { console.error(e); }
         }
         
+        // ADVANCED AUTO AI TAG SELECTION
         function renderCustomerGrid(products) {
             const grid = document.getElementById('customer-products-grid');
             grid.innerHTML = '';
@@ -118,7 +118,7 @@
                     <div onclick="openLightbox('${p._id}')" class="cursor-pointer">
                         <div class="w-full pt-[100%] relative bg-slate-50 rounded-2xl overflow-hidden mb-2 border">
                             <span class="absolute left-2 top-2 bg-orange-500 text-white font-black text-[7px] uppercase tracking-wider px-2 py-0.5 rounded-md z-10 shadow-sm">${aiBadgeText}</span>
-                            <img src="${p.image || p.images[0]}" class="absolute inset-0 w-full h-full object-contain p-1">
+                            <img src="${p.image || (p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/150')}" class="absolute inset-0 w-full h-full object-contain p-1">
                         </div>
                         <h3 class="font-black text-sm text-slate-900 line-clamp-1 mt-1">${p.name}</h3>
                         <p class="text-[10px] text-slate-500 line-clamp-1">${aiPromoText}</p>
@@ -157,6 +157,7 @@
             document.getElementById('product-lightbox').classList.remove('hidden');
         }
         function closeLightbox() { document.getElementById('product-lightbox').classList.add('hidden'); }
+        
         async function registerProductClick(id, name) {
             await fetch(`/api/products/click/${id}`, { method: 'POST' });
             window.open(`https://wa.me/919450222868?text=Namaste+Shiv+Shakti+Super+Mart,+mujhe+ye+chahiye:+*${encodeURIComponent(name)}*`, '_blank');

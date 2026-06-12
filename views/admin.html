@@ -24,10 +24,10 @@
         </header>
 
         <div class="p-5 rounded-3xl bg-white/5 border border-white/5 mb-8">
-            <h3 class="font-black text-white text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-400"></i> Customer Banner Offer Text</h3>
+            <h3 class="font-black text-white text-sm mb-3 flex items-center gap-2"><i class="fa-bullhorn fa-solid text-orange-400"></i> Customer Banner Offer Text</h3>
             <div class="flex gap-3">
                 <input type="text" id="banner-text-input" placeholder="Example: Diwali Dhamaka Offer! 30% Off..." class="w-full bg-[#111827] border border-white/5 p-3 text-sm text-white rounded-xl outline-none">
-                <button onclick="updateLiveBanner()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-black text-xs px-5 rounded-xl transition">Change Banner</button>
+                <button onclick="updateLiveBanner()" class="bg-orange-500 text-slate-950 font-black text-xs px-5 rounded-xl transition">Change Banner</button>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
                     <img src="${p.image || p.images[0]}" class="w-full h-32 object-contain rounded-2xl">
                     <h4 class="font-bold text-xs text-white">${p.name}</h4>
                     <p class="text-[10px] text-slate-400">Rate: ₹${p.price}</p>
-                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-900/40 text-red-400 font-bold text-[11px] py-2 rounded-xl">Hatayein</button>
+                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/40 text-red-400 font-bold text-[11px] py-2 rounded-xl">Hatayein</button>
                 `;
                 list.appendChild(card);
             });
@@ -139,15 +139,18 @@
 
             const fileInput = document.getElementById('p-images');
             for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('image', fileInput.files[i]);
+                formData.append('image', fileInput.files[i]); // PURE DUAL LOCK SYNC
             }
 
-            const response = await fetch('/api/products', { method: 'POST', body: formData });
-            if (response.ok) {
-                alert("Saman live ho gaya!");
-                document.getElementById('old-upload-form').reset();
-                fetchAdminMetrics();
-            } else { alert("Upload fail."); }
+            try {
+                const response = await fetch('/api/products', { method: 'POST', body: formData });
+                if (response.ok) {
+                    alert("Saman live हो गया!");
+                    document.getElementById('old-upload-form').reset();
+                    fetchAdminMetrics();
+                } else { alert("Upload fail."); }
+            } catch (error) { alert("Connection error."); }
+            
             btn.innerText = "Saman ko Live Dukan Par Chadhayein";
             btn.disabled = false;
         });
