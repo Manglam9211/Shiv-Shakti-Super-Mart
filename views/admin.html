@@ -47,24 +47,24 @@
 
         <div class="p-6 rounded-3xl bg-white/5 backdrop-glass border border-white/5 mb-8">
             <h3 class="font-black text-white text-base mb-5 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i> Naya Saman Chadhayein</h3>
-            <form id="secure-upload-form" onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
+            <form id="old-upload-form" class="flex flex-col gap-4">
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman Ka Naam</label>
-                    <input type="text" id="p-name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                    <input type="text" id="p-name" name="name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Kharidi Rate</label>
-                        <input type="number" id="p-cost" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                        <input type="number" id="p-cost" name="costPrice" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                     <div>
                         <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Bechne Ka Rate</label>
-                        <input type="number" id="p-price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                        <input type="number" id="p-price" name="price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Category</label>
-                    <select id="p-cat" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
+                    <select id="p-cat" name="category" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
                         <option value="General">General Grocery</option>
                         <option value="Stationery">Stationery & Books</option>
                         <option value="Toys">Toys & Games</option>
@@ -73,7 +73,7 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo)</label>
-                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
+                    <input type="file" id="p-images" name="image" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
                 </div>
                 <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
             </form>
@@ -104,14 +104,11 @@
         let productsData = [];
 
         function verifyPin() {
-            const pinVal = document.getElementById('pin-input').value;
-            if(pinVal === '7181') {
+            if(document.getElementById('pin-input').value === '7181') {
                 document.getElementById('security-gate').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
-            } else { 
-                alert("Galat PIN!"); 
-            }
+            } else { alert("Galat PIN!"); }
         }
 
         async function fetchAdminMetrics() {
@@ -154,58 +151,45 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
-        const convertToBase64 = (file) => new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-
-        async function handleFormSubmit(event) {
-            event.preventDefault();
+        // 🚀 OLD SCHOOL FORMDATA CAPTURE - RESTORED FOR MULTIPART SYNC
+        document.getElementById('old-upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Processing Data Stream... Wait...";
+            btn.innerText = "Saman Chadh raha hai... rukiye...";
             btn.disabled = true;
 
+            const formData = new FormData();
+            formData.append('name', document.getElementById('p-name').value);
+            formData.append('costPrice', document.getElementById('p-cost').value);
+            formData.append('price', document.getElementById('p-price').value);
+            formData.append('category', document.getElementById('p-cat').value);
+
+            const fileInput = document.getElementById('p-images');
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('image', fileInput.files[i]); // Field Name matches backend perfectly
+            }
+
             try {
-                const fileInput = document.getElementById('p-images');
-                const base64Images = [];
-                
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const base64Str = await convertToBase64(fileInput.files[i]);
-                    base64Images.push(base64Str);
-                }
-
-                const payload = {
-                    name: document.getElementById('p-name').value,
-                    costPrice: Number(document.getElementById('p-cost').value),
-                    price: Number(document.getElementById('p-price').value),
-                    category: document.getElementById('p-cat').value,
-                    images: base64Images
-                };
-
                 const response = await fetch('/api/products', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: formData
                 });
-
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    showSmartAlert('success', "Saman kamyabi se chadh gaya hai!");
-                    document.getElementById('secure-upload-form').reset();
+                    showSmartAlert('success', "Saman live dukan par chadh gaya!");
+                    document.getElementById('old-upload-form').reset();
                     fetchAdminMetrics();
                 } else {
-                    showSmartAlert('error', "Upload nahi ho paya! Server error.");
+                    showSmartAlert('error', "Server issue. Upload fail.");
                 }
             } catch (error) {
-                showSmartAlert('error', "Transmission connection lost.");
+                showSmartAlert('error', "Connection issue.");
             } finally {
                 btn.innerText = "Saman ko Live Dukan Par Chadhayein";
                 btn.disabled = false;
             }
-        }
+        });
 
         async function triggerAIMarketingBlast() {
             try {

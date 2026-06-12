@@ -13,36 +13,32 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// 1. Cloudinary Direct Setup - Old School, Pukka Connection
+// Cloudinary Direct Config
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// 2. Storage Engine - Isolated safe directory structure
+// Old School Storage Bridge - Tied with Multipart Field
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'shiv_shakti_fresh_zone', // Clear, isolated fresh directory
+    folder: 'shiv_shakti_fresh_zone',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
   }
 });
 
-// 3. Multer Engine - Bulletproof file handler for Windows 7
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // Safe 10MB per image limit
-}).any();
+// CRITICAL OLD ENGINE BACK: Handles multiple files on field name 'image'
+const upload = multer({ storage: storage }).any();
 
-
-// Secure MongoDB Connection Architecture
+// MongoDB Connection
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
-  .then(() => console.log("Database Connected with safe multipart engine!"))
+  .then(() => console.log("Database Sync Active with Old School Multipart Setup"))
   .catch(err => console.log("Database Sync Error: ", err));
 
-// Database Schema Setup - Minimal but scalable
+// Database Schema Layout
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
@@ -54,7 +50,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// Universal Frontend Pages Endpoints
+// Frontend Endpoints
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -81,19 +77,18 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// 🚀 ZERO-AI, OLD-SCHOOL, BULLETPROOF MULTIPART UPLOAD ENGINE
+// 🚀 RESTORED COMPLETELY: THE OLD WORKING UPLOAD STREAM
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Upload process crash safely caught:", err);
-      return res.status(500).json({ error: true, message: "Server connection lost" });
+      console.error("Multer capture breakdown caught:", err);
+      return res.status(500).json({ success: false, message: "Upload stream broken" });
     }
     
     try {
       const { name, price, costPrice, category } = req.body;
       let uploadedUrls = [];
       
-      // File urls received safely from isolated safe engine
       if (req.files && req.files.length > 0) {
         uploadedUrls = req.files.map(file => file.path);
       }
@@ -113,8 +108,8 @@ app.post('/api/products', (req, res) => {
       await newProduct.save();
       return res.status(200).json({ success: true });
     } catch (error) {
-      console.error("Database structural saving crashed:", error);
-      return res.status(500).json({ error: true, message: "Database rejected data stream" });
+      console.error("Database saving error:", error);
+      return res.status(500).json({ success: false, message: "Database rejected product mapping" });
     }
   });
 });
@@ -134,4 +129,4 @@ app.delete('/api/products/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server blasting live on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
