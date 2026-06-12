@@ -8,57 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.85); border-top: 1px solid rgba(229, 231, 235, 0.5); z-index: 50; }
+        .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.9); border-top: 1px solid rgba(229, 231, 235, 0.5); z-index: 50; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        @keyframes pulse-subtle { 0%, 100__ { transform: scale(1); } 50__ { transform: scale(1.03); } }
         .pulse-btn { animation: pulse-subtle 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="bg-slate-50 pb-28 font-sans text-slate-800 antialiased">
 
-    <div id="ai-banner" class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white text-center py-2 text-xs font-extrabold tracking-wider shadow-sm hidden select-none animate-shimmer">
+    <div id="ai-banner" class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white text-center py-2 text-xs font-extrabold tracking-wider shadow-sm hidden select-none">
         <span id="banner-text">✨ Welcome to Shiv Shakti Super Mart ✨</span>
     </div>
 
     <header class="bg-slate-900 text-white px-4 pt-7 pb-7 rounded-b-[24px] shadow-xl text-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/40 pointer-events-none"></div>
-        <h1 class="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 relative z-10">
+        <h1 class="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300">
             Shiv Shakti <span class="text-white font-light text-2xl">Super Mart</span>
         </h1>
-        <p class="text-[11px] text-slate-400 mt-1.5 flex items-center justify-center gap-1 font-medium relative z-10">
+        <p class="text-[11px] text-slate-400 mt-1.5 flex items-center justify-center gap-1 font-medium">
             <i class="fa-solid fa-brain text-orange-400 text-xs"></i> Intelligent Sync Engine Active
         </p>
         
-        <div class="flex justify-center gap-2.5 mt-4 text-xs relative z-10">
+        <div class="flex justify-center gap-2.5 mt-4 text-xs">
             <span class="bg-slate-800/90 backdrop-glass px-3.5 py-1.5 rounded-full border border-slate-700/60 font-semibold flex items-center gap-1.5 shadow-sm text-slate-200">
                 <i class="fa-solid fa-location-dot text-orange-500"></i> Agrahunda, Chitrakoot
             </span>
-            <a href="/admin" class="bg-slate-800/90 backdrop-glass hover:bg-slate-700 px-3.5 py-1.5 rounded-full border border-slate-700/60 font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm text-slate-200">
+            <a href="/admin" class="bg-slate-800/90 backdrop-glass hover:bg-slate-700 px-3.5 py-1.5 rounded-full border border-slate-700/60 font-semibold flex items-center gap-1.5 transition text-slate-200">
                 <i class="fa-solid fa-circle-user text-amber-400"></i> Admin Panel
             </a>
         </div>
 
-        <button id="lang-btn" onclick="toggleLanguage()" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 active:scale-95 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10 transition backdrop-glass">
+        <button id="lang-btn" onclick="toggleLanguage()" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-slate-300 px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10 transition backdrop-glass">
             EN
         </button>
     </header>
 
     <main class="max-w-md mx-auto px-4 mt-6">
         
-        <div class="relative flex items-center mb-4 shadow-xs">
+        <div class="relative flex items-center mb-4">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein" class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm font-medium shadow-xs transition-all">
-            <button onclick="startVoiceSearch()" class="absolute right-3 p-2 text-orange-500 hover:bg-orange-50 rounded-xl transition active:scale-90" title="Voice Search">
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein" class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm font-medium">
+            <button onclick="startVoiceSearch()" class="absolute right-3 p-2 text-orange-500 hover:bg-orange-50 rounded-xl transition" title="Voice Search">
                 <i class="fa-solid fa-microphone text-base"></i>
             </button>
         </div>
 
         <div class="relative mb-6">
-            <button id="category-trigger" onclick="toggleCategoryMenu()" class="w-full bg-slate-950 text-white py-3.5 px-5 rounded-2xl font-bold flex items-center justify-between shadow-md hover:bg-slate-900 transition active:scale-[0.99]">
+            <button id="category-trigger" onclick="toggleCategoryMenu()" class="w-full bg-slate-950 text-white py-3.5 px-5 rounded-2xl font-bold flex items-center justify-between shadow-md hover:bg-slate-900 transition">
                 <span id="cat-title" class="flex items-center gap-2">⚡ Sabhi Saman (All)</span>
                 <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
             </button>
-            <div id="category-menu" class="hidden mt-2 bg-white/95 backdrop-glass rounded-2xl shadow-2xl border border-slate-100 overflow-hidden absolute w-full z-30 transition-all">
+            <div id="category-menu" class="hidden mt-2 bg-white/95 backdrop-glass rounded-2xl shadow-2xl border border-slate-100 overflow-hidden absolute w-full z-30">
                 <button onclick="selectCategory('All')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-border-all text-orange-500"></i> Sabhi Saman (All)</button>
                 <button onclick="selectCategory('General')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-basket-shopping text-orange-500"></i> General Grocery</button>
                 <button onclick="selectCategory('Stationery')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-book text-orange-500"></i> Stationery & Books</button>
@@ -71,9 +70,41 @@
             </div>
     </main>
 
+    <div id="product-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-[32px] overflow-hidden max-h-[90vh] flex flex-col shadow-2xl relative">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 bg-slate-900/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-20 hover:bg-slate-950 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="overflow-y-auto p-5 flex-1 pb-8">
+                <div class="w-full bg-slate-50 rounded-2xl overflow-hidden relative border border-slate-100 mb-4 flex items-center justify-center h-64">
+                    <img id="modal-main-img" src="" class="max-w-full max-h-full object-contain p-2">
+                </div>
+                <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2 mb-4 justify-center"></div>
+                
+                <span id="modal-category" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1"></span>
+                <h2 id="modal-title" class="font-black text-slate-900 text-xl leading-snug mb-3"></h2>
+                
+                <div class="flex items-baseline gap-2 mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <span id="modal-price" class="text-2xl font-black text-orange-600"></span>
+                    <span id="modal-mrp" class="text-xs text-slate-400 line-through"></span>
+                </div>
+
+                <div class="flex flex-col gap-2.5">
+                    <button id="modal-wa-btn" class="w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-black py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm transition active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp शॉप से आर्डर करें
+                    </button>
+                    <a id="modal-call-btn" href="tel:9450222868" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-extrabold py-2.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs transition active:scale-95">
+                        <i class="fa-solid fa-phone-volume"></i> Direct Call (सीधे बात करें)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="sticky-bar backdrop-glass grid grid-cols-2 text-center py-2.5 shadow-xl">
-        <a href="tel:9450222868" class="text-blue-600 font-extrabold text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
-            <i class="fa-solid fa-phone-volume text-xl"></i> Direct Call
+        <a href="tel:9450222868" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 font-black text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
+            <i class="fa-solid fa-phone-volume text-xl text-blue-600"></i> Direct Call
         </a>
         <a href="https://wa.me/9450222868" target="_blank" class="text-emerald-600 font-extrabold text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
             <i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp Shop
@@ -111,7 +142,7 @@
 
         function selectCategory(cat) {
             currentCategory = cat;
-            document.getElementById('cat-title').innerHTML = cat === 'All' ? '⚡ Sabhi Saman (All)' : `⚡ ${cat}`;
+            document.getElementById('cat-title').innerHTML = `⚡ ${cat === 'All' ? 'Sabhi Saman (All)' : cat}`;
             toggleCategoryMenu();
             renderProducts();
         }
@@ -132,30 +163,30 @@
 
             const filtered = allProducts.filter(p => {
                 const matchCat = (currentCategory === 'All' || p.category === currentCategory);
-                const matchQuery = p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query));
-                return matchCat && matchQuery;
+                return matchCat && (p.name.toLowerCase().includes(query));
             });
 
             filtered.forEach(p => {
                 const calculatedMRP = Math.round(p.price * 1.25);
                 const isHighDemand = p.clicks >= 5;
+                const mainThumb = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/150';
 
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl overflow-hidden shadow-xs border border-slate-100 flex flex-col relative transition-all duration-200 hover:shadow-md active:scale-95";
+                card.className = "bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 flex flex-col relative transition-all duration-200 hover:shadow-md active:scale-95";
                 
                 card.innerHTML = `
                     ${isHighDemand ? 
-                        `<span class="absolute top-2.5 left-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm z-10 tracking-wide uppercase flex items-center gap-0.5"><i class="fa-solid fa-fire text-[8px] animate-bounce"></i> DEMAND HIGH</span>` : 
-                        `<span class="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-glass text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded-full z-10 shadow-xs flex items-center gap-0.5 border border-white/10"><i class="fa-solid fa-star text-[8px]"></i> BESTSELLER</span>`
+                        `<span class="absolute top-2.5 left-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm z-10 tracking-wide uppercase flex items-center gap-0.5"><i class="fa-solid fa-fire text-[8px]"></i> DEMAND HIGH</span>` : 
+                        `<span class="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-glass text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded-full z-10 shadow-xs border border-white/10"><i class="fa-solid fa-star text-[8px]"></i> BESTSELLER</span>`
                     }
                     
-                    <div class="w-full pt-[100%] relative bg-gradient-to-b from-slate-50 to-white/30">
-                        <img src="${p.image || 'https://via.placeholder.com/150'}" class="absolute inset-0 w-full h-full object-contain p-2.5" loading="lazy">
+                    <div onclick="openProductModal('${p._id}')" class="w-full pt-[100%] relative bg-gradient-to-b from-slate-50 to-white/30 cursor-pointer">
+                        <img src="${mainThumb}" class="absolute inset-0 w-full h-full object-contain p-2.5" loading="lazy">
                     </div>
 
                     <div class="p-3.5 flex-1 flex flex-col">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">${p.category || 'General'}</span>
-                        <h3 class="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2 h-9">${p.name}</h3>
+                        <span onclick="openProductModal('${p._id}')" class="text-[9px] font-bold text-slate-400 uppercase cursor-pointer">${p.category || 'General'}</span>
+                        <h3 onclick="openProductModal('${p._id}')" class="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2 h-9 cursor-pointer hover:text-orange-500 transition">${p.name}</h3>
                         <div class="mt-auto">
                             <div class="flex items-baseline gap-1.5 mb-2.5">
                                 <span class="text-xl font-black text-orange-600">₹${p.price}</span>
@@ -163,19 +194,55 @@
                             </div>
                             
                             <div class="flex flex-col gap-2 mt-2">
-                                <button onclick="registerClick('${p._id}', '${p.name}')" class="pulse-btn w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white text-[12px] font-black py-2.5 px-2 rounded-xl shadow-md hover:shadow-lg flex items-center justify-center gap-1.5 transition duration-150">
+                                <button onclick="registerClick('${p._id}', '${p.name}')" class="pulse-btn w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-[12px] font-black py-2.5 px-2 rounded-xl shadow-md flex items-center justify-center gap-1.5 transition">
                                     <i class="fa-brands fa-whatsapp text-sm"></i> ${dict[currentLang].shop}
                                 </button>
-                                <a href="tel:9450222868" class="w-full bg-slate-50 text-slate-600 border border-slate-200/60 hover:bg-slate-100 text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center gap-1 transition">
+                                <a href="tel:9450222868" onclick="event.stopPropagation();" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center gap-1 shadow-xs hover:brightness-110 transition">
                                     <i class="fa-solid fa-phone text-[10px]"></i> ${dict[currentLang].call}
                                 </a>
                             </div>
-
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        function openProductModal(id) {
+            const prod = allProducts.find(p => p._id === id);
+            if(!prod) return;
+
+            document.getElementById('modal-title').innerText = prod.name;
+            document.getElementById('modal-category').innerText = prod.category || 'General';
+            document.getElementById('modal-price').innerText = `₹${prod.price}`;
+            document.getElementById('modal-mrp').innerText = `MRP: ₹${Math.round(prod.price * 1.25)}`;
+            
+            const mainImg = document.getElementById('modal-main-img');
+            mainImg.src = prod.images && prod.images.length > 0 ? prod.images[0] : 'https://via.placeholder.com/150';
+
+            const thumbBox = document.getElementById('modal-thumbnails');
+            thumbBox.innerHTML = '';
+            
+            if(prod.images && prod.images.length > 1) {
+                prod.images.forEach((imgUrl, index) => {
+                    const thumb = document.createElement('div');
+                    thumb.className = `w-12 h-12 rounded-lg border-2 bg-slate-50 overflow-hidden flex-shrink-0 cursor-pointer p-0.5 transition ${index === 0 ? 'border-orange-500' : 'border-slate-200'}`;
+                    thumb.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain">`;
+                    thumb.onclick = function() {
+                        mainImg.src = imgUrl;
+                        document.querySelectorAll('#modal-thumbnails > div').forEach(d => d.classList.remove('border-orange-500'));
+                        thumb.classList.add('border-orange-500');
+                    };
+                    thumbBox.appendChild(thumb);
+                });
+            }
+
+            document.getElementById('modal-wa-btn').onclick = () => registerClick(prod._id, prod.name);
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
         }
 
         async function registerClick(id, name) {
@@ -190,13 +257,22 @@
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) return alert("Apka browser voice search support nahi karta.");
-            const rec = new SpeechRecognition(); rec.lang = 'hi-IN';
-            rec.onstart = () => { document.getElementById('search-input').placeholder = "🎤 Aap boliye, Mai sun raha hu..."; };
+            const rec = new SpeechRecognition();
+            
+            rec.lang = 'hi-IN'; 
+            rec.continuous = false;
+            rec.interimResults = false;
+
+            rec.onstart = () => { document.getElementById('search-input').placeholder = "🎤 Speak now / बोलिए..."; };
             rec.onresult = (e) => {
-                document.getElementById('search-input').value = e.results[0][0].transcript;
+                let speechResult = e.results[0][0].transcript;
+                if (speechResult.endsWith('.')) speechResult = speechResult.slice(0, -1);
+                
+                document.getElementById('search-input').value = speechResult;
                 document.getElementById('search-input').placeholder = dict[currentLang].search;
                 filterProducts();
             };
+            rec.onerror = () => { document.getElementById('search-input').placeholder = dict[currentLang].search; };
             rec.start();
         }
 

@@ -3,171 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Super Admin - Shakti Mart</title>
+    <title>Control Panel - Shiv Shakti Super Mart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #ff6b00; --dark: #1a1a1a; --bg: #f8f9fa; --danger: #dc3545; --success: #28a745; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); padding: 15px; color: var(--dark); }
-        .lock-screen { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--dark); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; }
-        .lock-box { text-align:center; background:#2a2a2a; padding:30px; border-radius:15px; width:90%; max-width:350px; }
-        .container { max-width: 600px; margin: 0 auto; display:none; }
-        .card-panel { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
-        h2, h3 { margin-bottom: 15px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        .stats-grid { display: flex; gap: 10px; margin-bottom: 15px; }
-        .stat-card { flex: 1; background: #1e3c72; color: white; padding: 15px; border-radius: 12px; text-align: center; }
-        .stat-card.profit { background: #11998e; }
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; outline: none; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 5px; }
-        .btn-success { background: var(--success); }
-        .product-item { display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
-        .product-item img { width: 45px; height: 45px; object-fit: contain; }
-        .delete-btn { background: var(--danger); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-        .qr-btn { background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
+        .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .gradient-bg { bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 min-h-screen font-sans pb-16 antialiased text-slate-800">
 
-<div id="lockScreen" class="lock-screen">
-    <div class="lock-box">
-        <h2><i class="fa-solid fa-shield-halved"></i> Security Check</h2>
-        <p style="margin-bottom:15px; color:#aaa;">Shiv Shakti Mart Secret PIN dalein:</p>
-        <input type="password" id="pinInput" placeholder="🔒 PIN" style="text-align:center; font-size:20px; margin-bottom:15px;" maxlength="4">
-        <button class="btn" onclick="verifyPin()">Open Panel</button>
-    </div>
-</div>
-
-<div class="container" id="adminContainer">
-    <div class="card-panel">
-        <h2><i class="fa-solid fa-chart-line"></i> AI Dashboard</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div style="font-size:11px;">Total Clicks (Demand Meter)</div>
-                <div id="totalClicks" style="font-size:20px; font-weight:bold;">0</div>
+    <div id="security-gate" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
+        <div class="bg-white/95 backdrop-glass rounded-[32px] p-7 w-full max-w-sm shadow-2xl text-center border border-slate-100">
+            <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-md">
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <div class="stat-card profit">
-                <div style="font-size:11px;">Estimated Profit Module</div>
-                <div id="profitEstimate" style="font-size:20px; font-weight:bold;">₹0</div>
-            </div>
+            <h2 class="text-2xl font-black text-slate-900 mb-1">Security Check</h2>
+            <p class="text-xs text-slate-500 mb-6 font-medium">Dukan ka secret admin code daalein panel kholne ke liye</p>
+            <input type="password" id="pin-input" placeholder="Security PIN daalein" class="w-full border-2 border-slate-200 text-center py-3.5 rounded-2xl mb-5 text-2xl font-black tracking-widest focus:border-slate-900 focus:ring-0 outline-none transition-all bg-slate-50/50">
+            <button onclick="verifyPin()" class="w-full bg-slate-950 text-white py-3.5 rounded-2xl font-bold hover:bg-slate-900 transition shadow-lg active:scale-[0.98]">Access Verify Karein</button>
         </div>
     </div>
 
-    <div class="card-panel" style="background: #fff8f0;">
-        <h3><i class="fa-solid fa-robot"></i> Festival Automation Engine</h3>
-        <div class="form-group">
-            <label>Offer Banner Matrix Text:</label>
-            <input type="text" id="bannerTextInput" placeholder="e.g. ✨ DIWALI DHAMAKA: 20% OFF ✨">
-        </div>
-        <button class="btn" onclick="updateAiBanner()">Push Live Banner</button>
-        <button class="btn btn-success" onclick="triggerAiWhatsappBlast()"><i class="fa-brands fa-whatsapp"></i> AI WhatsApp Blast (Highest Demand)</button>
-    </div>
-
-    <div class="card-panel">
-        <h3><i class="fa-solid fa-box-open"></i> Add New Product (Gallery)</h3>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Saman Ka Name:</label>
-                <input type="text" name="name" required placeholder="Wiper, Copy, etc.">
+    <div id="admin-dashboard" class="max-w-2xl mx-auto px-4 pt-6 hidden">
+        
+        <header class="flex items-center justify-between mb-6 bg-slate-900 text-white p-5 rounded-[24px] shadow-xl relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="font-black text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">Dukan Ka Control Panel</h1>
+                <p class="text-[11px] text-slate-400 font-medium mt-0.5">Saman Upload karein aur Live Munafa dekhein</p>
             </div>
-            <div class="form-group">
-                <label>Sale Price (Rs):</label>
-                <input type="number" name="price" required>
-            </div>
-            <div class="form-group">
-                <label>Wholesale Cost (For Profit Tracker):</label>
-                <input type="number" name="costPrice" required placeholder="Jitne me kharida tha">
-            </div>
-            <div class="form-group">
-                <label>Details / Description:</label>
-                <textarea name="description"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Saman Ki Photo (Gallery/Camera):</label>
-                <input type="file" name="image" accept="image/*" required>
-            </div>
-            <button type="submit" class="btn">Upload & Save to Cloudinary</button>
-        </form>
-    </div>
+            <a href="/" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition backdrop-glass border border-white/5 relative z-10 active:scale-95">Shop Dekhein</a>
+        </header>
 
-    <div class="card-panel">
-        <h3><i class="fa-solid fa-list-check"></i> Stock & Delete Control</h3>
-        <div id="adminProductGrid"></div>
-    </div>
-</div>
-
-<script>
-    // FIXED PASSWORD SHIELD TO 7181 AS REQUESTED
-    function verifyPin() {
-        if(document.getElementById('pinInput').value === "7181") {
-            document.getElementById('lockScreen').style.display = 'none';
-            document.getElementById('adminContainer').style.display = 'block';
-            loadAdminPanel();
-        } else { alert("Galat PIN! Kripya sahi password dalein."); }
-    }
-
-    async function loadAdminPanel() {
-        const res = await fetch('/api/products');
-        const products = await res.json();
-        let totalClicks = 0, estimatedProfit = 0;
-        const grid = document.getElementById('adminProductGrid');
-        grid.innerHTML = '';
-
-        products.forEach(p => {
-            totalClicks += (p.clicks || 0);
-            if(p.price && p.costPrice) { estimatedProfit += ((p.price - p.costPrice) * (p.clicks || 1)); }
-            let imgUrl = p.image || 'https://via.placeholder.com/50';
-            grid.innerHTML += `
-                <div class="product-item">
-                    <img src="${imgUrl}">
-                    <div style="flex-grow:1; margin-left:10px;">
-                        <div style="font-weight:bold; font-size:14px;">${p.name}</div>
-                        <div style="color:var(--primary); font-size:12px;">₹${p.price} | Clicks: ${p.clicks || 0}</div>
-                    </div>
-                    <button class="qr-btn" onclick="generateQr('${p.name}', ${p.price})"><i class="fa-solid fa-qrcode"></i></button>
-                    <button class="delete-btn" onclick="deleteItem('${p._id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Total Grahak Click</span>
+                    <span id="total-clicks" class="text-3xl font-black text-slate-900">0</span>
                 </div>
-            `;
-        });
-        document.getElementById('totalClicks').innerText = totalClicks;
-        document.getElementById('profitEstimate').innerText = '₹' + estimatedProfit;
-    }
+                <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1 mt-3"><i class="fa-solid fa-chart-line animate-pulse"></i> Live click count active hai</span>
+            </div>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Aapka Net Munafa (Profit)</span>
+                    <span id="total-profit" class="text-3xl font-black text-emerald-600">₹0</span>
+                </div>
+                <span class="text-[10px] text-slate-400 font-semibold block mt-3">Bechne ka Rate - Kharidi Rate</span>
+            </div>
+        </div>
 
-    async function updateAiBanner() {
-        const txt = document.getElementById('bannerTextInput').value;
-        await fetch('/api/ai-banner', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ text: txt, active: true })
-        });
-        alert("Banner Live ho gaya!");
-    }
+        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
+            <h3 class="font-bold text-slate-900 text-sm mb-3.5 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-500 text-base"></i> AI Dhamaka Offer Banner Alert Box</h3>
+            <div class="flex flex-col gap-3.5">
+                <input type="text" id="banner-input" placeholder="Offer ya Alert ka naam likhein jo upar chalana hai..." class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl focus:border-slate-900 outline-none transition-all">
+                <div class="flex items-center justify-between pt-1">
+                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 cursor-pointer select-none">
+                        <input type="checkbox" id="banner-active" class="w-4 h-4 accent-slate-950 rounded-md"> Live Banner chalu karein
+                    </label>
+                    <button onclick="saveBannerConfig()" class="bg-slate-950 text-white px-5 py-2.5 text-xs font-bold rounded-xl shadow-md transition hover:bg-slate-900 active:scale-95">Save Karein</button>
+                </div>
+            </div>
+        </div>
 
-    async function triggerAiWhatsappBlast() {
-        const res = await fetch('/api/ai-whatsapp-blast');
-        const data = await res.json();
-        if(data.success) { window.open(`https://wa.me/?text=${encodeURIComponent(data.message)}`, '_blank'); }
-        else { alert("Dukan khali hai."); }
-    }
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6">
+            <h3 class="font-bold text-slate-900 text-sm mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-emerald-500 text-base"></i> Naya Saman Chadhayein (Gallery Upload Box)</h3>
+            <form action="/api/products" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+                
+                <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman Ka Naam (Product Name)</label>
+                    <input type="text" name="name" required placeholder="Jaise: Lux Sabun, Natraj Pencil Box" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                </div>
 
-    function generateQr(name, price) {
-        window.open(`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('Item: '+name+' | Price: Rs.'+price)}`, '_blank');
-    }
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Kharidi Rate (Wholesale Price)</label>
+                        <input type="number" name="costPrice" required placeholder="Aapko kitne me mila" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Bechne Ka Rate (Store Price)</label>
+                        <input type="number" name="price" required placeholder="Grahak ko kitne me dena hai" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                    </div>
+                </div>
 
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const res = await fetch('/api/products', { method: 'POST', body: formData });
-        if(res.ok) { alert("Saman directly Cloudinary gallery me save ho gaya!"); e.target.reset(); loadAdminPanel(); }
-    });
+                <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman Ki Category Chunein</label>
+                    <select name="category" class="w-full border border-slate-200 p-3.5 text-xs font-semibold rounded-xl bg-white outline-none focus:border-slate-900 transition-all cursor-pointer">
+                        <option value="General">General Grocery (Ration)</option>
+                        <option value="Stationery">Stationery & Books (Padhai)</option>
+                        <option value="Toys">Toys & Games (Khilone)</option>
+                        <option value="Household">Household Goods (Ghar ka saman)</option>
+                    </select>
+                </div>
 
-    async function deleteItem(id) {
-        if(confirm("Kya aap ise hatana chahte hain?")) {
-            await fetch(`/api/products/${id}`, { method: 'DELETE' });
-            loadAdminPanel();
+                <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman ki Photo Select Karein (Max 5 Photo ek sath)</label>
+                    <input type="file" name="images" multiple accept="image/*" required class="w-full border border-slate-200 p-3 text-xs rounded-xl bg-slate-50 cursor-pointer text-slate-500 font-medium focus:outline-none">
+                    <p class="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-circle-info text-blue-500"></i> Tip: Aap gallery se ek sath 3 ya 4 photo select kar sakte hain alag-alag angle ki.</p>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3.5 rounded-xl shadow-md mt-2 transition active:scale-[0.99]">Saman ko Live Dukan Par Chadhayein</button>
+            </form>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3.5">
+                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-boxes-stacked text-blue-500 text-base"></i> Dukan Ke Active Samano Ki List</h3>
+                <button onclick="triggerWhatsAppBlast()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-sm flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-bolt text-[10px]"></i> AI WhatsApp Blast
+                </button>
+            </div>
+            <div id="admin-products-list" class="flex flex-col gap-1.5">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        let productsData = [];
+
+        function verifyPin() {
+            const entered = document.getElementById('pin-input').value;
+            if(entered === '7181') {
+                document.getElementById('security-gate').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                fetchAdminMetrics();
+            } else {
+                alert("Galat Security PIN hai! Fir se koshish karein.");
+            }
         }
-    }
-</script>
+
+        async function fetchAdminMetrics() {
+            try {
+                const bRes = await fetch('/api/ai-banner');
+                const banner = await bRes.json();
+                document.getElementById('banner-input').value = banner.text || '';
+                document.getElementById('banner-active').checked = banner.active || false;
+
+                const pRes = await fetch('/api/products');
+                productsData = await pRes.json();
+                renderAdminProducts();
+            } catch(e) { console.error(e); }
+        }
+
+        function renderAdminProducts() {
+            const list = document.getElementById('admin-products-list');
+            list.innerHTML = '';
+            
+            let totalClicks = 0;
+            let totalProfit = 0;
+
+            productsData.forEach(p => {
+                totalClicks += p.clicks || 0;
+                const margin = p.price - (p.costPrice || 0);
+                totalProfit += (margin * (p.clicks || 0));
+
+                const thumb = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/150';
+
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between border-b pb-3 last:border-none border-slate-100 mt-2 hover:bg-slate-50/50 p-2 rounded-xl transition-all";
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${thumb}" class="w-12 h-12 object-contain bg-slate-50 border border-slate-100 rounded-xl p-1 shadow-xs flex-shrink-0">
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-800 line-clamp-1 max-w-[180px]">${p.name}</h4>
+                            <p class="text-[10px] text-slate-400 font-semibold uppercase">${p.category || 'General'} | Click: <span class="text-slate-900 font-bold">${p.clicks || 0}</span></p>
+                            <p class="text-[9px] text-slate-500">ID: ${p._id}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="downloadQRCode('${p._id}', '${p.name}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-90" title="QR Code Nikalein"><i class="fa-solid fa-qrcode text-sm"></i></button>
+                        <button onclick="deleteProduct('${p._id}')" class="bg-red-50 text-red-600 hover:bg-red-100 w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-90" title="Saman Hatayein"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+
+            document.getElementById('total-clicks').innerText = totalClicks;
+            document.getElementById('total-profit').innerText = `₹${totalProfit}`;
+        }
+
+        async function saveBannerConfig() {
+            const text = document.getElementById('banner-input').value;
+            const active = document.getElementById('banner-active').checked;
+            await fetch('/api/ai-banner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, active })
+            });
+            alert("AI Announcement Banner Alert Save ho gaya!");
+        }
+
+        async function deleteProduct(id) {
+            if(confirm("Kya aap sach me is saman ko dukan se hatana chahte hain?")) {
+                await fetch(`/api/products/${id}`, { method: 'DELETE' });
+                fetchAdminMetrics();
+            }
+        }
+
+        function downloadQRCode(id, name) {
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://shiv-shakti-super-mart.onrender.com/?search=${encodeURIComponent(name)}`;
+            const a = document.createElement('a');
+            a.href = qrUrl;
+            a.download = `QR_${name}.png`;
+            window.open(qrUrl, '_blank');
+        }
+
+        function triggerWhatsAppBlast() {
+            if(productsData.length === 0) return alert("Dukan me koi saman nahi hai blast karne ke liye.");
+            const topProd = [...productsData].sort((a,b) => b.clicks - a.clicks)[0];
+            const message = `🔥 SHIV SHAKTI SUPER MART UPDATE! 🔥\n\nSabse zyada pasand kiya jaane wala saman live hai!\n📦 Saman: ${topProd.name}\n💰 Khaas Rate: ₹${topProd.price}\n\nTurant apna order book karne ke liye niche diye link par click karein! 👇\n👉 https://shiv-shakti-super-mart.onrender.com`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if(params.get('status') === 'success') alert("Saman dukan par kamyabi se chadh gaya hai!");
+    </script>
 </body>
 </html>
