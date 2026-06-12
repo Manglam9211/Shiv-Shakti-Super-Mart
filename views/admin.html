@@ -23,6 +23,14 @@
             <a href="/" class="bg-white/10 text-white px-4 py-2 rounded-xl text-xs font-bold">Shop Dekhein</a>
         </header>
 
+        <div class="p-5 rounded-3xl bg-white/5 border border-white/5 mb-8">
+            <h3 class="font-black text-white text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-400"></i> Customer Banner Offer Text</h3>
+            <div class="flex gap-3">
+                <input type="text" id="banner-text-input" placeholder="Example: Diwali Dhamaka Offer! 30% Off..." class="w-full bg-[#111827] border border-white/5 p-3 text-sm text-white rounded-xl outline-none">
+                <button onclick="updateLiveBanner()" class="bg-orange-500 hover:bg-orange-600 text-slate-950 font-black text-xs px-5 rounded-xl transition">Change Banner</button>
+            </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-4 mb-8">
             <div class="bg-white/5 p-5 rounded-3xl border border-white/5">
                 <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Total Grahak Click</span>
@@ -70,8 +78,27 @@
                 document.getElementById('security-gate').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
+                loadCurrentBanner();
             } else { alert("Galat PIN!"); }
         }
+
+        async function loadCurrentBanner() {
+            const res = await fetch('/api/ai-banner');
+            const data = await res.json();
+            if(data && data.text) document.getElementById('banner-text-input').value = data.text;
+        }
+
+        async function updateLiveBanner() {
+            const txt = document.getElementById('banner-text-input').value;
+            const res = await fetch('/api/ai-banner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: txt })
+            });
+            if(res.ok) alert("Dukan ka Top Banner badal gaya!");
+            else alert("Banner update failed.");
+        }
+
         async function fetchAdminMetrics() {
             const pRes = await fetch('/api/products');
             productsData = await pRes.json();
@@ -129,9 +156,8 @@
             try {
                 const res = await fetch('/api/ai-marketing/blast');
                 const data = await res.json();
-                if(data.success) {
-                    window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank');
-                } else { alert("Stock khali hai."); }
+                if(data.success) { window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank'); }
+                else { alert("Stock khali hai."); }
             } catch(e) { console.error(e); }
         }
 

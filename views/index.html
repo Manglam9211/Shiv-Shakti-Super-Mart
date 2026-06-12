@@ -15,6 +15,10 @@
 </head>
 <body class="bg-[#f1f3f6] min-h-screen font-sans pb-24 antialiased text-slate-800">
 
+    <div id="top-flash-banner" class="bg-gradient-to-r from-red-600 via-orange-600 to-amber-500 text-white text-center py-2 px-4 text-xs font-black tracking-wide shadow-lg overflow-hidden">
+        <marquee scrollamount="4" id="banner-text-loader">💥 Loading Live Shop Offers... 💥</marquee>
+    </div>
+
     <div class="bg-gradient-to-r from-slate-900 via-orange-600 to-amber-500 text-white p-5 rounded-b-[32px] shadow-lg max-w-md mx-auto">
         <div class="flex items-center justify-between mb-2">
             <h1 class="font-black text-2xl text-white">Shiv Shakti <span class="text-orange-400 font-extrabold">Super Mart</span></h1>
@@ -28,7 +32,7 @@
     <div class="max-w-md mx-auto px-4 pt-4">
         <div class="relative mb-5 shadow-md rounded-2xl overflow-hidden bg-white border flex items-center">
             <i class="fa-solid fa-magnifying-glass text-slate-400 ml-4"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full pl-3 pr-12 py-3.5 text-sm outline-none">
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-white pl-3 pr-12 py-3.5 text-sm outline-none">
             <button onclick="startVoiceSearch()" id="mike-btn" class="absolute right-4 text-orange-500 text-base"><i class="fa-solid fa-microphone"></i></button>
         </div>
 
@@ -67,18 +71,26 @@
 
     <footer class="fixed bottom-0 inset-x-0 bg-white border-t py-3 px-6 flex items-center justify-around z-40 max-w-md mx-auto shadow-xl rounded-t-2xl">
         <a href="tel:9450222868" class="text-slate-500 font-bold flex flex-col items-center"><i class="fa-solid fa-phone text-blue-600 text-lg"></i><span class="text-[10px]">Direct Call</span></a>
-        <a href="https://wa.me/919450222868" target="_blank" class="text-slate-500 font-bold flex flex-col items-center"><i class="fa-brands fa-whatsapp text-emerald-500 text-2xl"></i><span class="text-[10px]">WhatsApp Shop</span></a>
+        <a href="https://wa.me/919450222868" target="_blank" class="text-slate-500 font-bold flex flex-col items-center"><i class="fa-brands fa-whatsapp text-2xl text-emerald-500"></i><span class="text-[10px]">WhatsApp Shop</span></a>
     </footer>
 
     <script>
         let allProducts = [];
         async function initializeStorefront() {
-            const pRes = await fetch('/api/products');
-            allProducts = await pRes.json();
-            renderCustomerGrid(allProducts);
+            try {
+                // 🌟 SYNC LIVE BANNER TEXT FROM DATABASE
+                const bRes = await fetch('/api/ai-banner');
+                const bData = await bRes.json();
+                if(bData && bData.text) {
+                    document.getElementById('banner-text-loader').innerText = bData.text;
+                }
+
+                const pRes = await fetch('/api/products');
+                allProducts = await pRes.json();
+                renderCustomerGrid(allProducts);
+            } catch (e) { console.error(e); }
         }
         
-        // 🤖 ADVANCED CUSTOMER SIDE AI INTRODUCED BELOW WITH NO LAYOUT BREAK
         function renderCustomerGrid(products) {
             const grid = document.getElementById('customer-products-grid');
             grid.innerHTML = '';
@@ -86,8 +98,6 @@
             
             products.forEach(p => {
                 const itemPrice = p.price || 0;
-                
-                // 🧠 Advanced AI Auto-Tag logic checks price matrices dynamically
                 let aiBadgeText = "BESTSELLER";
                 let aiPromoText = "";
                 
