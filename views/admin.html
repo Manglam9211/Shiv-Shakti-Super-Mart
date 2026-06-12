@@ -93,7 +93,7 @@
                     <input type="file" name="images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 font-medium focus:outline-none cursor-pointer">
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 hover:brightness-110 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition active:scale-[0.99]">Saman ko Live Dukan Par Chadhayeइन</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 hover:brightness-110 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition active:scale-[0.99]">Saman ko Live Dukan Par Chadhayein</button>
             </form>
         </div>
 
@@ -155,7 +155,6 @@
                 const margin = p.price - (p.costPrice || 0);
                 totalProfit += (margin * (p.clicks || 0));
 
-                // 🔐 FIXED IMAGE PARSING LOOP FOR ADMIN GRID TOO
                 let thumb = 'https://via.placeholder.com/150';
                 if(p.images && p.images.length > 0) {
                     thumb = p.images[0];
@@ -185,7 +184,6 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
-        // 🤖 ONE-CLICK ADVERTISING MESSAGE GENERATOR TERMINAL
         async function triggerAIMarketingBlast() {
             try {
                 const res = await fetch('/api/ai-marketing/blast');
