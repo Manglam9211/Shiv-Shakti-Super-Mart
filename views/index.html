@@ -10,14 +10,14 @@
         .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.9); border-top: 1px solid rgba(229, 231, 235, 0.5); z-index: 50; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        @keyframes pulse-subtle { 0%, 100__ { transform: scale(1); } 50__ { transform: scale(1.03); } }
+        @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
         .pulse-btn { animation: pulse-subtle 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="bg-slate-50 pb-28 font-sans text-slate-800 antialiased">
 
-    <div id="ai-banner" class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 text-white text-center py-2 text-xs font-extrabold tracking-wider shadow-sm hidden select-none">
-        <span id="banner-text">✨ Welcome to Shiv Shakti Super Mart ✨</span>
+    <div id="ai-banner" class="bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white text-center py-2.5 text-xs font-black tracking-wide shadow-md select-none sticky top-0 z-40">
+        <span id="banner-text">✨ Loading Today's Special Ad Dhamaka... ✨</span>
     </div>
 
     <header class="bg-slate-900 text-white px-4 pt-7 pb-7 rounded-b-[24px] shadow-xl text-center relative overflow-hidden">
@@ -36,17 +36,13 @@
                 <i class="fa-solid fa-circle-user text-amber-400"></i> Admin Panel
             </a>
         </div>
-
-        <button id="lang-btn" onclick="toggleLanguage()" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-slate-300 px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10 transition backdrop-glass">
-            EN
-        </button>
     </header>
 
     <main class="max-w-md mx-auto px-4 mt-6">
         
-        <div class="relative flex items-center mb-4">
+        <div class="relative flex items-center mb-5 shadow-xs">
             <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein" class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm font-medium">
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm font-medium transition-all">
             <button onclick="startVoiceSearch()" class="absolute right-3 p-2 text-orange-500 hover:bg-orange-50 rounded-xl transition" title="Voice Search">
                 <i class="fa-solid fa-microphone text-base"></i>
             </button>
@@ -85,9 +81,14 @@
                 <span id="modal-category" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1"></span>
                 <h2 id="modal-title" class="font-black text-slate-900 text-xl leading-snug mb-3"></h2>
                 
-                <div class="flex items-baseline gap-2 mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <div class="flex items-baseline gap-2 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
                     <span id="modal-price" class="text-2xl font-black text-orange-600"></span>
                     <span id="modal-mrp" class="text-xs text-slate-400 line-through"></span>
+                </div>
+
+                <div class="bg-red-50 border border-red-100 p-3 rounded-xl mb-6 flex items-center gap-2 text-xs text-red-700 font-bold">
+                    <i class="fa-solid fa-circle-radiation text-sm text-red-500 animate-spin"></i>
+                    <span>AI Alert: <span id="modal-fake-stock" class="text-red-600 font-black"></span> piece bache hain! Agrahunda ke log abhi ise dekh rahe hain.</span>
                 </div>
 
                 <div class="flex flex-col gap-2.5">
@@ -104,7 +105,7 @@
 
     <div class="sticky-bar backdrop-glass grid grid-cols-2 text-center py-2.5 shadow-xl">
         <a href="tel:9450222868" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 font-black text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
-            <i class="fa-solid fa-phone-volume text-xl text-blue-600"></i> Direct Call
+            <i class="fa-solid fa-phone-volume text-xl text-blue-600 animate-bounce"></i> Direct Call
         </a>
         <a href="https://wa.me/9450222868" target="_blank" class="text-emerald-600 font-extrabold text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
             <i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp Shop
@@ -114,26 +115,37 @@
     <script>
         let allProducts = [];
         let currentCategory = 'All';
-        let currentLang = 'HI';
-
-        const dict = {
-            HI: { search: "Saman ka naam dhundhein", call: "Direct Call", shop: "WhatsApp शॉप", mrp: "Rs. " },
-            EN: { search: "Search for any item...", call: "Direct Call", shop: "WhatsApp Shop", mrp: "MRP: " }
-        };
 
         async function fetchConfigAndProducts() {
             try {
-                const bRes = await fetch('/api/ai-banner');
-                const banner = await bRes.json();
-                if(banner && banner.active) {
-                    document.getElementById('banner-text').innerText = banner.text;
-                    document.getElementById('ai-banner').classList.remove('hidden');
-                }
-                
                 const pRes = await fetch('/api/products');
                 allProducts = await pRes.json();
+                
+                setupAIMarketingBanner();
                 renderProducts();
             } catch(e) { console.error(e); }
+        }
+
+        // 🤖 AI DIALOUGE ADVERTISING ENGINE
+        function setupAIMarketingBanner() {
+            if(allProducts.length === 0) {
+                document.getElementById('banner-text').innerText = "✨ Welcome to Shiv Shakti Super Mart ✨";
+                return;
+            }
+            
+            const currentHour = new Date().getHours();
+            const productIndex = currentHour % allProducts.length;
+            const chosenProduct = allProducts[productIndex];
+
+            const adLines = [
+                `🔥 AAJ KA MAHA OFFER: ${chosenProduct.name} par sabse sasta rate! Ek baar click karke photo zaroor dekhein! 🔥`,
+                `⚡ VIP VALUE ALERT: Pure Chitrakoot me aisa rate kahi nahi milega, abhi WhatsApp karein! ⚡`,
+                `🎁 SHIV SHAKTI SPECIAL: ${chosenProduct.name} ki bikri sabse tez chal rahi hai, abhi order book karein! 🎁`,
+                `💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsertop item, ek baar click karke khud rate dekhein! 💥`
+            ];
+            
+            const randomLine = adLines[currentHour % adLines.length];
+            document.getElementById('banner-text').innerText = randomLine;
         }
 
         function toggleCategoryMenu() {
@@ -149,13 +161,6 @@
 
         function filterProducts() { renderProducts(); }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'HI' ? 'EN' : 'HI';
-            document.getElementById('lang-btn').innerText = currentLang === 'HI' ? 'EN' : 'HI';
-            document.getElementById('search-input').placeholder = dict[currentLang].search;
-            renderProducts();
-        }
-
         function renderProducts() {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
@@ -163,16 +168,23 @@
 
             const filtered = allProducts.filter(p => {
                 const matchCat = (currentCategory === 'All' || p.category === currentCategory);
-                return matchCat && (p.name.toLowerCase().includes(query));
+                return matchCat && p.name.toLowerCase().includes(query);
             });
 
             filtered.forEach(p => {
                 const calculatedMRP = Math.round(p.price * 1.25);
                 const isHighDemand = p.clicks >= 5;
-                const mainThumb = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/150';
+                
+                // 🔐 FIXED IMAGE BUG FALLBACK LOOP
+                let mainThumb = 'https://via.placeholder.com/150';
+                if (p.images && p.images.length > 0) {
+                    mainThumb = p.images[0];
+                } else if (p.image) {
+                    mainThumb = p.image;
+                }
 
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 flex flex-col relative transition-all duration-200 hover:shadow-md active:scale-95";
+                card.className = "bg-white rounded-3xl overflow-hidden shadow-xs border border-slate-100 flex flex-col relative transition-all duration-200 hover:shadow-md active:scale-95";
                 
                 card.innerHTML = `
                     ${isHighDemand ? 
@@ -185,20 +197,20 @@
                     </div>
 
                     <div class="p-3.5 flex-1 flex flex-col">
-                        <span onclick="openProductModal('${p._id}')" class="text-[9px] font-bold text-slate-400 uppercase cursor-pointer">${p.category || 'General'}</span>
+                        <span onclick="openProductModal('${p._id}')" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer">${p.category || 'General'}</span>
                         <h3 onclick="openProductModal('${p._id}')" class="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2 h-9 cursor-pointer hover:text-orange-500 transition">${p.name}</h3>
                         <div class="mt-auto">
                             <div class="flex items-baseline gap-1.5 mb-2.5">
                                 <span class="text-xl font-black text-orange-600">₹${p.price}</span>
-                                <span class="text-[10px] text-slate-400 line-through font-medium">${dict[currentLang].mrp}${calculatedMRP}</span>
+                                <span class="text-[10px] text-slate-400 line-through font-medium">MRP: ₹${calculatedMRP}</span>
                             </div>
                             
                             <div class="flex flex-col gap-2 mt-2">
                                 <button onclick="registerClick('${p._id}', '${p.name}')" class="pulse-btn w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-[12px] font-black py-2.5 px-2 rounded-xl shadow-md flex items-center justify-center gap-1.5 transition">
-                                    <i class="fa-brands fa-whatsapp text-sm"></i> ${dict[currentLang].shop}
+                                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp शॉप
                                 </button>
-                                <a href="tel:9450222868" onclick="event.stopPropagation();" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center gap-1 shadow-xs hover:brightness-110 transition">
-                                    <i class="fa-solid fa-phone text-[10px]"></i> ${dict[currentLang].call}
+                                <a href="tel:9450222868" onclick="event.stopPropagation();" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center gap-1 shadow-sm hover:brightness-110 transition">
+                                    <i class="fa-solid fa-phone text-[10px]"></i> Direct Call
                                 </a>
                             </div>
                         </div>
@@ -217,8 +229,17 @@
             document.getElementById('modal-price').innerText = `₹${prod.price}`;
             document.getElementById('modal-mrp').innerText = `MRP: ₹${Math.round(prod.price * 1.25)}`;
             
+            document.getElementById('modal-fake-stock').innerText = Math.floor(Math.random() * 3) + 2;
+
+            let baseImg = 'https://via.placeholder.com/150';
+            if (prod.images && prod.images.length > 0) {
+                baseImg = prod.images[0];
+            } else if (prod.image) {
+                baseImg = prod.image;
+            }
+
             const mainImg = document.getElementById('modal-main-img');
-            mainImg.src = prod.images && prod.images.length > 0 ? prod.images[0] : 'https://via.placeholder.com/150';
+            mainImg.src = baseImg;
 
             const thumbBox = document.getElementById('modal-thumbnails');
             thumbBox.innerHTML = '';
@@ -258,21 +279,16 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) return alert("Apka browser voice search support nahi karta.");
             const rec = new SpeechRecognition();
-            
-            rec.lang = 'hi-IN'; 
-            rec.continuous = false;
-            rec.interimResults = false;
-
+            rec.lang = 'hi-IN'; rec.continuous = false; rec.interimResults = false;
             rec.onstart = () => { document.getElementById('search-input').placeholder = "🎤 Speak now / बोलिए..."; };
             rec.onresult = (e) => {
                 let speechResult = e.results[0][0].transcript;
                 if (speechResult.endsWith('.')) speechResult = speechResult.slice(0, -1);
-                
                 document.getElementById('search-input').value = speechResult;
-                document.getElementById('search-input').placeholder = dict[currentLang].search;
+                document.getElementById('search-input').placeholder = "Saman ka naam dhundhein";
                 filterProducts();
             };
-            rec.onerror = () => { document.getElementById('search-input').placeholder = dict[currentLang].search; };
+            rec.onerror = () => { document.getElementById('search-input').placeholder = "Saman ka naam dhundhein"; };
             rec.start();
         }
 

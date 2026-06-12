@@ -1,119 +1,123 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Panel - Shiv Shakti Super Mart</title>
+    <title>Shiv Shakti Control Panel - AI Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .gradient-bg { bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950; }
+        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen font-sans pb-16 antialiased text-slate-800">
+<body class="bg-[#0b1120] min-h-screen font-sans pb-16 antialiased text-slate-300">
 
-    <div id="security-gate" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-white/95 backdrop-glass rounded-[32px] p-7 w-full max-w-sm shadow-2xl text-center border border-slate-100">
-            <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-orange-500 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-md">
-                <i class="fa-solid fa-shield-halved"></i>
+    <div id="security-gate" class="fixed inset-0 bg-[#070b14] z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[32px] p-7 w-full max-w-sm shadow-2xl text-center">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-md">
+                <i class="fa-solid fa-brain text-4xl animate-pulse"></i>
             </div>
-            <h2 class="text-2xl font-black text-slate-900 mb-1">Security Check</h2>
-            <p class="text-xs text-slate-500 mb-6 font-medium">Dukan ka secret admin code daalein panel kholne ke liye</p>
-            <input type="password" id="pin-input" placeholder="Security PIN daalein" class="w-full border-2 border-slate-200 text-center py-3.5 rounded-2xl mb-5 text-2xl font-black tracking-widest focus:border-slate-900 focus:ring-0 outline-none transition-all bg-slate-50/50">
-            <button onclick="verifyPin()" class="w-full bg-slate-950 text-white py-3.5 rounded-2xl font-bold hover:bg-slate-900 transition shadow-lg active:scale-[0.98]">Access Verify Karein</button>
+            <h2 class="text-2xl font-black text-slate-900 mb-1">AI Security Sync</h2>
+            <p class="text-xs text-slate-500 mb-6 font-medium">Apna Secret Admin PIN Daalein</p>
+            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black focus:border-amber-400 focus:ring-0 outline-none transition-all">
+            <button onclick="verifyPin()" class="w-full bg-[#111827] text-white py-4 rounded-2xl font-bold hover:bg-slate-900 transition active:scale-95 shadow-md">Verify Access</button>
         </div>
     </div>
 
     <div id="admin-dashboard" class="max-w-2xl mx-auto px-4 pt-6 hidden">
         
-        <header class="flex items-center justify-between mb-6 bg-slate-900 text-white p-5 rounded-[24px] shadow-xl relative overflow-hidden">
-            <div class="relative z-10">
-                <h1 class="font-black text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">Dukan Ka Control Panel</h1>
+        <header class="flex items-center justify-between mb-8 p-5 bg-white/5 backdrop-glass rounded-[24px] border border-white/5 shadow-xl">
+            <div>
+                <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
+                    <i class="fa-solid fa-server text-amber-400 text-sm"></i>
+                    Dukan ka Control Panel <span class="text-xs text-amber-400 font-medium">AI Edition v3.0</span>
+                </h1>
                 <p class="text-[11px] text-slate-400 font-medium mt-0.5">Saman Upload karein aur Live Munafa dekhein</p>
             </div>
-            <a href="/" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition backdrop-glass border border-white/5 relative z-10 active:scale-95">Shop Dekhein</a>
+            <a href="/" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition active:scale-95">Shop Dekhein</a>
         </header>
 
-        <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-white/5 backdrop-glass p-5 rounded-3xl border border-white/5 flex flex-col justify-between">
                 <div>
                     <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Total Grahak Click</span>
-                    <span id="total-clicks" class="text-3xl font-black text-slate-900">0</span>
+                    <span id="total-clicks" class="text-3xl font-black text-white">0</span>
                 </div>
-                <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1 mt-3"><i class="fa-solid fa-chart-line animate-pulse"></i> Live click count active hai</span>
+                <span class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-3"><i class="fa-solid fa-chart-line"></i> Live click count active hai</span>
             </div>
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between">
+            <div class="bg-white/5 backdrop-glass p-5 rounded-3xl border border-white/5 flex flex-col justify-between">
                 <div>
                     <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Aapka Net Munafa (Profit)</span>
-                    <span id="total-profit" class="text-3xl font-black text-emerald-600">₹0</span>
+                    <span id="total-profit" class="text-3xl font-black text-emerald-400">₹0</span>
                 </div>
                 <span class="text-[10px] text-slate-400 font-semibold block mt-3">Bechne ka Rate - Kharidi Rate</span>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-            <h3 class="font-bold text-slate-900 text-sm mb-3.5 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-500 text-base"></i> AI Dhamaka Offer Banner Alert Box</h3>
-            <div class="flex flex-col gap-3.5">
-                <input type="text" id="banner-input" placeholder="Offer ya Alert ka naam likhein jo upar chalana hai..." class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl focus:border-slate-900 outline-none transition-all">
-                <div class="flex items-center justify-between pt-1">
-                    <label class="flex items-center gap-2 text-xs font-bold text-slate-600 cursor-pointer select-none">
-                        <input type="checkbox" id="banner-active" class="w-4 h-4 accent-slate-950 rounded-md"> Live Banner chalu karein
-                    </label>
-                    <button onclick="saveBannerConfig()" class="bg-slate-950 text-white px-5 py-2.5 text-xs font-bold rounded-xl shadow-md transition hover:bg-slate-900 active:scale-95">Save Karein</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 mb-6">
-            <h3 class="font-bold text-slate-900 text-sm mb-4 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-emerald-500 text-base"></i> Naya Saman Chadhayein (Gallery Upload Box)</h3>
+        <div class="p-6 rounded-3xl bg-white/5 backdrop-glass border border-white/5 mb-8 shadow-sm">
+            <h3 class="font-black text-white text-base mb-5 flex items-center gap-3">
+                <i class="fa-solid fa-cloud-arrow-up text-lg text-emerald-400"></i> Naya Saman Chadhayein
+            </h3>
             <form action="/api/products" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
                 
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman Ka Naam (Product Name)</label>
-                    <input type="text" name="name" required placeholder="Jaise: Lux Sabun, Natraj Pencil Box" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman Ka Naam (Product Name)</label>
+                    <input type="text" name="name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white font-medium rounded-xl focus:border-amber-400 outline-none transition">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Kharidi Rate (Wholesale Price)</label>
-                        <input type="number" name="costPrice" required placeholder="Aapko kitne me mila" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Kharidi Rate (Wholesale Price)</label>
+                        <input type="number" name="costPrice" required placeholder="Kitne me mila" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white font-medium rounded-xl focus:border-amber-400 outline-none transition">
                     </div>
                     <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Bechne Ka Rate (Store Price)</label>
-                        <input type="number" name="price" required placeholder="Grahak ko kitne me dena hai" class="w-full border border-slate-200 p-3.5 text-xs font-medium rounded-xl outline-none focus:border-slate-900 transition-all">
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Bechne Ka Rate (Store Price)</label>
+                        <input type="number" name="price" required placeholder="Grahak ko kitne me" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white font-medium rounded-xl focus:border-amber-400 outline-none transition">
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman Ki Category Chunein</label>
-                    <select name="category" class="w-full border border-slate-200 p-3.5 text-xs font-semibold rounded-xl bg-white outline-none focus:border-slate-900 transition-all cursor-pointer">
-                        <option value="General">General Grocery (Ration)</option>
-                        <option value="Stationery">Stationery & Books (Padhai)</option>
-                        <option value="Toys">Toys & Games (Khilone)</option>
-                        <option value="Household">Household Goods (Ghar ka saman)</option>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Category</label>
+                    <select name="category" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white font-semibold rounded-xl focus:border-amber-400 outline-none transition cursor-pointer">
+                        <option value="General">General Grocery</option>
+                        <option value="Stationery">Stationery & Books</option>
+                        <option value="Toys">Toys & Games</option>
+                        <option value="Household">Household Goods</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Saman ki Photo Select Karein (Max 5 Photo ek sath)</label>
-                    <input type="file" name="images" multiple accept="image/*" required class="w-full border border-slate-200 p-3 text-xs rounded-xl bg-slate-50 cursor-pointer text-slate-500 font-medium focus:outline-none">
-                    <p class="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-circle-info text-blue-500"></i> Tip: Aap gallery se ek sath 3 ya 4 photo select kar sakte hain alag-alag angle ki.</p>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo ek sath select karein)</label>
+                    <input type="file" name="images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 font-medium focus:outline-none cursor-pointer">
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3.5 rounded-xl shadow-md mt-2 transition active:scale-[0.99]">Saman ko Live Dukan Par Chadhayein</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 hover:brightness-110 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition active:scale-[0.99]">Saman ko Live Dukan Par Chadhayeइन</button>
             </form>
         </div>
 
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3.5">
-                <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2"><i class="fa-solid fa-boxes-stacked text-blue-500 text-base"></i> Dukan Ke Active Samano Ki List</h3>
-                <button onclick="triggerWhatsAppBlast()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:brightness-105 text-white px-3.5 py-2 rounded-xl text-xs font-black shadow-sm flex items-center gap-1.5 transition active:scale-95">
-                    <i class="fa-solid fa-bolt text-[10px]"></i> AI WhatsApp Blast
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-black text-white text-base flex items-center gap-3">
+                    <i class="fa-solid fa-boxes-stacked text-lg text-amber-400"></i> Dukan ka Stock List
+                </h3>
+                <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:brightness-110 text-slate-950 px-4 py-2.5 rounded-xl text-xs font-black shadow-lg flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-bolt text-[11px]"></i> AI WhatsApp Blast
                 </button>
             </div>
-            <div id="admin-products-list" class="flex flex-col gap-1.5">
+            <div id="admin-products-list" class="grid grid-cols-2 gap-4">
                 </div>
+        </div>
+
+    </div>
+
+    <div id="ai-alert-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-[60] flex items-center justify-center hidden">
+        <div class="bg-[#111827] rounded-[32px] p-6 w-full max-w-sm shadow-2xl border border-white/5 text-center">
+            <div id="alert-icon" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"></div>
+            <h2 id="alert-title" class="text-2xl font-black text-white mb-1.5">Alert!</h2>
+            <p id="alert-text" class="text-sm text-slate-400 mb-7 font-medium"></p>
+            <button onclick="closeSmartAlert()" class="w-full bg-slate-800 text-white py-3.5 rounded-xl font-bold transition hover:bg-slate-700">Theek Hai</button>
         </div>
     </div>
 
@@ -133,11 +137,6 @@
 
         async function fetchAdminMetrics() {
             try {
-                const bRes = await fetch('/api/ai-banner');
-                const banner = await bRes.json();
-                document.getElementById('banner-input').value = banner.text || '';
-                document.getElementById('banner-active').checked = banner.active || false;
-
                 const pRes = await fetch('/api/products');
                 productsData = await pRes.json();
                 renderAdminProducts();
@@ -156,40 +155,47 @@
                 const margin = p.price - (p.costPrice || 0);
                 totalProfit += (margin * (p.clicks || 0));
 
-                const thumb = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/150';
+                // 🔐 FIXED IMAGE PARSING LOOP FOR ADMIN GRID TOO
+                let thumb = 'https://via.placeholder.com/150';
+                if(p.images && p.images.length > 0) {
+                    thumb = p.images[0];
+                } else if(p.image) {
+                    thumb = p.image;
+                }
 
-                const row = document.createElement('div');
-                row.className = "flex items-center justify-between border-b pb-3 last:border-none border-slate-100 mt-2 hover:bg-slate-50/50 p-2 rounded-xl transition-all";
-                row.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <img src="${thumb}" class="w-12 h-12 object-contain bg-slate-50 border border-slate-100 rounded-xl p-1 shadow-xs flex-shrink-0">
-                        <div>
-                            <h4 class="font-bold text-xs text-slate-800 line-clamp-1 max-w-[180px]">${p.name}</h4>
-                            <p class="text-[10px] text-slate-400 font-semibold uppercase">${p.category || 'General'} | Click: <span class="text-slate-900 font-bold">${p.clicks || 0}</span></p>
-                            <p class="text-[9px] text-slate-500">ID: ${p._id}</p>
-                        </div>
+                const card = document.createElement('div');
+                card.className = "product-card p-4 rounded-3xl bg-white/5 border border-white/5 flex flex-col justify-between gap-3 shadow-sm";
+                card.innerHTML = `
+                    <div class="w-full pt-[100%] relative bg-[#111827] rounded-2xl overflow-hidden border border-white/5">
+                        <img src="${thumb}" class="absolute inset-0 w-full h-full object-contain p-2">
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="downloadQRCode('${p._id}', '${p.name}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-90" title="QR Code Nikalein"><i class="fa-solid fa-qrcode text-sm"></i></button>
-                        <button onclick="deleteProduct('${p._id}')" class="bg-red-50 text-red-600 hover:bg-red-100 w-8 h-8 rounded-lg flex items-center justify-center transition active:scale-90" title="Saman Hatayein"><i class="fa-solid fa-trash-can text-sm"></i></button>
+                    <div class="mt-1">
+                        <h4 class="font-bold text-xs text-white line-clamp-1">${p.name}</h4>
+                        <p class="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">${p.category || 'General'}</p>
+                        <p class="text-[10px] text-amber-400 font-bold mt-1">Clicks: ${p.clicks || 0}</p>
                     </div>
+                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/40 hover:bg-red-900/60 text-red-400 font-bold text-[11px] py-2 rounded-xl transition flex items-center justify-center gap-1 border border-red-900/30">
+                        <i class="fa-solid fa-trash-can text-xs"></i> Hatayein
+                    </button>
                 `;
-                list.appendChild(row);
+                list.appendChild(card);
             });
 
             document.getElementById('total-clicks').innerText = totalClicks;
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
-        async function saveBannerConfig() {
-            const text = document.getElementById('banner-input').value;
-            const active = document.getElementById('banner-active').checked;
-            await fetch('/api/ai-banner', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, active })
-            });
-            alert("AI Announcement Banner Alert Save ho gaya!");
+        // 🤖 ONE-CLICK ADVERTISING MESSAGE GENERATOR TERMINAL
+        async function triggerAIMarketingBlast() {
+            try {
+                const res = await fetch('/api/ai-marketing/blast');
+                const data = await res.json();
+                if(data.success) {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank');
+                } else {
+                    alert("Maal list me koi saman hona chahiye blast karne ke liye.");
+                }
+            } catch(e) { console.error(e); }
         }
 
         async function deleteProduct(id) {
@@ -199,23 +205,32 @@
             }
         }
 
-        function downloadQRCode(id, name) {
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://shiv-shakti-super-mart.onrender.com/?search=${encodeURIComponent(name)}`;
-            const a = document.createElement('a');
-            a.href = qrUrl;
-            a.download = `QR_${name}.png`;
-            window.open(qrUrl, '_blank');
+        function showSmartAlert(type, text) {
+            const iconBox = document.getElementById('alert-icon');
+            const titleBox = document.getElementById('alert-title');
+            const textBox = document.getElementById('alert-text');
+            const modal = document.getElementById('ai-alert-modal');
+
+            if(type === 'success') {
+                iconBox.className = "w-16 h-16 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-800";
+                iconBox.innerHTML = `<i class="fa-solid fa-check-circle animate-bounce"></i>`;
+                titleBox.innerText = "Success!";
+            } else {
+                iconBox.className = "w-16 h-16 bg-red-950 text-red-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-red-800";
+                iconBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation animate-pulse"></i>`;
+                titleBox.innerText = "Error!";
+            }
+            textBox.innerText = text;
+            modal.classList.remove('hidden');
         }
 
-        function triggerWhatsAppBlast() {
-            if(productsData.length === 0) return alert("Dukan me koi saman nahi hai blast karne ke liye.");
-            const topProd = [...productsData].sort((a,b) => b.clicks - a.clicks)[0];
-            const message = `🔥 SHIV SHAKTI SUPER MART UPDATE! 🔥\n\nSabse zyada pasand kiya jaane wala saman live hai!\n📦 Saman: ${topProd.name}\n💰 Khaas Rate: ₹${topProd.price}\n\nTurant apna order book karne ke liye niche diye link par click karein! 👇\n👉 https://shiv-shakti-super-mart.onrender.com`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+        function closeSmartAlert() {
+            document.getElementById('ai-alert-modal').classList.add('hidden');
         }
 
         const params = new URLSearchParams(window.location.search);
-        if(params.get('status') === 'success') alert("Saman dukan par kamyabi se chadh gaya hai!");
+        if(params.get('status') === 'success') showSmartAlert('success', "Saman dukan par kamyabi se chadh gaya hai!");
+        if(params.get('status') === 'error') showSmartAlert('error', "Saman upload nahi ho paya! Dobara check karein.");
     </script>
 </body>
 </html>

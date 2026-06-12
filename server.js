@@ -13,14 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Credentials (100% Fixed Connection)
+// Cloudinary Credentials (100% Secure Setup)
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Setup Multiple Images Storage (Max 5 Images)
+// Setup Multiple Images Storage
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -36,13 +36,13 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Updated Schema with Images Array for Flipkart Gallery Feature
+// Schema with Images Array for Flipkart Feature
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
   costPrice: Number,
   category: String,
-  images: [String], // Array to store multiple image URLs
+  images: [String],
   clicks: { type: Number, default: 0 }
 });
 const Product = mongoose.model('Product', productSchema);
@@ -79,7 +79,29 @@ app.get('/api/products', async (req, res) => {
   res.json(products);
 });
 
-// Create Product Route Supporting Up to 5 Images simultaneously
+// AI ADVERTISING ENGINE: Automatically builds a stunning blast text based on smart stats
+app.get('/api/ai-marketing/blast', async (req, res) => {
+  try {
+    const products = await Product.find({});
+    if (products.length === 0) return res.json({ message: "No items available." });
+
+    // Pick a high demand product or random one
+    const sorted = [...products].sort((a,b) => b.clicks - a.clicks);
+    const featured = sorted[0];
+
+    const catchyLines = [
+      `?? AGRAHUNDA ME DHAMAKA OFFER! ??\n\nSabse zyada bikne wala maal ab bache hue stock me!`,
+      `? SHIV SHAKTI SUPER MART VIP VALUE ALERT! ?\n\nPure Chitrakoot me aisa rate kahi nahi milega, guarantee hai!`,
+      `?? AAJ KA MAHA OFFER! ??\n\nGrahak bhaiyo dhyan do, ye dukan ka sabse top rated item hai!`
+    ];
+    const randomLine = catchyLines[Math.floor(Math.random() * catchyLines.length)];
+
+    const message = `${randomLine}\n?? Saman: ${featured.name}\n?? Khaas Rate: ?${featured.price}\n\n? AI Alert: Sirf thoda sa bacha hai! Niche wale link par click karke photo dekhein aur order karein ??\n?? https://shiv-shakti-super-mart.onrender.com`;
+    
+    res.json({ success: true, text: message });
+  } catch (e) { res.status(500).json({ error: true }); }
+});
+
 app.post('/api/products', upload.array('images', 5), async (req, res) => {
   try {
     const { name, price, costPrice, category } = req.body;

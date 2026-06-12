@@ -13,14 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Credentials (100% Fixed Connection)
+// Cloudinary Credentials
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Setup Multiple Images Storage (Max 5 Images)
+// Setup Multiple Images Storage
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -36,13 +36,13 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Updated Schema with Images Array for Flipkart Gallery Feature
+// Product Schema
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
   costPrice: Number,
   category: String,
-  images: [String], // Array to store multiple image URLs
+  images: [String],
   clicks: { type: Number, default: 0 }
 });
 const Product = mongoose.model('Product', productSchema);
@@ -79,7 +79,31 @@ app.get('/api/products', async (req, res) => {
   res.json(products);
 });
 
-// Create Product Route Supporting Up to 5 Images simultaneously
+// 🤖 🔥 ULTRA ADVANCED HINGLISH AI MARKETING ENGINE (Pure Desi Advertising)
+app.get('/api/ai-marketing/blast', async (req, res) => {
+  try {
+    const products = await Product.find({});
+    if (products.length === 0) return res.json({ message: "Dukan me koi saman nahi hai." });
+
+    // Pick the most popular product or random
+    const sorted = [...products].sort((a,b) => b.clicks - a.clicks);
+    const featured = sorted[0];
+
+    // 💥 100% Hinglish Mind-Blowing Catchy Lines
+    const catchyLines = [
+      `🔥 AGRAHUNDA ME DHAMAKA OFFER! 🔥\n\nGrahak bhaiyo dhyan do! Sabse zyada pasand kiya jaane wala maal ab bache hue stock me hai!`,
+      `⚡ SHIV SHAKTI SUPER MART VIP DISCOUNT! ⚡\n\nPure Chitrakoot me ghum aao, aisa rate aur aisi solid quality kahi nahi milegi, Shiv Shakti ki guarantee hai!`,
+      `👑 AAJ KA SABSE BADA MAHA OFFER! 👑\n\nBina deri kiye turant dekhein! Ye item dukan par sabse tez bik raha hai, stock khatam hone wala hai!`
+    ];
+    const randomLine = catchyLines[Math.floor(Math.random() * catchyLines.length)];
+
+    // Fully personalized Hinglish message combination
+    const message = `${randomLine}\n\n📦 Saman: *${featured.name}*\n💰 Khaas Rate: *₹${featured.price}* bacha ke!\n\n⏳ AI Alert: Sirf thoda sa piece bacha hai! Niche diye link par click karke photo dekhein aur turant order book karein 👇\n👉 https://shiv-shakti-super-mart.onrender.com`;
+    
+    res.json({ success: true, text: message });
+  } catch (e) { res.status(500).json({ error: true }); }
+});
+
 app.post('/api/products', upload.array('images', 5), async (req, res) => {
   try {
     const { name, price, costPrice, category } = req.body;
