@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiv Shakti Control Panel - AI Edition</title>
+    <title>Shiv Shakti Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,7 +20,7 @@
                 <i class="fa-solid fa-brain text-4xl animate-pulse"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-900 mb-1">AI Security Sync</h2>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black focus:border-amber-400 focus:ring-0 outline-none">
+            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black outline-none">
             <button onclick="verifyPin()" class="w-full bg-[#111827] text-white py-4 rounded-2xl font-bold shadow-md">Verify Access</button>
         </div>
     </div>
@@ -47,24 +47,24 @@
 
         <div class="p-6 rounded-3xl bg-white/5 backdrop-glass border border-white/5 mb-8">
             <h3 class="font-black text-white text-base mb-5 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i> Naya Saman Chadhayein</h3>
-            <form action="/api/products" method="POST" enctype="multipart/form-data" class="flex flex-col gap-4">
+            <form id="secure-upload-form" onsubmit="handleFormSubmit(event)" class="flex flex-col gap-4">
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman Ka Naam</label>
-                    <input type="text" name="name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                    <input type="text" id="p-name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Kharidi Rate</label>
-                        <input type="number" name="costPrice" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                        <input type="number" id="p-cost" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                     <div>
                         <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Bechne Ka Rate</label>
-                        <input type="number" name="price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
+                        <input type="number" id="p-price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Category</label>
-                    <select name="category" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
+                    <select id="p-cat" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
                         <option value="General">General Grocery</option>
                         <option value="Stationery">Stationery & Books</option>
                         <option value="Toys">Toys & Games</option>
@@ -73,9 +73,9 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo)</label>
-                    <input type="file" name="images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
+                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
                 </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
+                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
             </form>
         </div>
 
@@ -150,6 +150,45 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
+        // 🚀 SECURE JAVASCRIPT SUBMISSION CONTROLLER (NO DIRECT PAGE POST)
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Uploading Maal... Please Wait...";
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('p-name').value);
+            formData.append('costPrice', document.getElementById('p-cost').value);
+            formData.append('price', document.getElementById('p-price').value);
+            formData.append('category', document.getElementById('p-cat').value);
+
+            const fileInput = document.getElementById('p-images');
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('images', fileInput.files[i]);
+            }
+
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showSmartAlert('success', "Saman kamyabi se chadh gaya hai!");
+                    document.getElementById('secure-upload-form').reset();
+                    fetchAdminMetrics();
+                } else {
+                    showSmartAlert('error', "Upload nahi हो पाया! Server issue.");
+                }
+            } catch (error) {
+                showSmartAlert('error', "Network error connection lost.");
+            } finally {
+                btn.innerText = "Saman ko Live Dukan Par Chadhayein";
+                btn.disabled = false;
+            }
+        }
+
         async function triggerAIMarketingBlast() {
             try {
                 const res = await fetch('/api/ai-marketing/blast');
@@ -183,9 +222,6 @@
         }
 
         function closeSmartAlert() { document.getElementById('ai-alert-modal').classList.add('hidden'); }
-        const params = new URLSearchParams(window.location.search);
-        if(params.get('status') === 'success') showSmartAlert('success', "Saman kamyabi se chadh gaya hai!");
-        if(params.get('status') === 'error') showSmartAlert('error', "Upload nahi ho paya!");
     </script>
 </body>
 </html>
