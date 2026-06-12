@@ -7,8 +7,8 @@ const path = require('path');
 
 const app = express();
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.set('views', path.join(__dirname, 'views'));
@@ -16,9 +16,9 @@ app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dmtafwfxg',
-  api_key: process.env.CLOUDINARY_API_KEY || '183174449285855',
-  api_secret: process.env.CLOUDINARY_API_SECRET || '7RORd5OHjwY3U6Z'
+  cloud_name: 'dmtafwfxg',
+  api_key: '183174449285855',
+  api_secret: '7RORd5OHjwY3U6Z'
 });
 
 const storage = new CloudinaryStorage({
@@ -29,22 +29,20 @@ const storage = new CloudinaryStorage({
   }
 });
 
-// ⚡ STRICT DEFINED FIELD FOR IMAGES
-const upload = multer({ storage: storage }).array('image', 10);
+const upload = multer({ storage: storage });
 
-const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
-mongoose.connect(mongoURI)
+mongoose.connect("mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0")
   .then(() => console.log("Database Synced Successfully"))
-  .catch(err => console.log("Database Connection Error: ", err));
+  .catch(err => console.log(err));
 
 const productSchema = new mongoose.Schema({
-  name: { type: String, default: 'Naya Saman' },
-  price: { type: Number, default: 0 },
-  costPrice: { type: Number, default: 0 },
-  category: { type: String, default: 'General' },
-  description: { type: String, default: '' },
-  images: { type: [String], default: [] },
-  image: { type: String, default: '' },
+  name: String,
+  price: Number,
+  costPrice: Number,
+  category: String,
+  description: String,
+  images: [String],
+  image: String,
   clicks: { type: Number, default: 0 }
 });
 const Product = mongoose.model('Product', productSchema);
@@ -75,44 +73,41 @@ app.post('/api/ai-banner', async (req, res) => {
 app.get('/api/products', async (req, res) => {
   try {
     const products = await Product.find({}).sort({ _id: -1 });
-    res.json(products || []);
-  } catch (e) { res.status(200).json([]); }
+    res.json(products);
+  } catch (e) { res.status(500).json([]); }
 });
 
-app.post('/api/products', (req, res) => {
-  upload(req, res, async function (err) {
-    if (err) {
-      console.log("Multer Upload Error: ", err);
-      return res.status(500).json({ success: false, message: "Upload stream failed" });
-    }
-    try {
-      const { name, price, costPrice, category, description } = req.body;
-      let uploadedUrls = [];
-      
-      // Handle array format safely
-      if (req.files && req.files.length > 0) {
-        uploadedUrls = req.files.map(file => file.path);
-      }
-      
-      const backupMainImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
+app.get('/api/ai-marketing/blast', async (req, res) => {
+  try {
+    const products = await Product.find({}).sort({ clicks: -1 });
+    if (products.length === 0) return res.json({ success: false, text: "Stock khali hai." });
+    const bestSellerItem = products[0];
+    const shopUrl = `https://shiv-shakti-super-mart.onrender.com`;
+    const finalAd = `🌅 *SUPER FLASH DEAL* 🌅\n\nशिव शक्ति सुपर मार्ट पर आइटम *${bestSellerItem.name}* मात्र *₹${bestSellerItem.price}* में! 👇\n👉 ${shopUrl}`;
+    res.json({ success: true, text: finalAd });
+  } catch (e) { res.json({ success: false, text: "AI Engine error" }); }
+});
 
-      const newProduct = new Product({
-        name: name || "Naya Saman",
-        price: Number(price) || 0,
-        costPrice: Number(costPrice || 0),
-        category: category || 'General',
-        description: description || '',
-        images: uploadedUrls,
-        image: backupMainImage,
-        clicks: 0
-      });
-      await newProduct.save();
-      return res.status(200).json({ success: true });
-    } catch (error) {
-      console.log("Database Save Error: ", error);
-      return res.status(500).json({ success: false, message: "DB write failure" });
-    }
-  });
+app.post('/api/products', upload.single('image'), async (req, res) => {
+  try {
+    const { name, price, costPrice, category, description } = req.body;
+    const imageUrl = req.file ? req.file.path : 'https://via.placeholder.com/150';
+
+    const newProduct = new Product({
+      name,
+      price: Number(price),
+      costPrice: Number(costPrice),
+      category,
+      description,
+      images: [imageUrl],
+      image: imageUrl,
+      clicks: 0
+    });
+    await newProduct.save();
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
 });
 
 app.delete('/api/products/:id', async (req, res) => {

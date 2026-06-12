@@ -56,7 +56,7 @@
                     <option value="Household">Household Goods</option>
                 </select>
                 <textarea id="p-desc" placeholder="Saman ki Quality / Description" rows="3" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
-                <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] p-3.5 text-sm rounded-xl text-slate-500">
+                <input type="file" id="p-image" required class="w-full bg-[#111827] p-3.5 text-sm rounded-xl text-slate-500">
                 <button type="submit" id="submit-btn" class="w-full bg-emerald-600 text-white font-black text-xs py-4 rounded-xl mt-2">Saman ko Live Dukan Par Chadhayein</button>
             </form>
         </div>
@@ -113,7 +113,7 @@
                 const card = document.createElement('div');
                 card.className = "p-4 rounded-3xl bg-white/5 border flex flex-col justify-between gap-3";
                 card.innerHTML = `
-                    <img src="${p.image || p.images[0]}" class="w-full h-32 object-contain rounded-2xl">
+                    <img src="${p.image}" class="w-full h-32 object-contain rounded-2xl">
                     <h4 class="font-bold text-xs text-white">${p.name}</h4>
                     <p class="text-[10px] text-slate-400">Rate: ₹${p.price}</p>
                     <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/40 text-red-400 font-bold text-[11px] py-2 rounded-xl">Hatayein</button>
@@ -136,21 +136,17 @@
             formData.append('price', document.getElementById('p-price').value);
             formData.append('category', document.getElementById('p-cat').value);
             formData.append('description', document.getElementById('p-desc').value);
-
-            const fileInput = document.getElementById('p-images');
-            for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('image', fileInput.files[i]);
-            }
+            formData.append('image', document.getElementById('p-image').files[0]);
 
             try {
                 const response = await fetch('/api/products', { method: 'POST', body: formData });
-                // ⚡ REWORKED RELIABILITY: Checks raw server status instead of strict response object mapping
-                if (response.status === 200 || response.ok) {
+                const result = await response.json();
+                if (response.ok && result.success) {
                     alert("Saman live ho gaya!");
                     document.getElementById('old-upload-form').reset();
                     fetchAdminMetrics();
-                } else { alert("Upload fail. Server response error."); }
-            } catch (error) { alert("Connection error."); }
+                } else { alert("Upload fail."); }
+            } catch (error) { alert("Upload fail."); }
             
             btn.innerText = "Saman ko Live Dukan Par Chadhayein";
             btn.disabled = false;
