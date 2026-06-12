@@ -13,22 +13,19 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// 🔐 KAL WALE TEENO CLOUD CODE (100% Locked & Working)
+// Cloudinary Configuration
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// MULTIPLE IMAGES SAFE INTEGRATION ENGINE
+// Image Storage Engine
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req, file) => {
-    return {
-      folder: 'shiv_shakti_mart',
-      format: 'jpg', // forces safe image formats
-      public_id: file.originalname.split('.')[0] + '_' + Date.now()
-    };
+  params: {
+    folder: 'shiv_shakti_mart',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
   }
 });
 const upload = multer({ storage: storage });
@@ -39,7 +36,7 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Secure Database Schema (Handles both Old and New items together)
+// Database Schema Setup
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
@@ -57,7 +54,7 @@ const bannerSchema = new mongoose.Schema({
 });
 const Banner = mongoose.model('Banner', bannerSchema);
 
-// HTML Routes
+// Frontend Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -65,16 +62,6 @@ app.get('/api/ai-banner', async (req, res) => {
   let banner = await Banner.findOne();
   if (!banner) banner = await Banner.create({});
   res.json(banner);
-});
-
-app.post('/api/ai-banner', async (req, res) => {
-  const { text, active } = req.body;
-  let banner = await Banner.findOne();
-  if (!banner) banner = new Banner();
-  banner.text = text;
-  banner.active = active;
-  await banner.save();
-  res.json({ success: true });
 });
 
 app.get('/api/products', async (req, res) => {
@@ -94,25 +81,22 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
     const featured = sorted[0];
 
     const catchyLines = [
-      `🔥 AGRAHUNDA ME DHAMAKA OFFER! 🔥\n\nGrahak bhaiyo dhyan do! Sabse zyada pasand kiya jaane wala maal ab bache hue stock me hai!`,
-      `⚡ SHIV SHAKTI SUPER MART VIP DISCOUNT! ⚡\n\nPure Chitrakoot me ghum aao, aisa rate aur aisi solid quality kahi nahi milegi!`,
-      `👑 AAJ KA SABSE BADA MAHA OFFER! 👑\n\nStock khatam hone wala hai, ek baar click karke photo dekhein aur jaldi order karein!`
+      `\uD83D\uDD25 AGRAHUNDA ME DHAMAKA OFFER! \uD83D\uDD25\n\nGrahak bhaiyo dhyan do! Sabse zyada pasand kiya jaane wala maal ab bache hue stock me hai!`,
+      `\u26A1 SHIV SHAKTI SUPER MART VIP DISCOUNT! \u26A1\n\nPure Chitrakoot me ghum aao, aisa rate aur aisi solid quality kahi nahi milegi, Shiv Shakti ki guarantee hai!`,
+      `\uD83D\uDC51 AAJ KA SABSE BADA MAHA OFFER! \uD83D\uDC51\n\nBina deri kiye turant dekhein! Ye item dukan par sabse tez bik raha hai, stock khatam hone wala hai!`
     ];
     const randomLine = catchyLines[Math.floor(Math.random() * catchyLines.length)];
 
-    const message = `${randomLine}\n\n📦 Saman: *${featured.name}*\n💰 Khaas Rate: *₹${featured.price}*\n\n👉 https://shiv-shakti-super-mart.onrender.com`;
+    const message = `${randomLine}\n\n📦 Saman: *${featured.name}*\n💰 Khaas Rate: *₹${featured.price}* bacha ke!\n\n⏳ AI Alert: Sirf thoda sa piece bacha hai! Niche diye link par click karke photo dekhein aur turant order book karein 👇\n👉 https://shiv-shakti-super-mart.onrender.com`;
     res.json({ success: true, text: message });
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// FIXED PRODUCT UPLOAD ROUTE WITH TRY-CATCH FAIL-SAFE
+// Product Upload Secure Route
 app.post('/api/products', upload.array('images', 5), async (req, res) => {
   try {
     const { name, price, costPrice, category } = req.body;
-    
-    // Safely extract paths from uploaded files
-    const imageUrls = req.files && req.files.length > 0 ? req.files.map(file => file.path) : [];
-    const fallbackImage = imageUrls.length > 0 ? imageUrls[0] : 'https://via.placeholder.com/150';
+    const imageUrls = req.files ? req.files.map(file => file.path) : [];
 
     const newProduct = new Product({
       name: name,
@@ -120,24 +104,17 @@ app.post('/api/products', upload.array('images', 5), async (req, res) => {
       costPrice: Number(costPrice || 0),
       category: category || 'General',
       images: imageUrls,
-      image: fallbackImage
+      image: imageUrls.length > 0 ? imageUrls[0] : 'https://via.placeholder.com/150'
     });
     
     await newProduct.save();
     res.redirect('/admin?status=success');
   } catch (error) {
-    console.error("Upload Error Tracked: ", error);
     res.redirect('/admin?status=error');
   }
 });
 
-app.post('/api/products/click/:id', async (req, res) => {
-  try {
-    await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
-    res.json({ success: true });
-  } catch (e) { res.status(500).json({ error: true }); }
-});
-
+// Delete Product Route
 app.delete('/api/products/:id', async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
