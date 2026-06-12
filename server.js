@@ -15,7 +15,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// ⚡ STRICT ENV LINKING FIXED
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dmtafwfxg',
   api_key: process.env.CLOUDINARY_API_KEY || '183174449285855',
@@ -30,7 +29,8 @@ const storage = new CloudinaryStorage({
   }
 });
 
-const upload = multer({ storage: storage }).any();
+// ⚡ STRICT DEFINED FIELD FOR IMAGES
+const upload = multer({ storage: storage }).array('image', 10);
 
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
@@ -79,26 +79,21 @@ app.get('/api/products', async (req, res) => {
   } catch (e) { res.status(200).json([]); }
 });
 
-app.get('/api/ai-marketing/blast', async (req, res) => {
-  try {
-    const products = await Product.find({}).sort({ clicks: -1 });
-    if (!products || products.length === 0) return res.json({ success: false, text: "Stock khali hai." });
-    const bestSellerItem = products[0];
-    const shopUrl = `https://shiv-shakti-super-mart.onrender.com`;
-    const finalAd = `🌅 *SUPER FLASH DEAL* 🌅\n\nशिव शक्ति सुपर मार्ट पर आइटम *${bestSellerItem.name}* मात्र *₹${bestSellerItem.price}* में! 👇\n👉 ${shopUrl}`;
-    res.json({ success: true, text: finalAd });
-  } catch (e) { res.json({ success: false, text: "AI Engine error" }); }
-});
-
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
-    if (err) return res.status(500).json({ success: false, message: "Upload stream failed" });
+    if (err) {
+      console.log("Multer Upload Error: ", err);
+      return res.status(500).json({ success: false, message: "Upload stream failed" });
+    }
     try {
       const { name, price, costPrice, category, description } = req.body;
       let uploadedUrls = [];
+      
+      // Handle array format safely
       if (req.files && req.files.length > 0) {
         uploadedUrls = req.files.map(file => file.path);
       }
+      
       const backupMainImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
 
       const newProduct = new Product({
@@ -114,6 +109,7 @@ app.post('/api/products', (req, res) => {
       await newProduct.save();
       return res.status(200).json({ success: true });
     } catch (error) {
+      console.log("Database Save Error: ", error);
       return res.status(500).json({ success: false, message: "DB write failure" });
     }
   });
