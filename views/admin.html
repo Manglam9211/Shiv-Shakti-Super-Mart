@@ -20,8 +20,8 @@
                 <i class="fa-solid fa-brain text-4xl animate-pulse"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-900 mb-1">AI Security Sync</h2>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black focus:border-amber-400 focus:ring-0 outline-none">
-            <button onclick="verifyPin()" class="w-full bg-[#111827] text-white py-4 rounded-2xl font-bold shadow-md">Verify Access</button>
+            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black text-slate-900 outline-none focus:border-amber-500">
+            <button onclick="verifyPin()" type="button" class="w-full bg-[#111827] hover:bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-md cursor-pointer transition active:scale-95">Verify Access</button>
         </div>
     </div>
 
@@ -104,11 +104,14 @@
         let productsData = [];
 
         function verifyPin() {
-            if(document.getElementById('pin-input').value === '7181') {
+            const pinVal = document.getElementById('pin-input').value;
+            if(pinVal === '7181') {
                 document.getElementById('security-gate').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
-            } else { alert("Galat PIN!"); }
+            } else { 
+                alert("Galat PIN!"); 
+            }
         }
 
         async function fetchAdminMetrics() {
@@ -151,7 +154,6 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
-        // Safe Base64 core transmission loop for phone gallery upload
         const convertToBase64 = (file) => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -195,7 +197,7 @@
                     document.getElementById('secure-upload-form').reset();
                     fetchAdminMetrics();
                 } else {
-                    showSmartAlert('error', "Upload nahi ho paya! Server structure error.");
+                    showSmartAlert('error', "Upload nahi ho paya! Server error.");
                 }
             } catch (error) {
                 showSmartAlert('error', "Transmission connection lost.");
@@ -225,4 +227,19 @@
             const iconBox = document.getElementById('alert-icon');
             const modal = document.getElementById('ai-alert-modal');
             if(type === 'success') {
-                iconBox.className =
+                iconBox.className = "w-16 h-16 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-800";
+                iconBox.innerHTML = `<i class="fa-solid fa-check-circle"></i>`;
+                document.getElementById('alert-title').innerText = "Success!";
+            } else {
+                iconBox.className = "w-16 h-16 bg-red-950 text-red-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-red-800";
+                iconBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                document.getElementById('alert-title').innerText = "Error!";
+            }
+            document.getElementById('alert-text').innerText = text;
+            modal.classList.remove('hidden');
+        }
+
+        function closeSmartAlert() { document.getElementById('ai-alert-modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
