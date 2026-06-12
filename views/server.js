@@ -13,14 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Credentials Fixed
+// Cloudinary Credentials Locked
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Windows 7 Safe Storage Configuration
+// Windows 7 Secure Storage Configuration
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -37,7 +37,7 @@ mongoose.connect(mongoURI)
   .then(() => console.log("MongoDB Connected Safely!"))
   .catch(err => console.log("DB Connection Error: ", err));
 
-// Secure Schema - Neutral fields to bypass old crashed database entries
+// Database Schema
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
-// Frontend Routes
+// Page Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -76,41 +76,40 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// 🚀 ZERO-CONFLICT SECURE UPLOAD ENGINE
+// 🚀 100% FIXED RAW POST ENGINE
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
-      return res.redirect('/admin?status=error');
+      return res.status(500).json({ error: true, message: "Multer upload failed" });
     }
     
     try {
       const { name, price, costPrice, category } = req.body;
-      let imageUrls = [];
       
+      // Extract cloud links from incoming files safely
+      let uploadedUrls = [];
       if (req.files && req.files.length > 0) {
-        imageUrls = req.files.map(file => file.path);
+        uploadedUrls = req.files.map(file => file.path);
       }
+
+      const mainSingleImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
 
       const newProduct = new Product({
         name: name || "Naya Saman",
         price: Number(price) || 0,
         costPrice: Number(costPrice || 0),
         category: category || 'General',
-        images: imageUrls,
-        image: imageUrls.length > 0 ? imageUrls[0] : 'https://via.placeholder.com/150',
+        images: uploadedUrls,
+        image: mainSingleImage,
         clicks: 0
       });
       
       await newProduct.save();
-      res.redirect('/admin?status=success');
+      return res.status(200).json({ success: true });
     } catch (error) {
-      res.redirect('/admin?status=error');
+      return res.status(500).json({ error: true, message: "Database save failed" });
     }
   });
-});
-
-app.post('/api/products/click/:id', async (req, res) => {
-  res.json({ success: true });
 });
 
 app.delete('/api/products/:id', async (req, res) => {
