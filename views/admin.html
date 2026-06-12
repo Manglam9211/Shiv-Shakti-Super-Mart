@@ -107,12 +107,16 @@
     <script>
         let productsData = [];
 
+        // LOCKED FUNCTION: This will execute instantly when Verify Access button is pressed
         function verifyPin() {
-            if(document.getElementById('pin-input').value === '7181') {
+            const pinVal = document.getElementById('pin-input').value;
+            if(pinVal === '7181') {
                 document.getElementById('security-gate').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
-            } else { alert("Galat PIN!"); }
+            } else { 
+                alert("Galat PIN!"); 
+            }
         }
 
         async function fetchAdminMetrics() {
@@ -125,6 +129,7 @@
 
         function renderAdminProducts() {
             const list = document.getElementById('admin-products-list');
+            if(!list) return;
             list.innerHTML = '';
             let totalClicks = 0, totalProfit = 0;
 
@@ -132,7 +137,7 @@
                 totalClicks += p.clicks || 0;
                 totalProfit += ((p.price - (p.costPrice || 0)) * (p.clicks || 0));
 
-                // FIXED: Bulletproof photo fallback to show the image instantly in stock list
+                // FIXED: Syllable logic to map both .image and .images array safely
                 let thumb = 'https://via.placeholder.com/150';
                 if(p.image) thumb = p.image;
                 else if(p.images && p.images.length > 0) thumb = p.images[0];
@@ -145,7 +150,7 @@
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-white line-clamp-1">${p.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">${p.description || 'No description'}</p>
+                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">${p.description || 'No description available'}</p>
                         <p class="text-[10px] text-amber-400 font-bold mt-1">Clicks: ${p.clicks || 0}</p>
                         <p class="text-[10px] text-slate-400 font-medium">Rate: ₹${p.price}</p>
                     </div>
@@ -168,7 +173,7 @@
             formData.append('costPrice', document.getElementById('p-cost').value);
             formData.append('price', document.getElementById('p-price').value);
             formData.append('category', document.getElementById('p-cat').value);
-            formData.append('description', document.getElementById('p-desc').value); // Send description field safely
+            formData.append('description', document.getElementById('p-desc').value);
 
             const fileInput = document.getElementById('p-images');
             for (let i = 0; i < fileInput.files.length; i++) {
@@ -191,7 +196,7 @@
                 }
             } catch (error) {
                 showSmartAlert('error', "Connection issue.");
-            } military_safe_end: finally {
+            } finally {
                 btn.innerText = "Saman ko Live Dukan Par Chadhayein";
                 btn.disabled = false;
             }
