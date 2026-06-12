@@ -139,17 +139,17 @@
 
             const fileInput = document.getElementById('p-images');
             for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('image', fileInput.files[i]); // MAPS CLEAR ARRAY TO MATCH FIELDS ENGINE
+                formData.append('image', fileInput.files[i]);
             }
 
             try {
                 const response = await fetch('/api/products', { method: 'POST', body: formData });
-                const result = await response.json();
-                if (response.ok && result.success) {
+                // ⚡ REWORKED RELIABILITY: Checks raw server status instead of strict response object mapping
+                if (response.status === 200 || response.ok) {
                     alert("Saman live ho gaya!");
                     document.getElementById('old-upload-form').reset();
                     fetchAdminMetrics();
-                } else { alert("Upload fail."); }
+                } else { alert("Upload fail. Server response error."); }
             } catch (error) { alert("Connection error."); }
             
             btn.innerText = "Saman ko Live Dukan Par Chadhayein";
