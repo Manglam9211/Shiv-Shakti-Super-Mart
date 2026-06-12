@@ -3,110 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiv Shakti Control Panel - VIP Admin</title>
+    <title>Control Panel - VIP Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .product-card { transition: all 0.3s ease; }
-        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-    </style>
 </head>
-<body class="bg-[#0b1120] min-h-screen font-sans pb-16 antialiased text-slate-300">
+<body class="bg-[#0b1120] min-h-screen font-sans pb-16 text-slate-300">
 
     <div id="security-gate" class="fixed inset-0 bg-[#070b14] z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-[32px] p-7 w-full max-w-sm shadow-2xl text-center">
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
-                <i class="fa-solid fa-brain text-4xl animate-pulse"></i>
-            </div>
-            <h2 class="text-2xl font-black text-slate-900 mb-1">AI Security Sync</h2>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black text-slate-900 outline-none focus:border-amber-500">
-            <button onclick="verifyPin()" type="button" class="w-full bg-[#111827] hover:bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-md cursor-pointer transition active:scale-95">Verify Access</button>
+            <h2 class="text-xl font-black text-slate-900 mb-4">Enter Admin PIN</h2>
+            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black text-slate-900 outline-none">
+            <button onclick="verifyPin()" type="button" class="w-full bg-[#111827] text-white py-4 rounded-2xl font-bold shadow-md transition">Verify Access</button>
         </div>
     </div>
 
     <div id="admin-dashboard" class="max-w-2xl mx-auto px-4 pt-6 hidden">
-        <header class="flex items-center justify-between mb-8 p-5 bg-white/5 backdrop-glass rounded-[24px] border border-white/5 shadow-xl">
-            <div>
-                <h1 class="font-black text-xl tracking-tight text-white">Dukan ka Control Panel</h1>
-                <p class="text-[11px] text-slate-400 font-medium mt-0.5">Control center active</p>
-            </div>
-            <a href="/" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Shop Dekhein</a>
+        <header class="flex items-center justify-between mb-8 p-5 bg-white/5 rounded-[24px] border border-white/5 shadow-xl">
+            <h1 class="font-black text-xl text-white">Dukan ka Control Panel</h1>
+            <a href="/" class="bg-white/10 text-white px-4 py-2 rounded-xl text-xs font-bold">Shop Dekhein</a>
         </header>
 
         <div class="grid grid-cols-2 gap-4 mb-8">
             <div class="bg-white/5 p-5 rounded-3xl border border-white/5">
-                <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Total Grahak Click</span>
+                <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Total Grahak Click</span>
                 <span id="total-clicks" class="text-3xl font-black text-white">0</span>
             </div>
             <div class="bg-white/5 p-5 rounded-3xl border border-white/5">
-                <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Aapka Net Munafa</span>
+                <span class="text-[10px] uppercase font-bold text-slate-400 block mb-1">Aapka Net Munafa</span>
                 <span id="total-profit" class="text-3xl font-black text-emerald-400">₹0</span>
             </div>
         </div>
 
-        <div class="p-6 rounded-3xl bg-white/5 backdrop-glass border border-white/5 mb-8">
-            <h3 class="font-black text-white text-base mb-5 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i> Naya Saman Chadhayein</h3>
+        <div class="p-6 rounded-3xl bg-white/5 border border-white/5 mb-8">
             <form id="old-upload-form" class="flex flex-col gap-4">
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman Ka Naam</label>
-                    <input type="text" id="p-name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
-                </div>
+                <input type="text" id="p-name" required placeholder="Saman Ka Naam" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none">
                 <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Kharidi Rate</label>
-                        <input type="number" id="p-cost" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Bechne Ka Rate</label>
-                        <input type="number" id="p-price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
-                    </div>
+                    <input type="number" id="p-cost" required placeholder="Kharidi Rate" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none">
+                    <input type="number" id="p-price" required placeholder="Bechne Ka Rate" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none">
                 </div>
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Category</label>
-                    <select id="p-cat" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
-                        <option value="General">General Grocery</option>
-                        <option value="Stationery">Stationery & Books</option>
-                        <option value="Toys">Toys & Games</option>
-                        <option value="Household">Household Goods</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Quality / Description</label>
-                    <textarea id="p-desc" placeholder="Saman ki khoobi ya details likhein..." rows="3" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
-                </div>
-                <div>
-                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5-6 Photo)</label>
-                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
-                </div>
-                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
+                <select id="p-cat" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none">
+                    <option value="General">General Grocery</option>
+                    <option value="Stationery">Stationery & Books</option>
+                    <option value="Toys">Toys & Games</option>
+                    <option value="Household">Household Goods</option>
+                </select>
+                <textarea id="p-desc" placeholder="Saman ki Quality / Description" rows="3" class="w-full bg-[#111827] border p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
+                <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] p-3.5 text-sm rounded-xl text-slate-500">
+                <button type="submit" id="submit-btn" class="w-full bg-emerald-600 text-white font-black text-xs py-4 rounded-xl mt-2">Saman ko Live Dukan Par Chadhayein</button>
             </form>
         </div>
 
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="font-black text-white text-base flex items-center gap-3"><i class="fa-solid fa-boxes-stacked text-amber-400"></i> Dukan ka Stock List</h3>
-                <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 px-4 py-2.5 rounded-xl text-xs font-black shadow-lg flex items-center gap-1.5 transition">
-                    <i class="fa-solid fa-bolt text-[11px]"></i> AI WhatsApp Blast
-                </button>
-            </div>
-            <div id="admin-products-list" class="grid grid-cols-2 gap-4">
-                </div>
+        <div class="mb-8 flex items-center justify-between">
+            <h3 class="font-black text-white text-base">Dukan ka Stock List</h3>
+            <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 px-4 py-2 rounded-xl text-xs font-black shadow-lg">
+                <i class="fa-solid fa-bolt mr-1"></i> AI WhatsApp Blast
+            </button>
         </div>
-    </div>
 
-    <div id="ai-alert-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-[60] flex items-center justify-center hidden">
-        <div class="bg-[#111827] rounded-[32px] p-6 w-full max-w-sm shadow-2xl border border-white/5 text-center">
-            <div id="alert-icon" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border"></div>
-            <h2 id="alert-title" class="text-2xl font-black text-white mb-1.5">Alert!</h2>
-            <p id="alert-text" class="text-sm text-slate-400 mb-7 font-medium"></p>
-            <button onclick="closeSmartAlert()" class="w-full bg-slate-800 text-white py-3.5 rounded-xl font-bold transition">Theek Hai</button>
-        </div>
+        <div id="admin-products-list" class="grid grid-cols-2 gap-4"></div>
     </div>
 
     <script>
         let productsData = [];
-
         function verifyPin() {
             if(document.getElementById('pin-input').value === '7181') {
                 document.getElementById('security-gate').classList.add('hidden');
@@ -114,18 +72,10 @@
                 fetchAdminMetrics();
             } else { alert("Galat PIN!"); }
         }
-
         async function fetchAdminMetrics() {
-            try {
-                const pRes = await fetch('/api/products');
-                productsData = await pRes.json();
-                renderAdminProducts();
-            } catch(e) { console.error("Metrics sync error:", e); }
-        }
-
-        function renderAdminProducts() {
+            const pRes = await fetch('/api/products');
+            productsData = await pRes.json();
             const list = document.getElementById('admin-products-list');
-            if(!list) return;
             list.innerHTML = '';
             let totalClicks = 0, totalProfit = 0;
 
@@ -133,23 +83,13 @@
                 totalClicks += p.clicks || 0;
                 totalProfit += ((p.price - (p.costPrice || 0)) * (p.clicks || 0));
 
-                let thumb = 'https://via.placeholder.com/150';
-                if(p.image) thumb = p.image;
-                else if(p.images && p.images.length > 0) thumb = p.images[0];
-
                 const card = document.createElement('div');
-                card.className = "product-card p-4 rounded-3xl bg-white/5 border border-white/5 flex flex-col justify-between gap-3 shadow-sm";
+                card.className = "p-4 rounded-3xl bg-white/5 border flex flex-col justify-between gap-3";
                 card.innerHTML = `
-                    <div class="w-full pt-[100%] relative bg-[#111827] rounded-2xl overflow-hidden border border-white/5">
-                        <img src="${thumb}" class="absolute inset-0 w-full h-full object-contain p-2" onerror="this.src='https://via.placeholder.com/150'">
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-xs text-white line-clamp-1">${p.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">${p.description || ''}</p>
-                        <p class="text-[10px] text-amber-400 font-bold mt-1">Clicks: ${p.clicks || 0}</p>
-                        <p class="text-[10px] text-slate-400 font-medium">Rate: ₹${p.price}</p>
-                    </div>
-                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/40 text-red-400 font-bold text-[11px] py-2 rounded-xl border border-red-900/30">Hatayein</button>
+                    <img src="${p.image || p.images[0]}" class="w-full h-32 object-contain rounded-2xl">
+                    <h4 class="font-bold text-xs text-white">${p.name}</h4>
+                    <p class="text-[10px] text-slate-400">Rate: ₹${p.price}</p>
+                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-900/40 text-red-400 font-bold text-[11px] py-2 rounded-xl">Hatayein</button>
                 `;
                 list.appendChild(card);
             });
@@ -160,7 +100,7 @@
         document.getElementById('old-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Saman Chadh raha hai... rukiye...";
+            btn.innerText = "Chadh raha hai...";
             btn.disabled = true;
 
             const formData = new FormData();
@@ -175,32 +115,24 @@
                 formData.append('image', fileInput.files[i]);
             }
 
-            try {
-                const response = await fetch('/api/products', { method: 'POST', body: formData });
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    showSmartAlert('success', "Saman live dukan par chadh gaya!");
-                    document.getElementById('old-upload-form').reset();
-                    fetchAdminMetrics();
-                } else {
-                    showSmartAlert('error', "Server issue. Upload fail.");
-                }
-            } catch (error) {
-                showSmartAlert('error', "Connection issue.");
-            } finally {
-                btn.innerText = "Saman ko Live Dukan Par Chadhayein";
-                btn.disabled = false;
-            }
+            const response = await fetch('/api/products', { method: 'POST', body: formData });
+            if (response.ok) {
+                alert("Saman live ho gaya!");
+                document.getElementById('old-upload-form').reset();
+                fetchAdminMetrics();
+            } else { alert("Upload fail."); }
+            btn.innerText = "Saman ko Live Dukan Par Chadhayein";
+            btn.disabled = false;
         });
 
         async function triggerAIMarketingBlast() {
             try {
                 const res = await fetch('/api/ai-marketing/blast');
                 const data = await res.json();
-                if(data.success) window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank');
-                else alert("Saman list khali hai.");
-            } catch(e) { console.error("Marketing blast failed:", e); }
+                if(data.success) {
+                    window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank');
+                } else { alert("Stock khali hai."); }
+            } catch(e) { console.error(e); }
         }
 
         async function deleteProduct(id) {
@@ -209,24 +141,6 @@
                 fetchAdminMetrics();
             }
         }
-
-        function showSmartAlert(type, text) {
-            const iconBox = document.getElementById('alert-icon');
-            const modal = document.getElementById('ai-alert-modal');
-            if(type === 'success') {
-                iconBox.className = "w-16 h-16 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-800";
-                iconBox.innerHTML = `<i class="fa-solid fa-check-circle"></i>`;
-                document.getElementById('alert-title').innerText = "Success!";
-            } else {
-                iconBox.className = "w-16 h-16 bg-red-950 text-red-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-red-800";
-                iconBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
-                document.getElementById('alert-title').innerText = "Error!";
-            }
-            document.getElementById('alert-text').innerText = text;
-            modal.classList.remove('hidden');
-        }
-
-        function closeSmartAlert() { document.getElementById('ai-alert-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
