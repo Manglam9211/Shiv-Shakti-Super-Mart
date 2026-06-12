@@ -24,9 +24,9 @@
         </header>
 
         <div class="p-5 rounded-3xl bg-white/5 border border-white/5 mb-8">
-            <h3 class="font-black text-white text-sm mb-3 flex items-center gap-2"><i class="fa-bullhorn fa-solid text-orange-400"></i> Customer Banner Offer Text</h3>
+            <h3 class="font-black text-white text-sm mb-3 flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-400"></i> Customer Banner Offer Text</h3>
             <div class="flex gap-3">
-                <input type="text" id="banner-text-input" placeholder="Example: Diwali Dhamaka Offer! 30% Off..." class="w-full bg-[#111827] border border-white/5 p-3 text-sm text-white rounded-xl outline-none">
+                <input type="text" id="banner-text-input" placeholder="Diwali Dhamaka Offer! 30% Off..." class="w-full bg-[#111827] border border-white/5 p-3 text-sm text-white rounded-xl outline-none">
                 <button onclick="updateLiveBanner()" class="bg-orange-500 text-slate-950 font-black text-xs px-5 rounded-xl transition">Change Banner</button>
             </div>
         </div>
@@ -139,13 +139,14 @@
 
             const fileInput = document.getElementById('p-images');
             for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('image', fileInput.files[i]); // PURE DUAL LOCK SYNC
+                formData.append('image', fileInput.files[i]); // MAPS CLEAR ARRAY TO MATCH FIELDS ENGINE
             }
 
             try {
                 const response = await fetch('/api/products', { method: 'POST', body: formData });
-                if (response.ok) {
-                    alert("Saman live हो गया!");
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    alert("Saman live ho gaya!");
                     document.getElementById('old-upload-form').reset();
                     fetchAdminMetrics();
                 } else { alert("Upload fail."); }

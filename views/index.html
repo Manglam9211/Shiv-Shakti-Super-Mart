@@ -80,17 +80,13 @@
             try {
                 const bRes = await fetch('/api/ai-banner');
                 const bData = await bRes.json();
-                if(bData && bData.text) {
-                    document.getElementById('banner-text-loader').innerText = bData.text;
-                }
-
+                if(bData && bData.text) { document.getElementById('banner-text-loader').innerText = bData.text; }
                 const pRes = await fetch('/api/products');
                 allProducts = await pRes.json();
                 renderCustomerGrid(allProducts);
             } catch (e) { console.error(e); }
         }
         
-        // ADVANCED AUTO AI TAG SELECTION
         function renderCustomerGrid(products) {
             const grid = document.getElementById('customer-products-grid');
             grid.innerHTML = '';
@@ -101,16 +97,9 @@
                 let aiBadgeText = "BESTSELLER";
                 let aiPromoText = "";
                 
-                if (itemPrice >= 500) {
-                    aiBadgeText = "🚚 FREE DELIVERY";
-                    aiPromoText = "Special 35% Off Included";
-                } else if (itemPrice < 100 && itemPrice > 0) {
-                    aiBadgeText = "💥 POCKET ROCKET";
-                    aiPromoText = "Buy 2 Get 1 Free Suggested";
-                } else {
-                    aiBadgeText = "🔥 HOT DEAL";
-                    aiPromoText = p.description || "Flipkart Super Value Pack";
-                }
+                if (itemPrice >= 500) { aiBadgeText = "🚚 FREE DELIVERY"; aiPromoText = "Special 35% Off Included"; }
+                else if (itemPrice < 100 && itemPrice > 0) { aiBadgeText = "💥 POCKET ROCKET"; aiPromoText = "Buy 2 Get 1 Free Suggested"; }
+                else { aiBadgeText = "🔥 HOT DEAL"; aiPromoText = p.description || "Flipkart Super Value Pack"; }
 
                 const card = document.createElement('div');
                 card.className = "bg-white border rounded-3xl p-3 flex flex-col justify-between gap-2 shadow-sm animate-fade-in";
@@ -157,7 +146,6 @@
             document.getElementById('product-lightbox').classList.remove('hidden');
         }
         function closeLightbox() { document.getElementById('product-lightbox').classList.add('hidden'); }
-        
         async function registerProductClick(id, name) {
             await fetch(`/api/products/click/${id}`, { method: 'POST' });
             window.open(`https://wa.me/919450222868?text=Namaste+Shiv+Shakti+Super+Mart,+mujhe+ye+chahiye:+*${encodeURIComponent(name)}*`, '_blank');
