@@ -7,7 +7,6 @@ const path = require('path');
 
 const app = express();
 
-// 50MB Highway locked for High-Quality Mobile Uploads
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('public'));
@@ -23,7 +22,6 @@ cloudinary.config({
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Bridge Storage Routing Setup
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -32,35 +30,32 @@ const storage = new CloudinaryStorage({
   }
 });
 
-const upload = multer({ 
-  storage: storage,
-  limits: { fileSize: 30 * 1024 * 1024 }
-}).any();
+// CRITICAL OLD ENGINE BACK: Handles all file fields without crashing
+const upload = multer({ storage: storage }).any();
 
-// MongoDB Connection with FRESH COLLECTION MAP to bypass old empty records
+// MongoDB Connection
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
-  .then(() => console.log("Database Sync Connection Live on Fresh Collection Engine"))
+  .then(() => console.log("Database Live with Old School Working Setup"))
   .catch(err => console.log("Database Sync Error: ", err));
 
-// Database Model Scheme - Locked strict formatting rule maps
+// Database Schema Layout
 const productSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
+  name: { type: String, default: 'Naya Saman' },
+  price: { type: Number, default: 0 },
   costPrice: { type: Number, default: 0 },
   category: { type: String, default: 'General' },
   description: { type: String, default: '' },
   images: { type: [String], default: [] },
   image: { type: String, default: '' },
   clicks: { type: Number, default: 0 }
-}, { collection: 'active_shiv_shakti_stock' }); // ? FRESH COLLECTION TO BYPASS OLD BLANK DATA
+});
 const Product = mongoose.model('Product', productSchema);
 
-// universal Frontend Pages Routes
+// Frontend Pages Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
-// AI FEATURE 1: DYNAMIC BANNER SYNC
 app.get('/api/ai-banner', (req, res) => {
   res.json({ text: "Welcome to Shiv Shakti Super Mart", active: false });
 });
@@ -72,7 +67,7 @@ app.get('/api/products', async (req, res) => {
   } catch (e) { res.status(200).json([]); }
 });
 
-// AI FEATURE 2: WHATSAPP BLAST LOGIC
+// AI WHATSAPP MARKETING BLAST
 app.get('/api/ai-marketing/blast', async (req, res) => {
   try {
     const products = await Product.find({});
@@ -83,23 +78,16 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// BULLETPROOF MULTIPART SAVE TUNNEL
+// THE OLD WORKING MULTIPART UPLOAD STREAM
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ success: false, message: "Upload stream failed" });
+      return res.status(500).json({ success: false, message: "Upload stream broken" });
     }
-    
     try {
       const { name, price, costPrice, category, description } = req.body;
-      
-      // Stop execution if core values are missing
-      if(!name || !price) {
-        return res.status(400).json({ success: false, message: "Name and Price required" });
-      }
-
       let uploadedUrls = [];
+      
       if (req.files && req.files.length > 0) {
         uploadedUrls = req.files.map(file => file.path);
       }
@@ -107,20 +95,19 @@ app.post('/api/products', (req, res) => {
       const backupMainImage = uploadedUrls.length > 0 ? uploadedUrls[0] : 'https://via.placeholder.com/150';
 
       const newProduct = new Product({
-        name: name,
-        price: Number(price),
+        name: name || "Naya Saman",
+        price: Number(price) || 0,
         costPrice: Number(costPrice || 0),
         category: category || 'General',
         description: description || '',
         images: uploadedUrls,
         image: backupMainImage,
         clicks: 0
-      });
+            });
       
       await newProduct.save();
       return res.status(200).json({ success: true });
     } catch (error) {
-      console.error(error);
       return res.status(500).json({ success: false, message: "Database failure" });
     }
   });

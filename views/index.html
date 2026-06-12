@@ -6,53 +6,81 @@
     <title>Shiv Shakti Super Mart - Agrahunda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .backdrop-glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); }
-        .product-card:hover { transform: translateY(-5px); border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 15px 25px -5px rgba(249, 115, 22, 0.15); }
-        .neon-text-orange { text-shadow: 0 0 10px rgba(249, 115, 22, 0.4); }
-    </style>
 </head>
-<body class="bg-[#030712] min-h-screen font-sans pb-24 antialiased text-slate-300">
+<body class="bg-slate-50 min-h-screen font-sans pb-24 antialiased text-slate-800">
 
-    <div id="top-flash-banner" class="bg-gradient-to-r from-amber-500 via-orange-600 to-red-600 text-white text-center py-2 px-4 text-xs font-black tracking-wide shadow-lg flex items-center justify-center gap-2">
-        <i class="fa-solid fa-fire text-amber-200 animate-bounce"></i>
-        <span id="banner-text-loader">💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item, ek baar click karke khud rate dekhein! 💥</span>
+    <div class="bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white p-5 rounded-b-[32px] shadow-lg max-w-md mx-auto">
+        <div class="flex items-center justify-between mb-3">
+            <div>
+                <h1 class="font-black text-2xl tracking-tight text-white flex items-center gap-2">
+                    Shiv Shakti <span class="text-slate-900 font-extrabold">Super Mart</span>
+                </h1>
+                <p class="text-xs text-orange-950 font-bold flex items-center gap-1 mt-1 bg-white/20 px-2 py-0.5 rounded-full w-max">
+                    <i class="fa-solid fa-brain"></i> Real-Time Cloud Sync Active
+                </p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 text-xs font-bold text-orange-950 mt-2">
+            <span><i class="fa-solid fa-location-dot text-slate-900"></i> Agrahunda, Chitrakoot</span>
+            <a href="tel:9450222868" class="ml-auto flex items-center gap-1 bg-slate-900 text-white px-2.5 py-1 rounded-lg"><i class="fa-solid fa-phone text-[10px]"></i> 9450222868</a>
+        </div>
     </div>
 
     <div class="max-w-md mx-auto px-4 pt-5">
-        
-        <header class="flex items-center justify-between mb-6 p-4 bg-[#0f172a]/80 backdrop-glass rounded-[24px] border border-slate-800 shadow-xl">
-            <div>
-                <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
-                    <span class="text-orange-500 neon-text-orange"><i class="fa-solid fa-shop"></i></span> Shiv Shakti Mart
-                </h1>
-                <p class="text-[10px] text-slate-400 font-bold flex items-center gap-1 mt-0.5">
-                    <i class="fa-solid fa-location-dot text-red-500"></i> Agrahunda, Chitrakoot
-                </p>
-            </div>
-            <a href="/admin" class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-[11px] font-black tracking-wide transition flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-user-shield text-amber-400"></i> Admin
-            </a>
-        </header>
+        <div class="relative mb-5 shadow-sm rounded-2xl overflow-hidden border border-slate-200">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-400 text-sm"></i>
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-white pl-11 pr-4 py-3.5 text-sm text-slate-900 outline-none font-medium placeholder-slate-400">
+        </div>
 
-        <div class="relative mb-6">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-500 text-sm"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-[#0f172a]/90 border border-slate-800 pl-11 pr-11 py-3.5 text-sm text-white rounded-2xl outline-none focus:border-orange-500 font-medium placeholder-slate-500 shadow-inner transition">
+        <div class="bg-slate-950 text-white p-4 rounded-2xl flex items-center justify-between font-black text-sm shadow-md mb-6">
+            <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> Sabhi Saman (All)</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
         </div>
 
         <div id="customer-products-grid" class="grid grid-cols-2 gap-4">
             </div>
     </div>
 
-    <footer class="fixed bottom-0 inset-x-0 bg-[#030712]/90 backdrop-glass border-t border-slate-800/80 py-3.5 px-6 flex items-center justify-around z-40 max-w-md mx-auto shadow-2xl">
-        <a href="tel:919211000000" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
-            <i class="fa-solid fa-phone-volume text-lg"></i>
-            <span class="text-[9px] font-black uppercase tracking-wider">Direct Call</span>
+    <div id="product-lightbox" class="fixed inset-0 bg-black/90 z-50 flex flex-col justify-between hidden p-4 animate-fade-in">
+        <div class="flex items-center justify-between text-white pt-2">
+            <span id="lightbox-category" class="text-xs uppercase tracking-widest font-black text-orange-400">Category</span>
+            <button onclick="closeLightbox()" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="w-full max-w-sm mx-auto aspect-square bg-slate-900/40 rounded-3xl overflow-hidden border border-white/5 flex items-center justify-center p-2 relative">
+            <img id="lightbox-main-img" src="" class="w-full h-full object-contain transition-all duration-300">
+        </div>
+
+        <div class="w-full max-w-sm mx-auto bg-slate-900 p-5 rounded-[32px] border border-white/5 shadow-2xl mb-4 text-left">
+            <h2 id="lightbox-title" class="text-xl font-black text-white tracking-tight">Saman Ka Naam</h2>
+            <p id="lightbox-desc" class="text-xs text-slate-400 mt-1 font-medium leading-relaxed">Description listing here...</p>
+            
+            <div class="mt-4">
+                <p class="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2">Alag-Alag Angle Se Dekhein:</p>
+                <div id="lightbox-thumbs-container" class="flex items-center gap-2 overflow-x-auto pb-1">
+                    </div>
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
+                <div>
+                    <span class="text-[9px] uppercase font-black tracking-widest text-slate-500 block">Khaas Rate</span>
+                    <span id="lightbox-price" class="text-2xl font-black text-orange-500">Rs. 0</span>
+                </div>
+                <button id="lightbox-wa-btn" class="bg-[#10b981] hover:bg-emerald-600 text-white px-6 py-3 rounded-xl font-black text-xs shadow-md uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Abhi Order Karein
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 py-3 px-6 flex items-center justify-around z-40 max-w-md mx-auto shadow-xl rounded-t-2xl">
+        <a href="tel:9450222868" class="flex flex-col items-center gap-1 text-slate-500 hover:text-blue-600 font-bold transition">
+            <i class="fa-solid fa-phone-volume text-lg text-blue-600"></i>
+            <span class="text-[10px]">Direct Call</span>
         </a>
-        <a href="https://wa.me/919211000000" target="_blank" class="flex flex-col items-center gap-1 text-emerald-400 hover:text-emerald-300 transition">
-            <i class="fa-solid fa-circle-nodes text-xl animate-pulse text-emerald-500"></i>
-            <span class="text-[9px] font-black uppercase tracking-wider">WhatsApp Shop</span>
+        <a href="https://wa.me/919450222868" target="_blank" class="flex flex-col items-center gap-1 text-slate-500 hover:text-emerald-600 font-bold transition">
+            <i class="fa-brands fa-whatsapp text-2xl text-emerald-500"></i>
+            <span class="text-[10px]">WhatsApp Shop</span>
         </a>
     </footer>
 
@@ -61,12 +89,6 @@
 
         async function initializeStorefront() {
             try {
-                const bRes = await fetch('/api/ai-banner');
-                const bData = await bRes.json();
-                if(bData && bData.active) {
-                    document.getElementById('banner-text-loader').innerText = bData.text;
-                }
-
                 const pRes = await fetch('/api/products');
                 allProducts = await pRes.json();
                 renderCustomerGrid(allProducts);
@@ -79,7 +101,7 @@
             grid.innerHTML = '';
 
             if(!products || products.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center text-slate-600 font-black py-16 text-sm">Dukan par abhi koi saman live nahi hai. Admin panel se saman chadhayein!</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center text-slate-400 font-bold py-12 text-sm">Dukan par koi saman nahi hai.</div>`;
                 return;
             }
 
@@ -89,27 +111,28 @@
                 else if(p.images && p.images.length > 0) thumbUrl = p.images[0];
 
                 const card = document.createElement('div');
-                card.className = "product-card bg-gradient-to-b from-[#0f172a] to-slate-950 rounded-[28px] p-3.5 flex flex-col justify-between gap-3 relative shadow-xl overflow-hidden";
+                card.className = "bg-white border border-slate-100 rounded-3xl p-3 flex flex-col justify-between gap-2.5 shadow-sm relative cursor-pointer";
                 
+                // 🌟 CLICK TARGET FIXED: Image click triggers the big Multi-Angle Pop-up!
                 card.innerHTML = `
-                    <div>
-                        <div class="w-full pt-[100%] relative bg-slate-950/60 rounded-2xl overflow-hidden mb-2.5 border border-slate-900 shadow-inner">
-                            <span class="absolute left-2 top-2 bg-orange-600/90 text-slate-950 font-black text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-md z-10 border border-orange-500/20"><i class="fa-solid fa-star text-[7px]"></i> Live</span>
+                    <div onclick="openLightbox('${p._id}')">
+                        <div class="w-full pt-[100%] relative bg-slate-50 rounded-2xl overflow-hidden mb-2 border border-slate-100">
+                            <span class="absolute left-2 top-2 bg-orange-500 text-white font-black text-[8px] uppercase tracking-wider px-2 py-0.5 rounded-md z-10 shadow-sm"><i class="fa-solid fa-star text-[7px]"></i> Live</span>
                             <img src="${thumbUrl}" class="absolute inset-0 w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/150'">
                         </div>
                         <div class="px-0.5">
-                            <span class="text-[8px] uppercase font-black tracking-widest text-orange-400 block">${p.category || 'General'}</span>
-                            <h3 class="font-black text-sm text-white tracking-tight line-clamp-1 mt-0.5">${p.name}</h3>
-                            <p class="text-[10px] text-slate-400 line-clamp-2 mt-1 leading-snug font-medium h-7">${p.description || 'No description available'}</p>
+                            <span class="text-[9px] uppercase font-bold text-slate-400 block">${p.category || 'General'}</span>
+                            <h3 class="font-black text-sm text-slate-900 tracking-tight line-clamp-1 mt-0.5">${p.name}</h3>
+                            <p class="text-[10px] text-slate-500 line-clamp-1 mt-0.5">${p.description || ''}</p>
                         </div>
                     </div>
-                    <div class="mt-2 flex flex-col gap-2">
-                        <div class="flex items-baseline gap-1.5 px-0.5">
-                            <span class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500">₹${p.price}</span>
-                            <span class="text-[10px] text-slate-600 font-bold line-through">MRP: ₹${Math.floor(p.price * 1.3)}</span>
+                    <div class="mt-1 flex flex-col gap-2">
+                        <div class="px-0.5">
+                            <span class="text-base font-black text-orange-600">Rs. ${p.price || 0}</span>
+                            <span class="text-[10px] text-slate-400 font-bold line-through ml-1">Rs. ${Math.floor((p.price || 0) * 1.25)}</span>
                         </div>
-                        <button onclick="registerProductClick('${p._id}', '${p.name}')" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 py-3 rounded-xl font-black text-xs shadow-md transition flex items-center justify-center gap-1.5 uppercase tracking-wider active:scale-95">
-                            <i class="fa-brands fa-whatsapp text-sm"></i> Order Karein
+                        <button onclick="registerProductClick('${p._id}', '${p.name}')" class="w-full bg-[#10b981] hover:bg-emerald-600 text-white py-2.5 rounded-xl font-black text-xs shadow-sm transition flex items-center justify-center gap-1.5 active:scale-95">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Abhi Book Karein
                         </button>
                     </div>
                 `;
@@ -117,11 +140,61 @@
             });
         }
 
+        // 🌟 LIGHTBOX LOGIC: Loads all images/angles uploaded by you live
+        function openLightbox(id) {
+            const p = allProducts.find(item => item._id === id);
+            if(!p) return;
+
+            document.getElementById('lightbox-title').innerText = p.name;
+            document.getElementById('lightbox-category').innerText = p.category || 'General';
+            document.getElementById('lightbox-desc').innerText = p.description || 'Is saman ka koi vivran nahi hai.';
+            document.getElementById('lightbox-price').innerText = `Rs. ${p.price}`;
+            
+            // Gather all available image links safely
+            let allImgs = [];
+            if(p.images && p.images.length > 0) allImgs = p.images;
+            else if(p.image) allImgs = [p.image];
+            else allImgs = ['https://via.placeholder.com/150'];
+
+            // Set main image view
+            const mainImgElement = document.getElementById('lightbox-main-img');
+            mainImgElement.src = allImgs[0];
+
+            // Render different angle thumbnails dynamically
+            const thumbsContainer = document.getElementById('lightbox-thumbs-container');
+            thumbsContainer.innerHTML = '';
+            
+            allImgs.forEach((imgUrl, index) => {
+                const thumbBtn = document.createElement('button');
+                thumbBtn.className = `w-12 h-12 rounded-xl overflow-hidden border-2 flex-shrink-0 p-0.5 bg-white ${index === 0 ? 'border-orange-500' : 'border-white/10'}`;
+                thumbBtn.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain">`;
+                
+                // Clicking angle thumbnail switches main view smoothly
+                thumbBtn.onclick = () => {
+                    mainImgElement.src = imgUrl;
+                    Array.from(thumbsContainer.children).forEach(child => child.classList.remove('border-orange-500'));
+                    thumbBtn.classList.add('border-orange-500');
+                };
+                thumbsContainer.appendChild(thumbBtn);
+            });
+
+            // Sync order button inside lightbox
+            document.getElementById('lightbox-wa-btn').onclick = () => {
+                registerProductClick(p._id, p.name);
+            };
+
+            document.getElementById('product-lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('product-lightbox').classList.add('hidden');
+        }
+
         async function registerProductClick(id, name) {
             try {
                 await fetch(`/api/products/click/${id}`, { method: 'POST' });
                 const waMessage = `Namaste Shiv Shakti Super Mart, mujhe ye saman chahiye:\n\nSaman ka Naam: *${name}*\n\nKripya order pakka karein.`;
-                window.open(`https://wa.me/919211000000?text=${encodeURIComponent(waMessage)}`, '_blank');
+                window.open(`https://wa.me/919450222868?text=${encodeURIComponent(waMessage)}`, '_blank');
             } catch(e) { console.error(e); }
         }
 

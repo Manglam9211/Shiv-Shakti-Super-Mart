@@ -7,69 +7,64 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .backdrop-glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -5px rgba(245, 158, 11, 0.2); }
-        .neon-border-green { border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: 0 0 15px rgba(16, 185, 129, 0.1); }
-        .neon-border-amber { border: 1px solid rgba(245, 158, 11, 0.3); box-shadow: 0 0 15px rgba(245, 158, 11, 0.1); }
+        .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
-<body class="bg-[#060b13] min-h-screen font-sans pb-16 antialiased text-slate-300">
+<body class="bg-[#0b1120] min-h-screen font-sans pb-16 antialiased text-slate-300">
 
-    <div id="security-gate" class="fixed inset-0 bg-[#030712] z-50 flex items-center justify-center p-4">
-        <div class="bg-[#0f172a] rounded-[32px] p-8 w-full max-w-sm border border-slate-800 text-center shadow-2xl">
-            <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-orange-600 text-white rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-lg shadow-orange-500/20">
-                <i class="fa-solid fa-brain text-3xl animate-pulse"></i>
+    <div id="security-gate" class="fixed inset-0 bg-[#070b14] z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[32px] p-7 w-full max-w-sm shadow-2xl text-center">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+                <i class="fa-solid fa-brain text-4xl animate-pulse"></i>
             </div>
-            <h2 class="text-2xl font-black text-white mb-1">AI Security Sync</h2>
-            <p class="text-xs text-slate-400 mb-6">Enter secure administration pin</p>
-            <input type="password" id="pin-input" placeholder="••••" class="w-full bg-slate-900 border-2 border-slate-800 text-center py-4 rounded-2xl mb-6 text-4xl font-black text-amber-500 outline-none focus:border-amber-500 tracking-widest shadow-inner">
-            <button onclick="verifyPin()" type="button" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-slate-950 py-4 rounded-2xl font-black shadow-lg shadow-orange-500/20 cursor-pointer transition active:scale-95 text-sm uppercase tracking-wider">Verify Access</button>
+            <h2 class="text-2xl font-black text-slate-900 mb-1">AI Security Sync</h2>
+            <input type="password" id="pin-input" placeholder="••••" class="w-full border-2 border-slate-200 text-center py-4 rounded-2xl mb-5 text-4xl font-black text-slate-900 outline-none focus:border-amber-500">
+            <button onclick="verifyPin()" type="button" class="w-full bg-[#111827] hover:bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-md cursor-pointer transition active:scale-95">Verify Access</button>
         </div>
     </div>
 
     <div id="admin-dashboard" class="max-w-2xl mx-auto px-4 pt-6 hidden">
-        <header class="flex items-center justify-between mb-8 p-5 bg-[#0f172a]/80 backdrop-glass rounded-[24px] border border-slate-800 shadow-2xl">
+        <header class="flex items-center justify-between mb-8 p-5 bg-white/5 backdrop-glass rounded-[24px] border border-white/5 shadow-xl">
             <div>
-                <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
-                    <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Dukan Control Panel</span>
-                </h1>
-                <p class="text-[11px] text-cyan-400 font-bold mt-0.5 tracking-wider uppercase"><i class="fa-solid fa-circle text-[8px] animate-pulse mr-1"></i> Control center active</p>
+                <h1 class="font-black text-xl tracking-tight text-white">Dukan ka Control Panel</h1>
+                <p class="text-[11px] text-slate-400 font-medium mt-0.5">Control center active</p>
             </div>
-            <a href="/" class="bg-gradient-to-r from-slate-800 to-slate-900 hover:from-slate-700 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-xs font-black transition shadow-md">Shop Dekhein</a>
+            <a href="/" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-bold transition">Shop Dekhein</a>
         </header>
 
         <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="bg-gradient-to-br from-[#0f172a] to-transparent p-5 rounded-3xl border border-slate-800 shadow-lg">
-                <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 block mb-1">Total Grahak Click</span>
-                <span id="total-clicks" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">0</span>
+            <div class="bg-white/5 p-5 rounded-3xl border border-white/5">
+                <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Total Grahak Click</span>
+                <span id="total-clicks" class="text-3xl font-black text-white">0</span>
             </div>
-            <div class="bg-gradient-to-br from-[#0f172a] to-transparent p-5 rounded-3xl border border-slate-800 shadow-lg">
-                <span class="text-[10px] uppercase font-black tracking-widest text-slate-400 block mb-1">Aapka Net Munafa</span>
-                <span id="total-profit" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">₹0</span>
+            <div class="bg-white/5 p-5 rounded-3xl border border-white/5">
+                <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-1">Aapka Net Munafa</span>
+                <span id="total-profit" class="text-3xl font-black text-emerald-400">₹0</span>
             </div>
         </div>
 
-        <div class="p-6 rounded-3xl bg-[#0f172a]/60 backdrop-glass border border-slate-800 mb-8 shadow-2xl neon-border-green">
-            <h3 class="font-black text-white text-base mb-6 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-emerald-400 text-lg"></i> Naya Saman Chadhayein</h3>
-            <form id="old-upload-form" class="flex flex-col gap-5">
+        <div class="p-6 rounded-3xl bg-white/5 backdrop-glass border border-white/5 mb-8">
+            <h3 class="font-black text-white text-base mb-5 flex items-center gap-3"><i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i> Naya Saman Chadhayein</h3>
+            <form id="old-upload-form" class="flex flex-col gap-4">
                 <div>
-                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Saman Ka Naam</label>
-                    <input type="text" id="p-name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-slate-950 border border-slate-800 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500 font-medium transition shadow-inner">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman Ka Naam</label>
+                    <input type="text" id="p-name" required placeholder="Lux Sabun, Natraj Pencil Box..." class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Kharidi Rate (₹)</label>
-                        <input type="number" id="p-cost" required placeholder="0" class="w-full bg-slate-950 border border-slate-800 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500 font-medium transition shadow-inner">
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Kharidi Rate</label>
+                        <input type="number" id="p-cost" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                     <div>
-                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Bechne Ka Rate (₹)</label>
-                        <input type="number" id="p-price" required placeholder="0" class="w-full bg-slate-950 border border-slate-800 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500 font-medium transition shadow-inner">
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Bechne Ka Rate</label>
+                        <input type="number" id="p-price" required class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Category</label>
-                    <select id="p-cat" class="w-full bg-slate-950 border border-slate-800 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500 font-black cursor-pointer shadow-inner">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Category</label>
+                    <select id="p-cat" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none cursor-pointer">
                         <option value="General">General Grocery</option>
                         <option value="Stationery">Stationery & Books</option>
                         <option value="Toys">Toys & Games</option>
@@ -77,22 +72,22 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Saman ki Quality / Description</label>
-                    <textarea id="p-desc" placeholder="Saman ki khoobi ya details likhein..." rows="3" class="w-full bg-slate-950 border border-slate-800 p-4 text-sm text-white rounded-xl outline-none focus:border-emerald-500 font-medium transition resize-none shadow-inner"></textarea>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Quality / Description</label>
+                    <textarea id="p-desc" placeholder="Saman ki khoobi ya details likhein..." rows="3" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
                 </div>
                 <div>
-                    <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest block mb-2">Saman ki Photo</label>
-                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-slate-950 border border-slate-800 p-3.5 text-sm rounded-xl text-slate-400 cursor-pointer focus:border-emerald-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo)</label>
+                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
                 </div>
-                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-600 text-slate-950 font-black text-xs py-4 rounded-xl shadow-lg shadow-emerald-500/10 mt-2 transition active:scale-95 uppercase tracking-wider">Saman ko Live Dukan Par Chadhayein</button>
+                <button type="submit" id="submit-btn" class="w-full bg-gradient-to-r from-emerald-500 via-teal-600 to-green-700 text-white font-black text-xs py-4 rounded-xl shadow-lg mt-2 transition">Saman ko Live Dukan Par Chadhayein</button>
             </form>
         </div>
 
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-6 p-1 rounded-2xl">
-                <h3 class="font-black text-white text-base flex items-center gap-3"><i class="fa-solid fa-boxes-stacked text-amber-500 text-lg"></i> Dukan ka Stock List</h3>
-                <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 px-5 py-3 rounded-xl text-xs font-black shadow-lg shadow-amber-500/20 flex items-center gap-2 transition active:scale-95 uppercase tracking-wider">
-                    <i class="fa-solid fa-bolt text-sm"></i> AI WhatsApp Blast
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="font-black text-white text-base flex items-center gap-3"><i class="fa-solid fa-boxes-stacked text-amber-400"></i> Dukan ka Stock List</h3>
+                <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 px-4 py-2.5 rounded-xl text-xs font-black shadow-lg flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-bolt text-[11px]"></i> AI WhatsApp Blast
                 </button>
             </div>
             <div id="admin-products-list" class="grid grid-cols-2 gap-4">
@@ -101,11 +96,11 @@
     </div>
 
     <div id="ai-alert-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xs z-[60] flex items-center justify-center hidden">
-        <div class="bg-[#0f172a] rounded-[32px] p-6 w-full max-w-sm shadow-2xl border border-slate-800 text-center">
+        <div class="bg-[#111827] rounded-[32px] p-6 w-full max-w-sm shadow-2xl border border-white/5 text-center">
             <div id="alert-icon" class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border"></div>
             <h2 id="alert-title" class="text-2xl font-black text-white mb-1.5">Alert!</h2>
             <p id="alert-text" class="text-sm text-slate-400 mb-7 font-medium"></p>
-            <button onclick="closeSmartAlert()" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-3.5 rounded-xl font-bold transition">Theek Hai</button>
+            <button onclick="closeSmartAlert()" class="w-full bg-slate-800 text-white py-3.5 rounded-xl font-bold transition">Theek Hai</button>
         </div>
     </div>
 
@@ -134,13 +129,6 @@
             list.innerHTML = '';
             let totalClicks = 0, totalProfit = 0;
 
-            if(productsData.length === 0) {
-                list.innerHTML = `<div class="col-span-2 text-center text-slate-500 font-bold py-12 text-sm">Stock list khali hai. Naya saman upar se chadhayein!</div>`;
-                document.getElementById('total-clicks').innerText = 0;
-                document.getElementById('total-profit').innerText = `₹0`;
-                return;
-            }
-
             productsData.forEach(p => {
                 totalClicks += p.clicks || 0;
                 totalProfit += ((p.price - (p.costPrice || 0)) * (p.clicks || 0));
@@ -150,20 +138,18 @@
                 else if(p.images && p.images.length > 0) thumb = p.images[0];
 
                 const card = document.createElement('div');
-                card.className = "product-card p-4 rounded-3xl bg-[#0f172a]/90 border border-slate-800 flex flex-col justify-between gap-3 shadow-md neon-border-amber";
+                card.className = "product-card p-4 rounded-3xl bg-white/5 border border-white/5 flex flex-col justify-between gap-3 shadow-sm";
                 card.innerHTML = `
-                    <div class="w-full pt-[100%] relative bg-slate-950 rounded-2xl overflow-hidden border border-slate-900">
+                    <div class="w-full pt-[100%] relative bg-[#111827] rounded-2xl overflow-hidden border border-white/5">
                         <img src="${thumb}" class="absolute inset-0 w-full h-full object-contain p-2" onerror="this.src='https://via.placeholder.com/150'">
                     </div>
                     <div>
-                        <h4 class="font-black text-xs text-white line-clamp-1 tracking-tight">${p.name}</h4>
-                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5 font-medium">${p.description || 'No description added'}</p>
-                        <div class="mt-2 pt-2 border-t border-slate-800/60 flex items-center justify-between">
-                            <p class="text-[10px] text-amber-400 font-black">Clicks: ${p.clicks || 0}</p>
-                            <p class="text-[10px] text-emerald-400 font-black">Rate: ₹${p.price}</p>
-                        </div>
+                        <h4 class="font-bold text-xs text-white line-clamp-1">${p.name}</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">${p.description || ''}</p>
+                        <p class="text-[10px] text-amber-400 font-bold mt-1">Clicks: ${p.clicks || 0}</p>
+                        <p class="text-[10px] text-slate-400 font-medium">Rate: ₹${p.price}</p>
                     </div>
-                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/30 hover:bg-red-950/60 text-red-400 font-black text-[11px] py-2.5 rounded-xl border border-red-900/30 transition">Delete Item</button>
+                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-950/40 text-red-400 font-bold text-[11px] py-2 rounded-xl border border-red-900/30">Hatayein</button>
                 `;
                 list.appendChild(card);
             });
@@ -174,7 +160,7 @@
         document.getElementById('old-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Saman Live ho raha hai... rukiye...";
+            btn.innerText = "Saman Chadh raha hai... rukiye...";
             btn.disabled = true;
 
             const formData = new FormData();
@@ -197,11 +183,11 @@
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    showSmartAlert('success', "Badhai ho! Saman live dukan par chadh gaya.");
+                    showSmartAlert('success', "Saman live dukan par chadh gaya!");
                     document.getElementById('old-upload-form').reset();
                     fetchAdminMetrics();
                 } else {
-                    showSmartAlert('error', result.message || "Server engine error. Fail.");
+                    showSmartAlert('error', "Server issue. Upload fail.");
                 }
             } catch (error) {
                 showSmartAlert('error', "Connection issue.");
@@ -221,7 +207,7 @@
         }
 
         async function deleteProduct(id) {
-            if(confirm("Dukan se ye saman pakka hatayein?")) {
+            if(confirm("Saman hatayein?")) {
                 await fetch(`/api/products/${id}`, { method: 'DELETE' });
                 fetchAdminMetrics();
             }
@@ -231,11 +217,11 @@
             const iconBox = document.getElementById('alert-icon');
             const modal = document.getElementById('ai-alert-modal');
             if(type === 'success') {
-                iconBox.className = "w-16 h-16 bg-emerald-950/60 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-800/40";
+                iconBox.className = "w-16 h-16 bg-emerald-950 text-emerald-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-emerald-800";
                 iconBox.innerHTML = `<i class="fa-solid fa-check-circle"></i>`;
                 document.getElementById('alert-title').innerText = "Success!";
             } else {
-                iconBox.className = "w-16 h-16 bg-red-950/60 text-red-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-red-800/40";
+                iconBox.className = "w-16 h-16 bg-red-950 text-red-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 border border-red-800";
                 iconBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
                 document.getElementById('alert-title').innerText = "Error!";
             }
