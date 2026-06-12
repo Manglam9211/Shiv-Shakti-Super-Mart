@@ -1,298 +1,133 @@
 ﻿<!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shiv Shakti Super Mart</title>
+    <title>Shiv Shakti Super Mart - Agrahunda</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .backdrop-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .sticky-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.9); border-top: 1px solid rgba(229, 231, 235, 0.5); z-index: 50; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        @keyframes pulse-subtle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
-        .pulse-btn { animation: pulse-subtle 2s infinite ease-in-out; }
+        .product-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-card:hover { transform: translateY(-4px); }
     </style>
 </head>
-<body class="bg-slate-50 pb-28 font-sans text-slate-800 antialiased">
+<body class="bg-[#070b14] min-h-screen font-sans pb-24 antialiased text-slate-300">
 
-    <div id="ai-banner" class="bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 text-white text-center py-2.5 text-xs font-black tracking-wide shadow-md select-none sticky top-0 z-40">
-        <span id="banner-text">✨ Loading Today's Special Ad Dhamaka... ✨</span>
+    <div id="top-flash-banner" class="bg-gradient-to-r from-amber-500 via-orange-600 to-red-600 text-white text-center py-2 px-4 text-xs font-black tracking-wide shadow-md flex items-center justify-center gap-2">
+        <i class="fa-solid fa-fire text-amber-200 animate-bounce"></i>
+        <span id="banner-text-loader">💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item, ek baar click karke khud rate dekhein! 💥</span>
     </div>
 
-    <header class="bg-slate-900 text-white px-4 pt-7 pb-7 rounded-b-[24px] shadow-xl text-center relative overflow-hidden">
-        <h1 class="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300">
-            Shiv Shakti <span class="text-white font-light text-2xl">Super Mart</span>
-        </h1>
-        <p class="text-[11px] text-slate-400 mt-1.5 flex items-center justify-center gap-1 font-medium">
-            <i class="fa-solid fa-brain text-orange-400 text-xs"></i> Intelligent Sync Engine Active
-        </p>
-        
-        <div class="flex justify-center gap-2.5 mt-4 text-xs">
-            <span class="bg-slate-800/90 backdrop-glass px-3.5 py-1.5 rounded-full border border-slate-700/60 font-semibold flex items-center gap-1.5 shadow-sm text-slate-200">
-                <i class="fa-solid fa-location-dot text-orange-500"></i> Agrahunda, Chitrakoot
-            </span>
-            <a href="/admin" class="bg-slate-800/90 backdrop-glass hover:bg-slate-700 px-3.5 py-1.5 rounded-full border border-slate-700/60 font-semibold flex items-center gap-1.5 transition text-slate-200">
-                <i class="fa-solid fa-circle-user text-amber-400"></i> Admin Panel
+    <div class="max-w-md mx-auto px-4 pt-4">
+        <header class="flex items-center justify-between mb-5 p-4 bg-white/5 backdrop-glass rounded-[24px] border border-white/5 shadow-xl">
+            <div>
+                <h1 class="font-black text-xl tracking-tight text-white flex items-center gap-2">
+                    <span class="text-amber-500"><i class="fa-solid fa-shop"></i></span> Shiv Shakti Mart
+                </h1>
+                <p class="text-[10px] text-slate-400 font-bold flex items-center gap-1 mt-0.5">
+                    <i class="fa-solid fa-location-dot text-red-400"></i> Agrahunda, Chitrakoot
+                </p>
+            </div>
+            <a href="/admin" class="bg-white/10 hover:bg-white/20 border border-white/5 text-white px-3 py-1.5 rounded-xl text-[11px] font-black tracking-wide transition flex items-center gap-1.5">
+                <i class="fa-solid fa-user-shield text-amber-400"></i> Admin Panel
             </a>
-        </div>
-    </header>
-
-    <main class="max-w-md mx-auto px-4 mt-6">
-        
-        <div class="relative flex items-center mb-5 shadow-xs">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
-            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full pl-11 pr-12 py-3.5 bg-white rounded-2xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-sm font-medium transition-all">
-            <button onclick="startVoiceSearch()" class="absolute right-3 p-2 text-orange-500 hover:bg-orange-50 rounded-xl transition" title="Voice Search">
-                <i class="fa-solid fa-microphone text-base"></i>
-            </button>
-        </div>
+        </header>
 
         <div class="relative mb-6">
-            <button id="category-trigger" onclick="toggleCategoryMenu()" class="w-full bg-slate-950 text-white py-3.5 px-5 rounded-2xl font-bold flex items-center justify-between shadow-md hover:bg-slate-900 transition">
-                <span id="cat-title" class="flex items-center gap-2">⚡ Sabhi Saman (All)</span>
-                <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
-            </button>
-            <div id="category-menu" class="hidden mt-2 bg-white/95 backdrop-glass rounded-2xl shadow-2xl border border-slate-100 overflow-hidden absolute w-full z-30">
-                <button onclick="selectCategory('All')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-border-all text-orange-500"></i> Sabhi Saman (All)</button>
-                <button onclick="selectCategory('General')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-basket-shopping text-orange-500"></i> General Grocery</button>
-                <button onclick="selectCategory('Stationery')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-book text-orange-500"></i> Stationery & Books</button>
-                <button onclick="selectCategory('Toys')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm border-b border-slate-100 flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-gamepad text-orange-500"></i> Toys & Games</button>
-                <button onclick="selectCategory('Household')" class="w-full text-left px-5 py-3.5 hover:bg-orange-50 font-semibold text-sm flex items-center gap-3 transition text-slate-700"><i class="fa-solid fa-house-laptop text-orange-500"></i> Household Goods</button>
-            </div>
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-slate-500 text-sm"></i>
+            <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhundhein..." class="w-full bg-white/5 border border-white/5 pl-11 pr-11 py-3.5 text-sm text-white rounded-2xl outline-none focus:border-amber-500 font-medium placeholder-slate-500 shadow-inner">
         </div>
 
-        <div id="products-container" class="grid grid-cols-2 gap-4">
+        <div id="customer-products-grid" class="grid grid-cols-2 gap-4">
             </div>
-    </main>
-
-    <div id="product-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
-        <div class="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-[32px] overflow-hidden max-h-[90vh] flex flex-col shadow-2xl relative">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 bg-slate-900/60 text-white w-8 h-8 rounded-full flex items-center justify-center z-20 hover:bg-slate-950 transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            
-            <div class="overflow-y-auto p-5 flex-1 pb-8">
-                <div class="w-full bg-slate-50 rounded-2xl overflow-hidden relative border border-slate-100 mb-4 flex items-center justify-center h-64">
-                    <img id="modal-main-img" src="" class="max-w-full max-h-full object-contain p-2">
-                </div>
-                <div id="modal-thumbnails" class="flex gap-2 overflow-x-auto pb-2 mb-4 justify-center"></div>
-                
-                <span id="modal-category" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1"></span>
-                <h2 id="modal-title" class="font-black text-slate-900 text-xl leading-snug mb-3"></h2>
-                
-                <div class="flex items-baseline gap-2 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                    <span id="modal-price" class="text-2xl font-black text-orange-600"></span>
-                    <span id="modal-mrp" class="text-xs text-slate-400 line-through"></span>
-                </div>
-
-                <div class="bg-red-50 border border-red-100 p-3 rounded-xl mb-6 flex items-center gap-2 text-xs text-red-700 font-bold">
-                    <i class="fa-solid fa-circle-radiation text-sm text-red-500 animate-spin"></i>
-                    <span>AI Alert: <span id="modal-fake-stock" class="text-red-600 font-black"></span> piece bache hain! Agrahunda ke log abhi ise dekh rahe hain.</span>
-                </div>
-
-                <div class="flex flex-col gap-2.5">
-                    <button id="modal-wa-btn" class="w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white font-black py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm transition active:scale-95">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp शॉप से आर्डर करें
-                    </button>
-                    <a id="modal-call-btn" href="tel:9450222868" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white font-extrabold py-2.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs transition active:scale-95">
-                        <i class="fa-solid fa-phone-volume"></i> Direct Call (सीधे बात करें)
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <div class="sticky-bar backdrop-glass grid grid-cols-2 text-center py-2.5 shadow-xl">
-        <a href="tel:9450222868" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 font-black text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
-            <i class="fa-solid fa-phone-volume text-xl text-blue-600 animate-bounce"></i> Direct Call
+    <footer class="fixed bottom-0 inset-x-0 bg-slate-950/80 backdrop-glass border-t border-white/5 py-3 px-6 flex items-center justify-around z-40 max-w-md mx-auto">
+        <a href="tel:919211000000" class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+            <i class="fa-solid fa-phone-volume text-lg"></i>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Direct Call</span>
         </a>
-        <a href="https://wa.me/9450222868" target="_blank" class="text-emerald-600 font-extrabold text-xs flex flex-col items-center justify-center gap-1 transition active:scale-95">
-            <i class="fa-brands fa-whatsapp text-2xl"></i> WhatsApp Shop
+        <a href="https://wa.me/919211000000" target="_blank" class="flex flex-col items-center gap-1 text-emerald-400 hover:text-emerald-300 transition">
+            <i class="fa-solid fa-circle-nodes text-xl animate-pulse"></i>
+            <span class="text-[9px] font-bold uppercase tracking-wider">WhatsApp Shop</span>
         </a>
-    </div>
+    </footer>
 
     <script>
         let allProducts = [];
-        let currentCategory = 'All';
 
-        async function fetchConfigAndProducts() {
+        async function initializeStorefront() {
             try {
-                const pRes = await fetch('/api/products');
-                allProducts = await pRes.json();
-                
-                setupAIMarketingBanner();
-                renderProducts();
-            } catch(e) { console.error(e); }
-        }
-
-        // 🤖 AI DIALOUGE ADVERTISING ENGINE
-        function setupAIMarketingBanner() {
-            if(allProducts.length === 0) {
-                document.getElementById('banner-text').innerText = "✨ Welcome to Shiv Shakti Super Mart ✨";
-                return;
-            }
-            
-            const currentHour = new Date().getHours();
-            const productIndex = currentHour % allProducts.length;
-            const chosenProduct = allProducts[productIndex];
-
-            const adLines = [
-                `🔥 AAJ KA MAHA OFFER: ${chosenProduct.name} par sabse sasta rate! Ek baar click karke photo zaroor dekhein! 🔥`,
-                `⚡ VIP VALUE ALERT: Pure Chitrakoot me aisa rate kahi nahi milega, abhi WhatsApp karein! ⚡`,
-                `🎁 SHIV SHAKTI SPECIAL: ${chosenProduct.name} ki bikri sabse tez chal rahi hai, abhi order book karein! 🎁`,
-                `💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsertop item, ek baar click karke khud rate dekhein! 💥`
-            ];
-            
-            const randomLine = adLines[currentHour % adLines.length];
-            document.getElementById('banner-text').innerText = randomLine;
-        }
-
-        function toggleCategoryMenu() {
-            document.getElementById('category-menu').classList.toggle('hidden');
-        }
-
-        function selectCategory(cat) {
-            currentCategory = cat;
-            document.getElementById('cat-title').innerHTML = `⚡ ${cat === 'All' ? 'Sabhi Saman (All)' : cat}`;
-            toggleCategoryMenu();
-            renderProducts();
-        }
-
-        function filterProducts() { renderProducts(); }
-
-        function renderProducts() {
-            const container = document.getElementById('products-container');
-            container.innerHTML = '';
-            const query = document.getElementById('search-input').value.toLowerCase();
-
-            const filtered = allProducts.filter(p => {
-                const matchCat = (currentCategory === 'All' || p.category === currentCategory);
-                return matchCat && p.name.toLowerCase().includes(query);
-            });
-
-            filtered.forEach(p => {
-                const calculatedMRP = Math.round(p.price * 1.25);
-                const isHighDemand = p.clicks >= 5;
-                
-                // 🔐 FIXED IMAGE BUG FALLBACK LOOP
-                let mainThumb = 'https://via.placeholder.com/150';
-                if (p.images && p.images.length > 0) {
-                    mainThumb = p.images[0];
-                } else if (p.image) {
-                    mainThumb = p.image;
+                const bRes = await fetch('/api/ai-banner');
+                const bData = await bRes.json();
+                if(bData && bData.active) {
+                    document.getElementById('banner-text-loader').innerText = bData.text;
                 }
 
+                const pRes = await fetch('/api/products');
+                allProducts = await pRes.json();
+                renderCustomerGrid(allProducts);
+            } catch (e) { console.error(e); }
+        }
+
+        function renderCustomerGrid(products) {
+            const grid = document.getElementById('customer-products-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+
+            if(!products || products.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center text-slate-500 font-bold py-12 text-sm">Dukan par ye saman abhi nahi hai.</div>`;
+                return;
+            }
+
+            products.forEach(p => {
+                let thumbUrl = 'https://via.placeholder.com/150';
+                if(p.image) thumbUrl = p.image;
+                else if(p.images && p.images.length > 0) thumbUrl = p.images[0];
+
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-3xl overflow-hidden shadow-xs border border-slate-100 flex flex-col relative transition-all duration-200 hover:shadow-md active:scale-95";
+                card.className = "product-card bg-white/5 border border-white/5 rounded-[28px] p-3.5 flex flex-col justify-between gap-3 relative shadow-md overflow-hidden bg-gradient-to-b from-white/5 to-transparent";
                 
                 card.innerHTML = `
-                    ${isHighDemand ? 
-                        `<span class="absolute top-2.5 left-2.5 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm z-10 tracking-wide uppercase flex items-center gap-0.5"><i class="fa-solid fa-fire text-[8px]"></i> DEMAND HIGH</span>` : 
-                        `<span class="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-glass text-amber-400 text-[9px] font-bold px-2 py-0.5 rounded-full z-10 shadow-xs border border-white/10"><i class="fa-solid fa-star text-[8px]"></i> BESTSELLER</span>`
-                    }
-                    
-                    <div onclick="openProductModal('${p._id}')" class="w-full pt-[100%] relative bg-gradient-to-b from-slate-50 to-white/30 cursor-pointer">
-                        <img src="${mainThumb}" class="absolute inset-0 w-full h-full object-contain p-2.5" loading="lazy">
-                    </div>
-
-                    <div class="p-3.5 flex-1 flex flex-col">
-                        <span onclick="openProductModal('${p._id}')" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest cursor-pointer">${p.category || 'General'}</span>
-                        <h3 onclick="openProductModal('${p._id}')" class="font-bold text-slate-800 text-sm leading-snug mb-2 line-clamp-2 h-9 cursor-pointer hover:text-orange-500 transition">${p.name}</h3>
-                        <div class="mt-auto">
-                            <div class="flex items-baseline gap-1.5 mb-2.5">
-                                <span class="text-xl font-black text-orange-600">₹${p.price}</span>
-                                <span class="text-[10px] text-slate-400 line-through font-medium">MRP: ₹${calculatedMRP}</span>
-                            </div>
-                            
-                            <div class="flex flex-col gap-2 mt-2">
-                                <button onclick="registerClick('${p._id}', '${p.name}')" class="pulse-btn w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white text-[12px] font-black py-2.5 px-2 rounded-xl shadow-md flex items-center justify-center gap-1.5 transition">
-                                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp शॉप
-                                </button>
-                                <a href="tel:9450222868" onclick="event.stopPropagation();" class="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 text-white text-[11px] font-bold py-1.5 px-2 rounded-xl flex items-center justify-center gap-1 shadow-sm hover:brightness-110 transition">
-                                    <i class="fa-solid fa-phone text-[10px]"></i> Direct Call
-                                </a>
-                            </div>
+                    <div>
+                        <div class="w-full pt-[100%] relative bg-slate-900 rounded-2xl overflow-hidden mb-2.5 border border-white/5 shadow-inner">
+                            <img src="${thumbUrl}" class="absolute inset-0 w-full h-full object-contain p-1" onerror="this.src='https://via.placeholder.com/150'">
+                        </div>
+                        <div class="px-0.5">
+                            <span class="text-[9px] uppercase font-black tracking-widest text-slate-500 block">${p.category || 'General'}</span>
+                            <h3 class="font-black text-sm text-white tracking-tight line-clamp-1 mt-0.5">${p.name || 'Naya Saman'}</h3>
+                            <p class="text-[10px] text-slate-400 line-clamp-2 mt-1 leading-snug font-medium h-7">${p.description || ''}</p>
                         </div>
                     </div>
+                    <div class="mt-2 flex flex-col gap-2">
+                        <div class="flex items-baseline gap-1.5 px-0.5">
+                            <span class="text-xl font-black text-orange-500">₹${p.price || 0}</span>
+                        </div>
+                        <button onclick="registerProductClick('${p._id}', '${p.name}')" class="w-full bg-[#10b981] hover:bg-emerald-600 text-slate-950 py-3 rounded-xl font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                            <i class="fa-brands fa-whatsapp text-sm text-slate-950"></i> WhatsApp शॉप
+                        </button>
+                    </div>
                 `;
-                container.appendChild(card);
+                grid.appendChild(card);
             });
         }
 
-        function openProductModal(id) {
-            const prod = allProducts.find(p => p._id === id);
-            if(!prod) return;
-
-            document.getElementById('modal-title').innerText = prod.name;
-            document.getElementById('modal-category').innerText = prod.category || 'General';
-            document.getElementById('modal-price').innerText = `₹${prod.price}`;
-            document.getElementById('modal-mrp').innerText = `MRP: ₹${Math.round(prod.price * 1.25)}`;
-            
-            document.getElementById('modal-fake-stock').innerText = Math.floor(Math.random() * 3) + 2;
-
-            let baseImg = 'https://via.placeholder.com/150';
-            if (prod.images && prod.images.length > 0) {
-                baseImg = prod.images[0];
-            } else if (prod.image) {
-                baseImg = prod.image;
-            }
-
-            const mainImg = document.getElementById('modal-main-img');
-            mainImg.src = baseImg;
-
-            const thumbBox = document.getElementById('modal-thumbnails');
-            thumbBox.innerHTML = '';
-            
-            if(prod.images && prod.images.length > 1) {
-                prod.images.forEach((imgUrl, index) => {
-                    const thumb = document.createElement('div');
-                    thumb.className = `w-12 h-12 rounded-lg border-2 bg-slate-50 overflow-hidden flex-shrink-0 cursor-pointer p-0.5 transition ${index === 0 ? 'border-orange-500' : 'border-slate-200'}`;
-                    thumb.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-contain">`;
-                    thumb.onclick = function() {
-                        mainImg.src = imgUrl;
-                        document.querySelectorAll('#modal-thumbnails > div').forEach(d => d.classList.remove('border-orange-500'));
-                        thumb.classList.add('border-orange-500');
-                    };
-                    thumbBox.appendChild(thumb);
-                });
-            }
-
-            document.getElementById('modal-wa-btn').onclick = () => registerClick(prod._id, prod.name);
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
-
-        async function registerClick(id, name) {
+        async function registerProductClick(id, name) {
             try {
                 await fetch(`/api/products/click/${id}`, { method: 'POST' });
-                const msg = encodeURIComponent(`Hi! Mujhe Shiv Shakti Super Mart se ye saman chahiye:\n📦 Saman: ${name}\n\nKripya mera order confirm karein.`);
-                window.open(`https://wa.me/9450222868?text=${msg}`, '_blank');
-                fetchConfigAndProducts();
+                const waMessage = `Namaste Shiv Shakti Super Mart, mujhe ye saman chahiye:\n\nSaman ka Naam: *${name}*\n\nKripya order pakka karein.`;
+                window.open(`https://wa.me/919211000000?text=${encodeURIComponent(waMessage)}`, '_blank');
             } catch(e) { console.error(e); }
         }
 
-        function startVoiceSearch() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return alert("Apka browser voice search support nahi karta.");
-            const rec = new SpeechRecognition();
-            rec.lang = 'hi-IN'; rec.continuous = false; rec.interimResults = false;
-            rec.onstart = () => { document.getElementById('search-input').placeholder = "🎤 Speak now / बोलिए..."; };
-            rec.onresult = (e) => {
-                let speechResult = e.results[0][0].transcript;
-                if (speechResult.endsWith('.')) speechResult = speechResult.slice(0, -1);
-                document.getElementById('search-input').value = speechResult;
-                document.getElementById('search-input').placeholder = "Saman ka naam dhundhein";
-                filterProducts();
-            };
-            rec.onerror = () => { document.getElementById('search-input').placeholder = "Saman ka naam dhundhein"; };
-            rec.start();
+        function filterProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allProducts.filter(p => (p.name || '').toLowerCase().includes(query));
+            renderCustomerGrid(filtered);
         }
 
-        window.onload = fetchConfigAndProducts;
+        window.addEventListener('DOMContentLoaded', initializeStorefront);
     </script>
 </body>
 </html>

@@ -191,7 +191,7 @@
                 }
             } catch (error) {
                 showSmartAlert('error', "Connection issue.");
-            } readonly_end: finally {
+            } finally {
                 btn.innerText = "Saman ko Live Dukan Par Chadhayein";
                 btn.disabled = false;
             }
@@ -213,6 +213,7 @@
             }
         }
 
+        // Fixed Smart Alert Trigger Node
         function showSmartAlert(type, text) {
             const iconBox = document.getElementById('alert-icon');
             const modal = document.getElementById('ai-alert-modal');
