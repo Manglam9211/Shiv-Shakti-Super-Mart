@@ -72,6 +72,10 @@
                     </select>
                 </div>
                 <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Quality / Description</label>
+                    <textarea id="p-desc" name="description" placeholder="Saman ki khoobi ya details likhein..." rows="3" class="w-full bg-[#111827] border border-white/5 p-4 text-sm text-white rounded-xl outline-none resize-none"></textarea>
+                </div>
+                <div>
                     <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">Saman ki Photo (Max 5 Photo)</label>
                     <input type="file" id="p-images" name="image" multiple accept="image/*" required class="w-full bg-[#111827] border border-white/5 p-3.5 text-sm rounded-xl text-slate-500 cursor-pointer">
                 </div>
@@ -128,18 +132,20 @@
                 totalClicks += p.clicks || 0;
                 totalProfit += ((p.price - (p.costPrice || 0)) * (p.clicks || 0));
 
+                // FIXED: Bulletproof photo fallback to show the image instantly in stock list
                 let thumb = 'https://via.placeholder.com/150';
-                if(p.images && p.images.length > 0) thumb = p.images[0];
-                else if(p.image) thumb = p.image;
+                if(p.image) thumb = p.image;
+                else if(p.images && p.images.length > 0) thumb = p.images[0];
 
                 const card = document.createElement('div');
                 card.className = "product-card p-4 rounded-3xl bg-white/5 border border-white/5 flex flex-col justify-between gap-3 shadow-sm";
                 card.innerHTML = `
                     <div class="w-full pt-[100%] relative bg-[#111827] rounded-2xl overflow-hidden border border-white/5">
-                        <img src="${thumb}" class="absolute inset-0 w-full h-full object-contain p-2">
+                        <img src="${thumb}" class="absolute inset-0 w-full h-full object-contain p-2" onerror="this.src='https://via.placeholder.com/150'">
                     </div>
                     <div>
                         <h4 class="font-bold text-xs text-white line-clamp-1">${p.name}</h4>
+                        <p class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">${p.description || 'No description'}</p>
                         <p class="text-[10px] text-amber-400 font-bold mt-1">Clicks: ${p.clicks || 0}</p>
                         <p class="text-[10px] text-slate-400 font-medium">Rate: ₹${p.price}</p>
                     </div>
@@ -151,7 +157,6 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
-        // 🚀 OLD SCHOOL FORMDATA CAPTURE - RESTORED FOR MULTIPART SYNC
         document.getElementById('old-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -163,10 +168,11 @@
             formData.append('costPrice', document.getElementById('p-cost').value);
             formData.append('price', document.getElementById('p-price').value);
             formData.append('category', document.getElementById('p-cat').value);
+            formData.append('description', document.getElementById('p-desc').value); // Send description field safely
 
             const fileInput = document.getElementById('p-images');
             for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('image', fileInput.files[i]); // Field Name matches backend perfectly
+                formData.append('image', fileInput.files[i]);
             }
 
             try {
@@ -185,7 +191,7 @@
                 }
             } catch (error) {
                 showSmartAlert('error', "Connection issue.");
-            } finally {
+            } military_safe_end: finally {
                 btn.innerText = "Saman ko Live Dukan Par Chadhayein";
                 btn.disabled = false;
             }

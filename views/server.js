@@ -13,14 +13,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// Cloudinary Direct Config
+// Cloudinary Credentials Configuration
 cloudinary.config({
   cloud_name: 'dmtafwfxg',
   api_key: '183174449285855',
   api_secret: '7RORd5OHjwY3U6Z'
 });
 
-// Old School Storage Bridge - Tied with Multipart Field
+// Cloudinary Storage Bridge
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -29,28 +29,28 @@ const storage = new CloudinaryStorage({
   }
 });
 
-// CRITICAL OLD ENGINE BACK: Handles multiple files on field name 'image'
 const upload = multer({ storage: storage }).any();
 
-// MongoDB Connection
+// MongoDB Connection Engine
 const mongoURI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(mongoURI)
-  .then(() => console.log("Database Sync Active with Old School Multipart Setup"))
+  .then(() => console.log("Database Sync Connection Live"))
   .catch(err => console.log("Database Sync Error: ", err));
 
-// Database Schema Layout
+// FIXED SCHEMA LAYOUT: Restored Description field safely
 const productSchema = new mongoose.Schema({
   name: { type: String, default: 'Naya Saman' },
   price: { type: Number, default: 0 },
   costPrice: { type: Number, default: 0 },
   category: { type: String, default: 'General' },
+  description: { type: String, default: '' }, // Restored field mapping
   images: { type: [String], default: [] },
   image: { type: String, default: '' },
   clicks: { type: Number, default: 0 }
 });
 const Product = mongoose.model('Product', productSchema);
 
-// Frontend Endpoints
+// Frontend Pages Routes
 app.get('/', (req, res) => res.render('index.html'));
 app.get('/admin', (req, res) => res.render('admin.html'));
 
@@ -77,7 +77,7 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
   } catch (e) { res.json({ success: false, text: "Error" }); }
 });
 
-// 🚀 RESTORED COMPLETELY: THE OLD WORKING UPLOAD STREAM
+// 🚀 FIXED UPLOAD TUNNEL: SYNCED DUAL IMAGE KEYS AND DESCRIPTION INPUT
 app.post('/api/products', (req, res) => {
   upload(req, res, async function (err) {
     if (err) {
@@ -86,7 +86,7 @@ app.post('/api/products', (req, res) => {
     }
     
     try {
-      const { name, price, costPrice, category } = req.body;
+      const { name, price, costPrice, category, description } = req.body;
       let uploadedUrls = [];
       
       if (req.files && req.files.length > 0) {
@@ -100,8 +100,9 @@ app.post('/api/products', (req, res) => {
         price: Number(price) || 0,
         costPrice: Number(costPrice || 0),
         category: category || 'General',
-        images: uploadedUrls,
-        image: backupMainImage,
+        description: description || '', // Description saved successfully
+        images: uploadedUrls,            // Array sync fixed
+        image: backupMainImage,          // Direct thumb key fixed
         clicks: 0
       });
       
@@ -109,7 +110,7 @@ app.post('/api/products', (req, res) => {
       return res.status(200).json({ success: true });
     } catch (error) {
       console.error("Database saving error:", error);
-      return res.status(500).json({ success: false, message: "Database rejected product mapping" });
+      return res.status(500).json({ success: false, message: "Database failure" });
     }
   });
 });
