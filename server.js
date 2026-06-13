@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -96,14 +96,15 @@ app.post('/api/products/:id/click', async (req, res) => {
   } catch (e) { res.status(500).json({ success: false }); }
 });
 
-// 🚀 क्लाउड पर सीधे 7 फोटो सुरक्षित चढ़ाने का इंजन
-app.post('/api/products', upload.array('photo', 7), async (req, res) => {
+// 🚀 इंटरनेट लिंक से फोटो को सीधे पुराने 'images' डिब्बे में भेजने का सुधरा हुआ इंजन
+app.post('/api/products', async (req, res) => {
   try {
-    const { name, price, costPrice, category, description } = req.body;
+    const { name, price, costPrice, category, description, photo } = req.body;
     let imageUrls = [];
     
-    if (req.files && req.files.length > 0) {
-      imageUrls = req.files.map(file => file.path); // क्लाउडिनरी का सीधा लिंक
+    if (photo && photo.trim() !== "") {
+      // अगर कोमा लगाकर कई लिंक दिए हैं, तो उनको अलग-अलग करके लिस्ट बना देगा
+      imageUrls = photo.split(',').map(url => url.trim());
     } else {
       imageUrls = ['https://via.placeholder.com/600'];
     }
