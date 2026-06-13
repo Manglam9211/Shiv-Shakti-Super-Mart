@@ -9,99 +9,180 @@
     <style>
         .custom-scroll::-webkit-scrollbar { display: none; }
         .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .animate-marquee { animation: marquee 25s linear infinite; }
+        
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+        .live-pulse { animation: pulse-red 1.8s infinite ease-in-out; }
+
+        @keyframes text-glow-float {
+            0% { transform: translateY(0px); filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.2)); }
+            50% { transform: translateY(-4px); filter: drop-shadow(0 8px 12px rgba(249, 115, 22, 0.4)); }
+            100% { transform: translateY(0px); filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.2)); }
+        }
+        .floating-text-deal { animation: text-glow-float 3.5s infinite ease-in-out; }
+
+        @keyframes floatPulse {
+            0% { transform: translateY(0) scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+            50% { transform: translateY(-8px) scale(1.08); box-shadow: 0 0 25px rgba(16, 185, 129, 0.7); }
+            100% { transform: translateY(0) scale(1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+        }
+        .floating-call { animation: floatPulse 2.5s infinite ease-in-out; }
+
+        .premium-dark-text {
+            color: #0f172a;
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .zoom-image-wrapper {
+            overflow: hidden;
+            touch-action: none;
+        }
+        .zoom-image {
+            transition: transform 0.1s ease-out;
+            transform-origin: center center;
+            cursor: zoom-in;
+        }
     </style>
 </head>
-<body class="bg-[#070b14] min-h-screen text-slate-300 font-sans selection:bg-orange-500 selection:text-black">
+<body class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen text-slate-700 font-sans pb-24">
 
-    <div class="bg-gradient-to-r from-orange-600 to-amber-500 text-slate-950 py-2.5 font-black text-xs uppercase overflow-hidden shadow-lg border-b border-orange-500/20">
-        <div class="whitespace-nowrap animate-marquee flex items-center gap-4">
-            <span id="top-marquee-text">💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item! 💥</span>
+    <div class="max-w-md mx-auto px-4 pt-4">
+        <div class="relative overflow-hidden bg-[#1e293b] rounded-[28px] p-5 border border-slate-700 shadow-xl">
+            <div class="absolute -right-10 -top-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="flex items-center justify-between mb-2">
+                <span class="live-pulse flex items-center gap-1.5 bg-red-500/20 border border-red-500/40 text-red-400 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span> Limited Time Offer
+                </span>
+                <span class="text-[10px] text-orange-400 font-black bg-orange-50/10 px-2.5 py-1 rounded-lg border border-orange-500/20">🔥 TODAY'S DEAL</span>
+            </div>
+            
+            <div class="mt-2.5">
+                <h2 id="top-marquee-text" class="floating-text-deal text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 leading-tight tracking-tight">
+                    Loading Active Offer...
+                </h2>
+                <p class="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1"><i class="fa-solid fa-truck-fast text-orange-400"></i> Dukan par aakar turant le jaayein ya order karein!</p>
+            </div>
         </div>
     </div>
 
-    <header class="sticky top-0 bg-[#070b14]/80 backdrop-blur-xl border-b border-white/5 z-40 px-4 py-4">
+    <header class="sticky top-0 bg-[#f8fafc]/90 backdrop-blur-xl z-40 px-4 py-4 border-b border-slate-200">
         <div class="max-w-md mx-auto flex flex-col gap-4">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mt-1">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-orange-500 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20">
-                        <i class="fa-solid fa-shop text-slate-950 font-black text-lg"></i>
+                    <div class="w-11 h-11 bg-[#0f172a] rounded-2xl flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-shop text-orange-400 font-black text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="font-black text-white text-base tracking-tight">SHIV SHAKTI</h1>
-                        <p class="text-[10px] text-orange-400 font-bold uppercase tracking-widest">Super Mart • Agrahunda</p>
+                        <h1 class="font-black text-2xl premium-dark-text tracking-tight">SHIV SHAKTI</h1>
+                        <p class="text-[10px] text-orange-600 font-black uppercase tracking-widest">SUPER MART • AGRAHUNDA</p>
                     </div>
                 </div>
-                <a href="/admin" class="w-9 h-9 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition">
-                    <i class="fa-solid fa-user-gear text-sm"></i>
+                <a href="/admin" class="bg-white border border-slate-200 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-gear text-slate-500"></i> Control
                 </a>
             </div>
 
             <div class="relative flex items-center gap-2">
                 <div class="relative flex-1">
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhoondhein..." class="w-full bg-[#111827] border border-white/5 py-3.5 pl-11 pr-4 rounded-2xl text-sm text-white placeholder-slate-500 outline-none focus:border-orange-500/30 transition">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhoondhein..." class="w-full bg-white border border-slate-300 py-3.5 pl-12 pr-4 rounded-2xl text-sm text-slate-900 placeholder-slate-400 shadow-sm outline-none focus:border-orange-500 transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                 </div>
-                <button onclick="startVoiceSearch()" class="w-12 h-12 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center text-slate-400 active:bg-orange-500 active:text-slate-950 transition">
+                <button id="mic-button" onclick="startVoiceSearch()" type="button" class="w-12 h-12 bg-white border border-slate-300 rounded-2xl flex items-center justify-center text-orange-600 shadow-sm active:bg-slate-100 transition cursor-pointer z-50">
                     <i id="mic-icon" class="fa-solid fa-microphone text-base"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 pt-6 pb-24">
-        <div class="flex gap-2 overflow-x-auto custom-scroll mb-8 pb-1">
-            <button onclick="switchCategory('All')" class="cat-btn px-5 py-2.5 rounded-2xl text-xs font-black transition whitespace-nowrap bg-orange-500 text-slate-950 shadow-lg shadow-orange-500/10">All Stock</button>
-            <button onclick="switchCategory('General')" class="cat-btn px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap bg-white/5 border border-white/5 text-slate-400">Grocery</button>
-            <button onclick="switchCategory('Stationery')" class="cat-btn px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap bg-white/5 border border-white/5 text-slate-400">Stationery</button>
-            <button onclick="switchCategory('Toys')" class="cat-btn px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap bg-white/5 border border-white/5 text-slate-400">Toys</button>
-            <button onclick="switchCategory('Household')" class="cat-btn px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap bg-white/5 border border-white/5 text-slate-400">Household</button>
+    <main class="max-w-md mx-auto px-4 pt-4">
+        <div class="bg-white p-2 rounded-2xl mb-5 border border-slate-200 flex items-center justify-between shadow-sm">
+            <span class="text-xs font-black text-slate-800 px-2 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-orange-500"></i> Sabhi Saman (All Stock)</span>
+            <i class="fa-solid fa-chevron-down text-xs text-slate-400 px-2"></i>
+        </div>
+
+        <div class="flex gap-2 overflow-x-auto custom-scroll mb-6 pb-1">
+            <button onclick="switchCategory('All')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-black transition whitespace-nowrap bg-orange-500 text-white shadow-md">All Stock</button>
+            <button onclick="switchCategory('General')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Grocery</button>
+            <button onclick="switchCategory('Stationery')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Stationery</button>
+            <button onclick="switchCategory('Toys')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Toys</button>
+            <button onclick="switchCategory('Household')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Household</button>
         </div>
 
         <div id="products-grid" class="grid grid-cols-2 gap-4"></div>
 
         <div id="empty-state" class="hidden text-center py-16">
-            <div class="w-16 h-16 bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-box-open text-slate-600 text-xl"></i>
+            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-200 shadow-sm">
+                <i class="fa-solid fa-box-open text-slate-400 text-xl"></i>
             </div>
-            <p class="text-sm font-bold text-slate-500">Ye saman abhi dukan me nahi hai.</p>
+            <p class="text-sm font-bold text-slate-400">Ye saman abhi dukan me nahi hai.</p>
         </div>
     </main>
 
-    <div id="product-modal" class="fixed inset-0 bg-[#070b14]/90 backdrop-blur-md z-50 flex items-end justify-center p-0 hidden">
-        <div class="bg-[#0b1120] w-full max-w-md rounded-t-[36px] border-t border-white/10 p-6 shadow-2xl flex flex-col gap-5 max-h-[85vh] overflow-y-auto custom-scroll">
-            <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto" onclick="closeModal()"></div>
-            <img id="modal-image" src="" class="w-full h-56 object-contain bg-white/5 rounded-3xl p-2">
-            <div>
-                <span id="modal-cat" class="text-[10px] font-black tracking-widest uppercase text-orange-400 bg-orange-500/10 px-2.5 py-1 rounded-md">General</span>
-                <h2 id="modal-name" class="text-xl font-black text-white mt-3">Saman ka Naam</h2>
-                <p id="modal-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">Description goes here...</p>
+    <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-end justify-center p-0 hidden">
+        <div class="bg-white w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-200">
+            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer" onclick="closeModal()"></div>
+            
+            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm">
+                <div id="slider-container" class="w-full h-full flex transition-transform duration-300 ease-out"></div>
+                <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
-            <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-2">
-                <div>
-                    <span class="text-[10px] text-slate-500 block font-bold uppercase">Best Price</span>
-                    <span id="modal-price" class="text-2xl font-black text-white">₹0</span>
+            
+            <p class="text-[10px] text-center text-orange-600 font-bold bg-orange-50/80 py-1.5 rounded-lg border border-orange-200"><i class="fa-solid fa-arrows-left-right mr-1"></i> Tip: Photo ko ungli se baaye-daaye khiskaayein (Slide karein)</p>
+
+            <div>
+                <span id="modal-cat" class="text-[9px] font-black tracking-widest uppercase text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-200">General</span>
+                <h2 id="modal-name" class="text-lg font-black text-slate-900 mt-2 tracking-tight">Saman ka Naam</h2>
+                <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed">Description...</p>
+            </div>
+
+            <div class="flex flex-col gap-2 border-t border-slate-200 pt-2">
+                <div class="flex items-center justify-between mb-1">
+                    <div>
+                        <span class="text-[10px] text-slate-400 block font-bold uppercase">Best Price</span>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="modal-price" class="text-2xl font-black text-slate-900">₹0</span>
+                            <span id="modal-fake-price" class="text-xs text-slate-400 line-through font-bold">₹0</span>
+                        </div>
+                    </div>
                 </div>
-                <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-6 py-4 rounded-2xl flex items-center gap-2 shadow-lg shadow-emerald-500/10 transition">
-                    <i class="fa-brands fa-whatsapp text-base"></i> Order on WhatsApp
-                </button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
+                        <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Shop
+                    </button>
+                    <a id="modal-call-link" href="tel:919140134493" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-phone text-xs"></i> Direct Call
+                    </a>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-200 pt-4 mt-2">
+                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                    <i class="fa-solid fa-layer-group text-orange-500"></i> Usi Category Ke Aur Saman:
+                </h3>
+                <div id="related-products-container" class="flex gap-3 overflow-x-auto pb-2 custom-scroll"></div>
             </div>
         </div>
     </div>
+
+    <a href="tel:919140134493" class="floating-call fixed bottom-6 right-6 w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xl shadow-xl z-40 border border-emerald-400">
+        <i class="fa-solid fa-phone"></i>
+    </a>
 
     <script>
         let allProducts = [];
         let currentCategory = 'All';
         let activeProduct = null;
+        let currentSlideIndex = 0;
+        let startX = 0;
 
-        window.onload = () => {
-            loadBanner();
-            loadProducts();
-        };
+        window.onload = () => { loadBanner(); loadProducts(); };
 
         async function loadBanner() {
-            const res = await fetch('/api/ai-banner');
+            const res = await fetch('/api/ai-banner').catch(() => {});
             const data = await res.json();
             if(data && data.text) document.getElementById('top-marquee-text').innerText = data.text;
         }
@@ -128,19 +209,30 @@
             else {
                 empty.classList.add('hidden');
                 filtered.forEach(p => {
+                    const mainImg = p.images && p.images.length > 0 ? p.images[0] : '/public/uploads/placeholder.png';
+                    const fakePrice = Math.round(p.price * 1.25);
                     const card = document.createElement('div');
-                    card.className = "bg-white/5 rounded-[28px] border border-white/5 p-3 flex flex-col justify-between gap-3 shadow-xl hover:border-white/10 transition";
-                    card.onclick = () => openModal(p);
+                    card.className = "bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm cursor-pointer hover:scale-[1.01] transition";
+                    
                     card.innerHTML = `
-                        <div class="relative bg-white/5 rounded-2xl p-2 h-32 flex items-center justify-center overflow-hidden">
-                            <img src="${p.image}" class="w-full h-full object-contain">
+                        <div onclick="openModalById('${p._id}')" class="relative bg-slate-50 rounded-xl p-2 h-32 flex items-center justify-center overflow-hidden border border-slate-100">
+                            <img src="${mainImg}" class="max-w-full max-h-full object-contain rounded-lg">
                         </div>
-                        <div class="px-1 pb-1">
-                            <h3 class="font-bold text-xs text-white truncate">${p.name}</h3>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="text-sm font-black text-white">₹${p.price}</span>
-                                <span class="text-[9px] font-black text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded">View</span>
+                        <div onclick="openModalById('${p._id}')" class="px-0.5 mt-1">
+                            <span class="text-[9px] uppercase font-black text-slate-400 block">${p.category || 'General'}</span>
+                            <h3 class="font-black text-xs text-slate-800 truncate mt-0.5">${p.name}</h3>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span class="text-sm font-black text-orange-600">₹${p.price}</span>
+                                <span class="text-[10px] text-slate-400 line-through">₹${fakePrice}</span>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1.5 mt-2 pt-1 border-t border-slate-100">
+                            <button onclick="directWhatsAppOrder('${p._id}', '${p.name}', '${p.price}')" class="bg-emerald-500 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
+                                <i class="fa-brands fa-whatsapp text-xs"></i> Shop
+                            </button>
+                            <a href="tel:919140134493" class="bg-blue-600 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-phone text-[9px]"></i> Call
+                            </a>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -148,53 +240,185 @@
             }
         }
 
-        function filterProducts() { renderProducts(); }
+        function openModalById(id) {
+            const prod = allProducts.find(p => p._id === id);
+            if(prod) openModal(prod);
+        }
+
+        // 👁️ मीटर १: केवल फोटो छूने पर व्यू काउंटर ट्रिगर होगा (व्हाट्सएप्प क्लिक शांत रहेगा)
+        async function openModal(product) {
+            activeProduct = product;
+            currentSlideIndex = 0;
+            
+            // 🚀 व्यू का कनेक्शन सीधे डेटाबेस से
+            await fetch(`/api/products/${product._id}/view`, { method: 'POST' }).catch(() => {});
+
+            document.getElementById('modal-cat').innerText = product.category;
+            document.getElementById('modal-name').innerText = product.name;
+            document.getElementById('modal-desc').innerText = product.description || 'Stock available.';
+            document.getElementById('modal-price').innerText = `₹${product.price}`;
+            document.getElementById('modal-fake-price').innerText = `₹${Math.round(product.price * 1.25)}`;
+
+            const slider = document.getElementById('slider-container');
+            const dotsContainer = document.getElementById('slider-dots');
+            slider.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            const imgs = product.images && product.images.length > 0 ? product.images : ['/public/uploads/placeholder.png'];
+            
+            imgs.forEach((imgUrl, idx) => {
+                const imgWrap = document.createElement('div');
+                imgWrap.className = "w-full h-full flex-shrink-0 flex items-center justify-center p-2";
+                imgWrap.innerHTML = `<img src="${imgUrl}" class="zoom-image max-w-full max-h-full object-contain rounded-xl">`;
+                slider.appendChild(imgWrap);
+
+                const dot = document.createElement('div');
+                dot.className = `h-1 rounded-full transition-all duration-300 ${idx === 0 ? 'w-4 bg-orange-500' : 'w-1 bg-slate-300'}`;
+                dot.id = `slider-dot-${idx}`;
+                dotsContainer.appendChild(dot);
+            });
+
+            updateSliderPosition();
+            
+            // 🚀 रेंडर करें उसी कैटेगरी के दूसरे आइटम्स (AI Recommendation list)
+            renderRelatedProducts(product.category, product._id);
+
+            const sliderWrapper = document.getElementById('product-modal');
+            sliderWrapper.addEventListener('touchstart', handleTouchStart, false);
+            sliderWrapper.addEventListener('touchend', handleTouchEnd, false);
+
+            document.getElementById('product-modal').classList.remove('hidden');
+            initPinchZoomEngine();
+        }
+
+        // 🛍️ अमेज़न स्टाइल रेकमेंडेशन रेंडर करने का आटोमेटिक इंजन
+        function renderRelatedProducts(cat, currentId) {
+            const container = document.getElementById('related-products-container');
+            container.innerHTML = '';
+            const related = allProducts.filter(p => p.category === cat && p._id !== currentId);
+            
+            if(related.length === 0) {
+                container.innerHTML = `<p class="text-[11px] text-slate-400 italic py-1">Is category me abhi aur saman nahi hai.</p>`;
+                return;
+            }
+
+            related.forEach(p => {
+                const img = p.images && p.images.length > 0 ? p.images[0] : '/public/uploads/placeholder.png';
+                const div = document.createElement('div');
+                div.className = "bg-slate-50 border border-slate-200 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center cursor-pointer hover:bg-slate-100 transition";
+                div.onclick = () => { closeModal(); openModal(p); };
+                div.innerHTML = `
+                    <div class="w-16 h-16 bg-white rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-100">
+                        <img src="${img}" class="max-w-full max-h-full object-contain">
+                    </div>
+                    <h4 class="text-[10px] font-black text-slate-700 truncate w-full mt-1">${p.name}</h4>
+                    <span class="text-[11px] font-black text-orange-600">₹${p.price}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function handleTouchStart(e) { if (e.touches.length === 1) startX = e.touches[0].clientX; }
+        
+        function handleTouchEnd(e) {
+            if (!startX || !activeProduct || e.touches.length > 0) return;
+            let endX = e.changedTouches[0].clientX;
+            let diff = startX - endX;
+            const maxImgs = activeProduct.images ? activeProduct.images.length : 1;
+
+            if (diff > 50 && currentSlideIndex < maxImgs - 1) { currentSlideIndex++; } 
+            else if (diff < -50 && currentSlideIndex > 0) { currentSlideIndex--; }
+            
+            updateSliderPosition();
+            startX = 0;
+        }
+
+        function updateSliderPosition() {
+            const slider = document.getElementById('slider-container');
+            if(!slider) return;
+            slider.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
+            if(activeProduct && activeProduct.images) {
+                activeProduct.images.forEach((_, idx) => {
+                    const dot = document.getElementById(`slider-dot-${idx}`);
+                    if(dot) dot.className = `h-1 rounded-full transition-all duration-300 ${idx === currentSlideIndex ? 'w-4 bg-orange-500' : 'w-1 bg-slate-300'}`;
+                });
+            }
+        }
+
+        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+        // 💰 मीटर २: सिर्फ व्हाट्सएप्प बटन दबाने पर मुनाफा काउंटर ट्रिगर होगा
+        async function orderViaWhatsApp() {
+            if(!activeProduct) return;
+            await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            window.open(`https://wa.me/919140134493?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        async function directWhatsAppOrder(id, name, price) {
+            await fetch(`/api/products/${id}/click`, { method: 'POST' }).catch(() => {});
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${name}\n*कीमत:* ₹${price}`;
+            window.open(`https://wa.me/919140134493?text=${encodeURIComponent(msg)}`, '_blank');
+        }
 
         function switchCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.className = "cat-btn px-5 py-2.5 rounded-2xl text-xs font-bold transition whitespace-nowrap bg-white/5 border border-white/5 text-slate-400";
+                btn.className = "cat-btn px-5 py-2.5 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-600 shadow-sm";
                 if(btn.innerText.includes(cat) || (cat==='All' && btn.innerText==='All Stock')) {
-                    btn.className = "cat-btn px-5 py-2.5 rounded-2xl text-xs font-black transition whitespace-nowrap bg-orange-500 text-slate-950 shadow-lg";
+                    btn.className = "cat-btn px-5 py-2.5 rounded-xl text-xs font-black bg-orange-500 text-white shadow-md";
                 }
             });
             renderProducts();
         }
 
-        function openModal(product) {
-            activeProduct = product;
-            document.getElementById('modal-image').src = product.image;
-            document.getElementById('modal-cat').innerText = product.category;
-            document.getElementById('modal-name').innerText = product.name;
-            document.getElementById('modal-desc').innerText = product.description || 'Fresh stock available at shop.';
-            document.getElementById('modal-price').innerText = `₹${product.price}`;
-            document.getElementById('product-modal').classList.remove('hidden');
-            fetch(`/api/products/${product._id}`, { method: 'POST' }).catch(() => {});
-        }
-
-        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
-
-        function orderViaWhatsApp() {
-            if(!activeProduct) return;
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}\n\nकृपया स्टॉक चेक करके बताएं।`;
-            window.open(`https://wa.me/919140134493?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
+        // 🎤 100% कार्यशील एआई वॉइस सर्च इंजन (टूटी-फूटी देसी भाषा डिक्शनरी के साथ!)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { alert("Voice search not supported."); return; }
+            if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
             const rec = new SpeechRecognition();
             rec.lang = 'hi-IN';
+            
             const icon = document.getElementById('mic-icon');
             rec.onstart = () => icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
-            rec.onend = () => icon.className = "fa-solid fa-microphone text-base";
+            rec.onend = () => icon.className = "fa-solid fa-microphone text-base text-orange-400";
+            
             rec.onresult = (e) => {
-                const text = e.results[0][0].transcript.replace(/[.।]/g, '').trim();
-                document.getElementById('search-input').value = text;
-                renderProducts();
+                let spokenText = e.results[0][0].transcript.toLowerCase().replace(/[.।]/g, '').trim();
+                
+                // 🧠 एआई देसी डिक्शनरी: टूटी-फूटी भाषा का अनुवाद
+                if(spokenText.includes("झाड़ू") || spokenText.includes("पोछा") || spokenText.includes("डंडा") || spokenText.includes("साफ करने") || spokenText.includes("वाइपर")) {
+                    spokenText = "wiper"; // सीधे वाइपर पर ले जाओ
+                } else if(spokenText.includes("किताब") || spokenText.includes("कॉपी") || spokenText.includes("पेन") || spokenText.includes("पेंसिल") || spokenText.includes("पढ़ने")) {
+                    switchCategory('Stationery'); // सीधे स्टेशनरी फ़िल्टर ऑन कर दो
+                    document.getElementById('search-input').value = "";
+                    return;
+                } else if(spokenText.includes("खिलौना") || spokenText.includes("गाड़ी") || spokenText.includes("गुड़िया") || spokenText.includes("खेलने")) {
+                    switchCategory('Toys'); // सीधे खिलौने फ़िल्टर ऑन कर दो
+                    document.getElementById('search-input').value = "";
+                    return;
+                }
+
+                document.getElementById('search-input').value = spokenText;
+                renderProducts(); 
             };
             rec.start();
         }
+
+        function initPinchZoomEngine() {
+            const images = document.querySelectorAll('.zoom-image');
+            images.forEach(img => {
+                let scale = 1;
+                img.addEventListener('wheel', function(e) {
+                    e.preventDefault();
+                    if (e.deltaY < 0) scale = Math.min(scale + 0.2, 4);
+                    else scale = Math.max(scale - 0.2, 1);
+                    img.style.transform = `scale(${scale})`;
+                });
+            });
+        }
+        
+        function filterProducts() { renderProducts(); }
     </script>
 </body>
 </html>

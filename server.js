@@ -9,23 +9,25 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+// 📸 इंटरनेट स्पेशल: 6-7 भारी फोटो एक साथ संभालने के लिए लाइव क्लाउड कॉन्फ़िगरेशन
 cloudinary.config({
-  cloud_name: 'dmtafwfxg',
-  api_key: '183174449285855',
-  api_secret: '7RORd5OHjwY3U6Z'
+  cloud_name: 'dl93m9v8p',
+  api_key: '557766528731118',
+  api_secret: 'V9P05Cnd32Q-89wYQkY9KxRsm8M'
 });
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'shiv_shakti_fresh_zone',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'webp']
+    folder: 'shiv_shakti_mart_products',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ width: 800, quality: 'auto:good' }] // 🧠 ऑटो-कंप्रेसर: फोटो भारी होने पर भी सर्वर क्रैश नहीं होगा
   }
 });
 
@@ -35,6 +37,7 @@ mongoose.connect("mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb
   .then(() => console.log("Database Synced Successfully"))
   .catch(err => console.log(err));
 
+// डेटाबेस मॉडल (क्लिक्स और व्यूज दोनों बिल्कुल अलग तिजोरी में)
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
@@ -42,13 +45,13 @@ const productSchema = new mongoose.Schema({
   category: String,
   description: String,
   images: [String],
-  image: String,
-  clicks: { type: Number, default: 0 }
+  clicks: { type: Number, default: 0 },      
+  viewsCount: { type: Number, default: 0 }  
 });
 const Product = mongoose.model('Product', productSchema);
 
 const bannerSchema = new mongoose.Schema({
-  text: { type: String, default: "💥 AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item! 💥" }
+  text: { type: String, default: "AGRAHUNDA SUPER DEAL: Kam daam me sabsetop item!" }
 });
 const Banner = mongoose.model('Banner', bannerSchema);
 
@@ -77,36 +80,43 @@ app.get('/api/products', async (req, res) => {
   } catch (e) { res.status(500).json([]); }
 });
 
-app.get('/api/ai-marketing/blast', async (req, res) => {
+// व्यू काउंटर रूट
+app.post('/api/products/:id/view', async (req, res) => {
   try {
-    const products = await Product.find({}).sort({ clicks: -1 });
-    if (products.length === 0) return res.json({ success: false, text: "Stock khali hai." });
-    const bestSellerItem = products[0];
-    const shopUrl = `https://shiv-shakti-super-mart.onrender.com`;
-    const finalAd = `🌅 *SUPER FLASH DEAL* 🌅\n\nशिव शक्ति सुपर मार्ट पर आइटम *${bestSellerItem.name}* मात्र *₹${bestSellerItem.price}* में! 👇\n👉 ${shopUrl}`;
-    res.json({ success: true, text: finalAd });
-  } catch (e) { res.json({ success: false, text: "AI Engine error" }); }
+    await Product.findByIdAndUpdate(req.params.id, { $inc: { viewsCount: 1 } });
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ success: false }); }
 });
 
-app.post('/api/products', upload.single('image'), async (req, res) => {
+// व्हाट्सएप्प मुनाफा क्लिक रूट
+app.post('/api/products/:id/click', async (req, res) => {
+  try {
+    await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ success: false }); }
+});
+
+// 🚀 क्लाउड पर सीधे 7 फोटो सुरक्षित चढ़ाने का इंजन
+app.post('/api/products', upload.array('images', 7), async (req, res) => {
   try {
     const { name, price, costPrice, category, description } = req.body;
-    const imageUrl = req.file ? req.file.path : 'https://via.placeholder.com/150';
+    let imageUrls = [];
+    
+    if (req.files && req.files.length > 0) {
+      imageUrls = req.files.map(file => file.path); // क्लाउडिनरी का सीधा लिंक
+    } else {
+      imageUrls = ['https://via.placeholder.com/600'];
+    }
 
     const newProduct = new Product({
-      name,
-      price: Number(price),
-      costPrice: Number(costPrice),
-      category,
-      description,
-      images: [imageUrl],
-      image: imageUrl,
-      clicks: 0
+      name, price: Number(price), costPrice: Number(costPrice),
+      category, description, images: imageUrls, clicks: 0, viewsCount: 0
     });
     await newProduct.save();
     res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ success: false });
+  } catch (error) { 
+    console.log(error);
+    res.status(500).json({ success: false }); 
   }
 });
 
