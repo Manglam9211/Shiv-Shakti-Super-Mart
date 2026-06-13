@@ -97,7 +97,7 @@ app.post('/api/products/:id/click', async (req, res) => {
 });
 
 // 🚀 क्लाउड पर सीधे 7 फोटो सुरक्षित चढ़ाने का इंजन
-app.post('/api/products', upload.array('images', 7), async (req, res) => {
+app.post('/api/products', upload.array('photo', 7), async (req, res) => {
   try {
     const { name, price, costPrice, category, description } = req.body;
     let imageUrls = [];
