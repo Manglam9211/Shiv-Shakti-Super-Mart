@@ -1,17 +1,20 @@
 {
-  "name": "shiv-shakti-super-mart",
+  "name": "ShivShaktiNew",
   "version": "1.0.0",
-  "description": "Shiv Shakti Super Mart Advanced AI Store",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "cloudinary": "^2.2.0",
+    "cloudinary": "^2.10.0",
     "ejs": "^6.0.1",
-    "express": "^4.19.2",
-    "mongoose": "^8.3.1",
-    "multer": "^1.4.5-lts.1",
+    "express": "^4.18.2",
+    "mongoose": "^6.10.0",
+    "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0"
   }
 }
