@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -80,7 +80,8 @@
                 
                 <div class="bg-slate-50 border border-dashed border-slate-300 p-4 rounded-xl">
                     <label class="block text-xs font-black text-slate-500 mb-2 uppercase tracking-wider">Saman ki Photos Chunein (Ek sath 6-7 photos select karein)</label>
-               <input type="text" id="p-images" required placeholder="यहाँ फोटो का इंटरनेट लिंक पेस्ट करें" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-700 rounded-xl">    
+                    <input type="text" id="p-images" required placeholder="यहाँ फोटो का इंटरनेट लिंक पेस्ट करें" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-700 rounded-xl">    
+                </div>
   
                 <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs py-3.5 rounded-xl mt-2 transition shadow-sm">Saman ko Live Dukan Par Chadhayein</button>
             </form>
@@ -167,20 +168,21 @@
             btn.innerText = "Chadh raha hai...";
             btn.disabled = true;
 
-            const formData = new FormData();
-            formData.append('name', document.getElementById('p-name').value);
-            formData.append('costPrice', document.getElementById('p-cost').value);
-            formData.append('price', document.getElementById('p-price').value);
-            formData.append('category', document.getElementById('p-cat').value);
-            formData.append('description', document.getElementById('p-desc').value);
-
-            const fileInput = document.getElementById('p-images');
-            for (let i = 0; i < fileInput.files.length; i++) {
-                formData.append('images', fileInput.files[i]);
-            }
+            const productData = {
+                name: document.getElementById('p-name').value,
+                costPrice: document.getElementById('p-cost').value,
+                price: document.getElementById('p-price').value,
+                category: document.getElementById('p-cat').value,
+                description: document.getElementById('p-desc').value,
+                photo: document.getElementById('p-images').value
+            };
 
             try {
-                const response = await fetch('/api/products', { method: 'POST', body: formData });
+                const response = await fetch('/api/products', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
                 const result = await response.json();
                 if (response.ok && result.success) {
                     alert("सफलता! नया सामान दुकान पर लाइव हो गया। 🛍️");
