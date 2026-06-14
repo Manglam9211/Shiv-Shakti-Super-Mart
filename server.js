@@ -17,7 +17,7 @@ mongoose.connect("mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb
   .then(() => console.log("Database Synced Successfully"))
   .catch(err => console.log(err));
 
-// डेटाबेस मॉडल (क्लिक्स और व्यूज दोनों बिल्कुल अलग तिजोरी में)
+// डेटाबेस मॉडल
 const productSchema = new mongoose.Schema({
   name: String,
   price: Number,
@@ -60,7 +60,7 @@ app.get('/api/products', async (req, res) => {
   } catch (e) { res.status(500).json([]); }
 });
 
-// व्यू काउंटर रूट (सुरक्षित)
+// व्यू काउंटर रूट
 app.post('/api/products/:id/view', async (req, res) => {
   try {
     await Product.findByIdAndUpdate(req.params.id, { $inc: { viewsCount: 1 } });
@@ -68,23 +68,28 @@ app.post('/api/products/:id/view', async (req, res) => {
   } catch (e) { res.status(500).json({ success: false }); }
 });
 
-// व्हाट्सएप्प मुनाफा क्लिक रूट (सुरक्षित)
+// 📞 व्हाट्सएप्प मुनाफा क्लिक रूट + आपका असली नंबर लॉक (9450222868)
 app.post('/api/products/:id/click', async (req, res) => {
   try {
-    await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
+    const product = await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
+    if (product) {
+      // सीधे आपके नंबर पर ऑर्डर भेजने का लिंक तैयार करेगा
+      const message = `Namaste Shiv Shakti Super Mart, mujhe ye saman order karna hai:\n\n*Saman:* ${product.name}\n*Rate:* ₹${product.price}\n*Description:* ${product.description || 'Badiya Quality'}`;
+      const waLink = `https://wa.me/919450222868?text=${encodeURIComponent(message)}`;
+      return res.json({ success: true, redirectUrl: waLink });
+    }
     res.json({ success: true });
   } catch (e) { res.status(500).json({ success: false }); }
 });
 
-// 🚀 नया सुपर-लाइटवेट इंजन: मोबाइल से सीधे बने-बनाए लिंक्स रिसीवर
+// 🚀 मोबाइल से सीधे आने वाले लिंक्स का रिसीवर
 app.post('/api/products', async (req, res) => {
   try {
-    const { name, price, costPrice, category, description, linksList } = req.body;
+    const { name, price, costPrice, category, description, images } = req.body;
     let imageUrls = [];
     
-    // अगर मोबाइल ने क्लाउडिनरी से लिंक बनाकर भेजे हैं, तो सीधे उन्हें उठा लो
-    if (linksList && linksList.length > 0) {
-      imageUrls = linksList;
+    if (images && images.length > 0) {
+      imageUrls = images;
     } else {
       imageUrls = ['https://via.placeholder.com/600'];
     }
@@ -105,6 +110,26 @@ app.post('/api/products', async (req, res) => {
   } catch (error) { 
     console.log(error);
     res.status(500).json({ success: false }); 
+  }
+});
+
+// 💥 गायब हुआ AI WhatsApp Marketing Blast इंजन वापस आ गया
+app.get('/api/ai-marketing/blast', async (req, res) => {
+  try {
+    const products = await Product.find({}).sort({ _id: -1 }).limit(3);
+    if(products.length === 0) {
+      return res.json({ success: false, text: "Stock khali hai." });
+    }
+    
+    let text = `💥 *SHIV SHAKTI SUPER MART (AGRAHUNDA)* 💥\n\nBhaiya dukan par naya stock aa gaya hai! Kam daam me sabse top quality item:\n\n`;
+    products.forEach(p => {
+      text += `🛍️ *${p.name}* - Sirf ₹${p.price}\n👉 ${p.description || 'Badiya item'}\n\n`;
+    });
+    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\nhttps://shiv-shakti-super-mart.onrender.com`;
+    
+    res.json({ success: true, text: text });
+  } catch (e) {
+    res.status(500).json({ success: false });
   }
 });
 
