@@ -241,7 +241,7 @@
                     price: document.getElementById('p-price').value,
                     category: document.getElementById('p-cat').value,
                     description: document.getElementById('p-desc').value,
-                    linksList: uploadedUrls // रेंडर को केवल यह लिस्ट मिलेगी
+                    images: uploadedUrls // ✅ यहाँ बदलाव कर दिया - अब तिजोरी का नाम एकदम सही मैच करेगा
                 };
 
                 const response = await fetch('/api/products', { 
