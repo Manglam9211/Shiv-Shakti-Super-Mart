@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -153,7 +153,7 @@
                     <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
                         <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Shop
                     </button>
-                    <a id="modal-call-link" href="tel:919140134493" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
+                    <a id="modal-call-link" href="tel:919450222868" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
                         <i class="fa-solid fa-phone text-xs"></i> Direct Call
                     </a>
                 </div>
@@ -168,7 +168,7 @@
         </div>
     </div>
 
-    <a href="tel:919140134493" class="floating-call fixed bottom-6 right-6 w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xl shadow-xl z-40 border border-emerald-400">
+    <a href="tel:919450222868" class="floating-call fixed bottom-6 right-6 w-14 h-14 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xl shadow-xl z-40 border border-emerald-400">
         <i class="fa-solid fa-phone"></i>
     </a>
 
@@ -209,7 +209,8 @@
             else {
                 empty.classList.add('hidden');
                 filtered.forEach(p => {
-                    const mainImg = p.images && p.images.length > 0 ? p.images[0] : '/public/uploads/placeholder.png';
+                    // 📸 सुधार: टूटा इमेज आइकॉन हटाने के लिए सीधे डेटाबेस की पहली इमेज को खींचेगा
+                    const mainImg = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/600';
                     const fakePrice = Math.round(p.price * 1.25);
                     const card = document.createElement('div');
                     card.className = "bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm cursor-pointer hover:scale-[1.01] transition";
@@ -230,7 +231,7 @@
                             <button onclick="directWhatsAppOrder('${p._id}', '${p.name}', '${p.price}')" class="bg-emerald-500 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
                                 <i class="fa-brands fa-whatsapp text-xs"></i> Shop
                             </button>
-                            <a href="tel:919140134493" class="bg-blue-600 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
+                            <a href="tel:919450222868" class="bg-blue-600 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
                                 <i class="fa-solid fa-phone text-[9px]"></i> Call
                             </a>
                         </div>
@@ -245,12 +246,10 @@
             if(prod) openModal(prod);
         }
 
-        // 👁️ मीटर १: केवल फोटो छूने पर व्यू काउंटर ट्रिगर होगा (व्हाट्सएप्प क्लिक शांत रहेगा)
         async function openModal(product) {
             activeProduct = product;
             currentSlideIndex = 0;
             
-            // 🚀 व्यू का कनेक्शन सीधे डेटाबेस से
             await fetch(`/api/products/${product._id}/view`, { method: 'POST' }).catch(() => {});
 
             document.getElementById('modal-cat').innerText = product.category;
@@ -264,7 +263,8 @@
             slider.innerHTML = '';
             dotsContainer.innerHTML = '';
 
-            const imgs = product.images && product.images.length > 0 ? product.images : ['/public/uploads/placeholder.png'];
+            // 📸 सुधार: यहाँ भी प्लेसहोल्डर का पुराना रास्ता साफ़ करके सीधे लाइव लिंक कनेक्ट कर दिया
+            const imgs = product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/600'];
             
             imgs.forEach((imgUrl, idx) => {
                 const imgWrap = document.createElement('div');
@@ -280,7 +280,6 @@
 
             updateSliderPosition();
             
-            // 🚀 रेंडर करें उसी कैटेगरी के दूसरे आइटम्स (AI Recommendation list)
             renderRelatedProducts(product.category, product._id);
 
             const sliderWrapper = document.getElementById('product-modal');
@@ -291,7 +290,6 @@
             initPinchZoomEngine();
         }
 
-        // 🛍️ अमेज़न स्टाइल रेकमेंडेशन रेंडर करने का आटोमेटिक इंजन
         function renderRelatedProducts(cat, currentId) {
             const container = document.getElementById('related-products-container');
             container.innerHTML = '';
@@ -303,7 +301,7 @@
             }
 
             related.forEach(p => {
-                const img = p.images && p.images.length > 0 ? p.images[0] : '/public/uploads/placeholder.png';
+                const img = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/600';
                 const div = document.createElement('div');
                 div.className = "bg-slate-50 border border-slate-200 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center cursor-pointer hover:bg-slate-100 transition";
                 div.onclick = () => { closeModal(); openModal(p); };
@@ -347,18 +345,18 @@
 
         function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
 
-        // 💰 मीटर २: सिर्फ व्हाट्सएप्प बटन दबाने पर मुनाफा काउंटर ट्रिगर होगा
+        // 🛍️ व्हाट्सएप्प ऑर्डर पर आपका असली नंबर लॉक कर दिया है
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
             const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
-            window.open(`https://wa.me/919140134493?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         async function directWhatsAppOrder(id, name, price) {
             await fetch(`/api/products/${id}/click`, { method: 'POST' }).catch(() => {});
             const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${name}\n*कीमत:* ₹${price}`;
-            window.open(`https://wa.me/919140134493?text=${encodeURIComponent(msg)}`, '_blank');
+            window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         function switchCategory(cat) {
@@ -372,7 +370,6 @@
             renderProducts();
         }
 
-        // 🎤 100% कार्यशील एआई वॉइस सर्च इंजन (टूटी-फूटी देसी भाषा डिक्शनरी के साथ!)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
@@ -386,15 +383,14 @@
             rec.onresult = (e) => {
                 let spokenText = e.results[0][0].transcript.toLowerCase().replace(/[.।]/g, '').trim();
                 
-                // 🧠 एआई देसी डिक्शनरी: टूटी-फूटी भाषा का अनुवाद
                 if(spokenText.includes("झाड़ू") || spokenText.includes("पोछा") || spokenText.includes("डंडा") || spokenText.includes("साफ करने") || spokenText.includes("वाइपर")) {
-                    spokenText = "wiper"; // सीधे वाइपर पर ले जाओ
+                    spokenText = "wiper";
                 } else if(spokenText.includes("किताब") || spokenText.includes("कॉपी") || spokenText.includes("पेन") || spokenText.includes("पेंसिल") || spokenText.includes("पढ़ने")) {
-                    switchCategory('Stationery'); // सीधे स्टेशनरी फ़िल्टर ऑन कर दो
+                    switchCategory('Stationery');
                     document.getElementById('search-input').value = "";
                     return;
                 } else if(spokenText.includes("खिलौना") || spokenText.includes("गाड़ी") || spokenText.includes("गुड़िया") || spokenText.includes("खेलने")) {
-                    switchCategory('Toys'); // सीधे खिलौने फ़िल्टर ऑन कर दो
+                    switchCategory('Toys');
                     document.getElementById('search-input').value = "";
                     return;
                 }
