@@ -80,7 +80,7 @@
                 
                 <div class="bg-slate-50 border border-dashed border-slate-300 p-4 rounded-xl">
                     <label class="block text-xs font-black text-slate-500 mb-2 uppercase tracking-wider">Saman ki Photos Chunein (Ek sath 6-7 photos select karein)</label>
-                    <input type="text" id="p-images" required placeholder="यहाँ फोटो का इंटरनेट लिंक पेस्ट करें" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-700 rounded-xl">    
+                    <input type="file" id="p-images" multiple accept="image/*" required class="w-full bg-white border border-slate-300 p-2 text-sm text-slate-700 rounded-xl outline-none">    
                 </div>
   
                 <button type="submit" id="submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs py-3.5 rounded-xl mt-2 transition shadow-sm">Saman ko Live Dukan Par Chadhayein</button>
@@ -141,7 +141,7 @@
                 let profitPerClick = p.price - (p.costPrice || 0);
                 totalProfit += (profitPerClick * (p.clicks || 0));
 
-                const mainImg = p.images && p.images.length > 0 ? p.images[0] : '/public/uploads/placeholder.png';
+                const mainImg = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/600';
 
                 const card = document.createElement('div');
                 card.className = "p-4 bg-white border border-slate-200 rounded-2xl flex flex-col justify-between gap-3 shadow-sm";
@@ -162,37 +162,106 @@
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
         }
 
+        // 🧠 फोटो कंप्रेसर: जो मोबाइल में ही भारी फोटो को दबाकर हल्का कर देगा
+        function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.7);
+                    };
+                };
+            });
+        }
+
+        // 🚀 कल रात की बात के अनुसार: डायरेक्ट क्लाउडिनरी लूप इंजन
         document.getElementById('advanced-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Chadh raha hai...";
+            btn.innerText = "Cloudinary Par Upload Ho Jo Raha Hai...";
             btn.disabled = true;
 
-            const productData = {
-                name: document.getElementById('p-name').value,
-                costPrice: document.getElementById('p-cost').value,
-                price: document.getElementById('p-price').value,
-                category: document.getElementById('p-cat').value,
-                description: document.getElementById('p-desc').value,
-                photo: document.getElementById('p-images').value
-            };
+            const fileInput = document.getElementById('p-images');
+            let uploadedUrls = [];
 
             try {
+                // 🔄 लूप शुरू: एक-एक फोटो खुद इंटरनेट लिंक में बदलेगी
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const originalFile = fileInput.files[i];
+                    btn.innerText = `Photo ${i+1}/${fileInput.files.length} Upload Ho Rahi Hai...`;
+                    
+                    const compressedBlob = await compressImage(originalFile);
+
+                    const cloudData = new FormData();
+                    cloudData.append('file', compressedBlob, originalFile.name);
+                    cloudData.append('upload_preset', 'ml_default'); 
+                    cloudData.append('cloud_name', 'dl93m9v8p');
+
+                    // 💥 रेंडर को बायपास करके सीधे क्लाउडिनरी हिट किया
+                    const cloudRes = await fetch('https://api.cloudinary.com/v1_1/dl93m9v8p/image/upload', {
+                        method: 'POST',
+                        body: cloudData
+                    });
+
+                    const cloudResult = await cloudRes.json();
+                    if(cloudResult.secure_url) {
+                        uploadedUrls.push(cloudResult.secure_url); // लिंक लिस्ट में रख लिया
+                    }
+                }
+
+                if(uploadedUrls.length === 0) {
+                    throw new Error("Cloudinary upload failed");
+                }
+
+                // 📥 अब रेंडर को केवल लिंक्स का पैकेट सौंपा जाएगा
+                btn.innerText = "Render Server Pe Entry Ho Rahi Hai...";
+                
+                const productData = {
+                    name: document.getElementById('p-name').value,
+                    costPrice: document.getElementById('p-cost').value,
+                    price: document.getElementById('p-price').value,
+                    category: document.getElementById('p-cat').value,
+                    description: document.getElementById('p-desc').value,
+                    linksList: uploadedUrls // रेंडर को केवल यह लिस्ट मिलेगी
+                };
+
                 const response = await fetch('/api/products', { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(productData)
                 });
+                
                 const result = await response.json();
                 if (response.ok && result.success) {
-                    alert("सफलता! नया सामान दुकान पर लाइव हो गया। 🛍️");
+                    alert("सफलता! गैलरी से सामान सीधे लाइव दुकान पर चढ़ गया। 🛍️");
                     document.getElementById('advanced-upload-form').reset();
                     fetchAdminMetrics();
                 } else { 
-                    alert("Upload fail. Server error."); 
+                    alert("Upload fail. Server database error."); 
                 }
+
             } catch (error) { 
-                alert("Upload fail. Connection error."); 
+                console.error(error);
+                alert("Upload fail. Connection or Cloudinary error."); 
             }
             
             btn.innerText = "Saman ko Live Dukan Par Chadhayein";
