@@ -150,13 +150,6 @@
                 <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed desc-modal">Description...</p>
             </div>
 
-            <div id="ai-combo-box" class="hidden border-2 border-dashed border-orange-400 bg-orange-50/50 p-3 rounded-xl">
-                <div class="flex items-center gap-1.5 text-orange-700 font-black text-xs uppercase tracking-wider mb-1">
-                    <i class="fa-solid fa-gift animate-bounce"></i> AI Smart Combo Deal
-                </div>
-                <p id="ai-combo-text" class="text-[11px] text-slate-600 font-bold leading-tight">Loading intelligent deal...</p>
-            </div>
-
             <div class="flex flex-col gap-2 border-t border-slate-200 pt-2 border-modal-sep">
                 <div class="flex items-center justify-between mb-1">
                     <div>
@@ -412,7 +405,6 @@
             renderProducts();
         }
 
-        // 🛠️ सुधार: माइक अब एकदम शांत रहेगा, खुद से कुछ नहीं बोलेगा (फॉल्ट जड़ से साफ़)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
@@ -558,16 +550,13 @@
         // 🚀 ==================== ADVANCED AI ENGINE INJECTIONS ====================
         // =========================================================================================
 
-        // ⚡ नया एआई राम-राम स्वागत बटन फंक्शन (ऑप्शन 3 कस्टमाइज़्ड - हुक्म की जगह ऑर्डर करिए)
         function triggerAIWelcomeSpeech() {
             if ('speechSynthesis' in window) {
-                // अगर पुराना कोई वॉइस भाषण चल रहा हो तो उसे तुरंत शांत करें
                 window.speechSynthesis.cancel();
-                
                 const welcomePhrase = "जय श्री राम भैया! शिव शक्ति सुपर मार्ट में पधारने के लिए बहुत-बहुत धन्यवाद। आपके घर-परिवार, बच्चों के खिलौने और पढ़ाई लिखाई का सारा सामान अब अपनी दुकान पर आ चुका है। आराम से रेट देखिए और ऑर्डर करिए, हम सामान रेडी रखेंगे!";
                 const utterance = new SpeechSynthesisUtterance(welcomePhrase);
                 utterance.lang = 'hi-IN';
-                utterance.rate = 0.95; // एकदम साफ और मीठी आवाज़ के लिए हल्की सी स्पीड कम
+                utterance.rate = 0.95;
                 window.speechSynthesis.speak(utterance);
             } else {
                 alert("AI Voice Welcome is not supported in this browser.");
@@ -592,10 +581,6 @@
                 }
             }
             return input;
-        }
-
-        function speakVoiceRobotAssistant(phrase) {
-            // नोट: यह फंक्शन अब माइक के ऑन होने पर ट्रिगर नहीं हो रहा है (फॉल्ट क्लीन)
         }
 
         function startDynamicBannerAI() {
@@ -660,25 +645,8 @@
             }
         }
 
-        function runMicroCartComboAI(product) {
-            const comboBox = document.getElementById('ai-combo-box');
-            const comboText = document.getElementById('ai-combo-text');
-            const price = Number(product.price);
-
-            if (price > 0 && price <= 30) {
-                comboBox.classList.remove('hidden');
-                
-                if (product.name.toLowerCase().includes('pencil') || product.name.toLowerCase().includes('पेंसिल')) {
-                    comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹10 की रबर और ₹20 का कटर मिलाने पर ₹50 का पूरा पढ़ाई सेट सिर्फ *₹42* में अपनी दुकान पर ही पैक करवाएं!`;
-                } else if (product.name.toLowerCase().includes('pen') || product.name.toLowerCase().includes('पेन')) {
-                    comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹20 की एक कड़क नोटबुक (कॉपी) अटैच करने पर पूरा पैकेट सिर्फ *₹5 एक्स्ट्रा छूट* के साथ पैक करवाएं!`;
-                } else {
-                    comboText.innerHTML = `💡 *AI Smart Combo:* इस ₹${price} वाले छोटे आइटम के साथ ₹15 का पारले-जी बिस्कुट कॉम्बो मिलाने पर कुल बिल पर *₹4 की सीधी छूट* पाएं!`;
-                }
-            } else {
-                comboBox.classList.add('hidden');
-            }
-        }
+        // ⚡ इस फंक्शन को पूरी तरह शांत (Disable) कर दिया गया है
+        function runMicroCartComboAI(product) {}
     </script>
 </body>
 </html>
