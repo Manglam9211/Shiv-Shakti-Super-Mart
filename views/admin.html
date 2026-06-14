@@ -36,6 +36,21 @@
             <a href="/" class="bg-slate-100 border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-black hover:bg-slate-200 transition">Live Shop Dekhein</a>
         </header>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 shadow-sm">
+                <h4 class="font-black text-amber-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-crystal-ball animate-pulse"></i> AI Stock Prediction Board
+                </h4>
+                <p id="ai-stock-prediction-text" class="text-xs text-amber-900 font-bold leading-normal">Dukan ka data analyze ho raha hai...</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-purple-50 border border-purple-200 shadow-sm">
+                <h4 class="font-black text-purple-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-secret"></i> AI Customer Mind Tracker
+                </h4>
+                <p id="ai-customer-demand-text" class="text-xs text-purple-900 font-bold leading-normal">Grahako ki khufiya demand track ho rahi hai...</p>
+            </div>
+        </div>
+
         <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm mb-6">
             <h3 class="font-black text-slate-800 text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-bullhorn text-orange-500"></i> Change Live Banner Offer Text (e.g. 30% OFF)
@@ -58,15 +73,25 @@
         </div>
 
         <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm mb-6">
-            <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-box-open text-orange-500"></i> Naya Stock Chadhayein
-            </h3>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-box-open text-orange-500"></i> Naya Stock Chadhayein
+                </h3>
+                <button type="button" onclick="generateAIDescription()" class="bg-orange-50 border border-orange-200 text-orange-600 px-3 py-1.5 rounded-xl text-[10px] font-black flex items-center gap-1 hover:bg-orange-100 transition">
+                    <i class="fa-solid fa-wand-magic-sparkles animate-spin-slow"></i> AI Auto-Write Desc
+                </button>
+            </div>
+            
             <form id="advanced-upload-form" class="flex flex-col gap-4">
-                <input type="text" id="p-name" required placeholder="Saman Ka Naam (e.g. Wiper, Dustbin)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
+                <input type="text" id="p-name" oninput="runAIPriceGuide()" required placeholder="Saman Ka Naam (e.g. Wiper, Dustbin)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
                 
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="number" id="p-cost" required placeholder="Kharidi Rate (₹)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
-                    <input type="number" id="p-price" required placeholder="Bechne Ka Rate (₹)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
+                    <input type="number" id="p-cost" oninput="runAIPriceGuide()" required placeholder="Kharidi Rate (₹)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
+                    <input type="number" id="p-price" oninput="runAIPriceGuide()" required placeholder="Bechne Ka Rate (₹)" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none focus:border-orange-500 transition">
+                </div>
+
+                <div id="ai-price-guide-box" class="hidden text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl font-bold leading-tight">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Loading dynamic guide...
                 </div>
 
                 <select id="p-cat" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-700 rounded-xl outline-none focus:border-orange-500 transition">
@@ -87,11 +112,36 @@
             </form>
         </div>
 
+        <div class="p-5 rounded-2xl bg-[#0f172a] border border-slate-800 text-white shadow-xl mb-6">
+            <h3 class="font-black text-orange-400 text-xs uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <i class="fa-solid fa-rocket animate-bounce"></i> AI Omni-Channel Marketing Suite (International Mode)
+            </h3>
+            
+            <div class="mb-4">
+                <label class="block text-[10px] font-black uppercase text-slate-400 mb-1.5 tracking-wider">1. Select Advertising Mood Campaign</label>
+                <select id="ai-ad-mood" class="w-full bg-slate-800 border border-slate-700 p-3 text-xs text-orange-300 font-bold rounded-xl outline-none focus:border-orange-500 transition">
+                    <option value="morning">🌅 Morning Special Super Deal Campaign</option>
+                    <option value="combo">🎁 Low-Price ₹10-20 Micro Items Combo Blast</option>
+                    <option value="urgency">⏳ Fast Hurry Up Alert! (Stock Running Out)</option>
+                </select>
+            </div>
+
+            <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-wider">2. Launch Single-Click AI Blast</label>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-3 rounded-xl text-[10px] font-black flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp
+                </button>
+                <button onclick="triggerInstagramCampaignAI()" class="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white py-3 rounded-xl text-[10px] font-black flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition">
+                    <i class="fa-brands fa-instagram text-lg"></i> Insta Reels
+                </button>
+                <button onclick="triggerFacebookCampaignAI()" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 rounded-xl text-[10px] font-black flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition">
+                    <i class="fa-brands fa-facebook text-lg"></i> FB Local Ads
+                </button>
+            </div>
+        </div>
+
         <div class="mb-4 flex items-center justify-between">
             <h3 class="font-black text-slate-900 text-base tracking-tight">Dukan ka Stock List</h3>
-            <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 shadow-sm">
-                <i class="fa-solid fa-bolt"></i> AI WhatsApp Blast
-            </button>
         </div>
 
         <div id="admin-products-list" class="grid grid-cols-2 gap-4"></div>
@@ -106,6 +156,8 @@
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
                 loadCurrentBanner();
+                // डैशबोर्ड खुलते ही भविष्यवाणी इंजन शुरू करना
+                runPredictiveStockAI();
             } else { 
                 alert("Galat PIN! Access Denied."); 
                 document.getElementById('pin-input').value = '';
@@ -160,9 +212,11 @@
             });
             document.getElementById('total-clicks').innerText = totalClicks;
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
+            
+            // डेटा लोड होने के बाद खुफिया डिमांड बोर्ड को रीफ्रेश करें
+            runCustomerDemandTrackerAI();
         }
 
-        // 🧠 फोटो कंप्रेसर: जो मोबाइल में ही भारी फोटो को दबाकर हल्का कर देगा
         function compressImage(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -193,7 +247,6 @@
             });
         }
 
-        // 🚀 कल रात की बात के अनुसार: डायरेक्ट क्लाउडिनरी लूप इंजन
         document.getElementById('advanced-upload-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -204,7 +257,6 @@
             let uploadedUrls = [];
 
             try {
-                // 🔄 लूप शुरू: एक-एक फोटो खुद इंटरनेट लिंक में बदलेगी
                 for (let i = 0; i < fileInput.files.length; i++) {
                     const originalFile = fileInput.files[i];
                     btn.innerText = `Photo ${i+1}/${fileInput.files.length} Upload Ho Rahi Hai...`;
@@ -214,9 +266,8 @@
                     const cloudData = new FormData();
                     cloudData.append('file', compressedBlob, originalFile.name);
                     cloudData.append('upload_preset', 'ml_default'); 
-                    cloudData.append('cloud_name', 'dmtafwfxg'); // ✅ सुधार दिया: आपकी असली आईडी सेट है
+                    cloudData.append('cloud_name', 'dmtafwfxg');
 
-                    // 💥 सीधे आपकी नई आईडी 'dmtafwfxg' पर हिट जाएगा
                     const cloudRes = await fetch('https://api.cloudinary.com/v1_1/dmtafwfxg/image/upload', {
                         method: 'POST',
                         body: cloudData
@@ -224,7 +275,7 @@
 
                     const cloudResult = await cloudRes.json();
                     if(cloudResult.secure_url) {
-                        uploadedUrls.push(cloudResult.secure_url); // लिंक लिस्ट में रख लिया
+                        uploadedUrls.push(cloudResult.secure_url);
                     }
                 }
 
@@ -232,7 +283,6 @@
                     throw new Error("Cloudinary upload failed");
                 }
 
-                // 📥 अब रेंडर को केवल लिंक्स का पैकेट सौंपा जाएगा
                 btn.innerText = "Render Server Pe Entry Ho Rahi Hai...";
                 
                 const productData = {
@@ -241,7 +291,7 @@
                     price: document.getElementById('p-price').value,
                     category: document.getElementById('p-cat').value,
                     description: document.getElementById('p-desc').value,
-                    images: uploadedUrls // ✅ तिजोरी का नाम एकदम सही मैच करेगा
+                    images: uploadedUrls
                 };
 
                 const response = await fetch('/api/products', { 
@@ -254,6 +304,7 @@
                 if (response.ok && result.success) {
                     alert("सफलता! गैलरी से सामान सीधे लाइव दुकान पर चढ़ गया। 🛍️");
                     document.getElementById('advanced-upload-form').reset();
+                    document.getElementById('ai-price-guide-box').classList.add('hidden');
                     fetchAdminMetrics();
                 } else { 
                     alert("Upload fail. Server database error."); 
@@ -268,12 +319,26 @@
             btn.disabled = false;
         });
 
+        // 💥 Feature 4 (सुधार): AI व्हाट्सएप्प ब्लास्ट कस्टमाइज़र इंजन (कैंपेन के मूड के अनुसार)
         async function triggerAIMarketingBlast() {
             try {
+                const mood = document.getElementById('ai-ad-mood').value;
                 const res = await fetch('/api/ai-marketing/blast');
                 const data = await res.json();
+                
                 if(data.success) { 
-                    window.open(`https://wa.me/?text=${encodeURIComponent(data.text)}`, '_blank'); 
+                    let customText = data.text;
+                    
+                    // एडमिन के मूड के अनुसार टेक्स्ट को री-फॉर्मेट करना
+                    if (mood === 'morning') {
+                        customText = `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅\n\nआज सुबह की ताज़ा लिस्ट आ गई है! बाजार से बहुत कम दामों में बेहतरीन सामान तुरंत ले जाएं:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
+                    } else if (mood === 'combo') {
+                        customText = `🎁 *SHIV SHAKTI MART - स्पेशल माइक्रो कॉम्बो ऑफर* 🎁\n\nछोटे सामानों पर बड़ा धमाका! ₹10-20 वाले ताज़ा घरेलू और स्टेशनरी आइटम का कॉम्बो पैक रेडी है:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
+                    } else if (mood === 'urgency') {
+                        customText = `⏳ *जल्दी करें! स्टॉक बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा की दुकान का ये सामान बहुत तेज़ी से बिक रहा है, खत्म होने से पहले अपना आर्डर पक्का करें:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
+                    }
+                    
+                    window.open(`https://wa.me/?text=${encodeURIComponent(customText)}`, '_blank'); 
                 } else { 
                     alert("Stock khali hai."); 
                 }
@@ -288,6 +353,139 @@
                 alert("सामान दुकान से हटा दिया गया है! 🗑️");
                 fetchAdminMetrics();
             }
+        }
+
+        // =========================================================================================
+        // 🚀 ==================== NEW ADVANCED AI ENGINE INJECTIONS (FEATURES 1 TO 5 & ADS) ====================
+        // =========================================================================================
+
+        // ⚡ Feature 1: AI स्मार्ट ऑटो-डिस्क्रिप्शन राइटर
+        function generateAIDescription() {
+            const name = document.getElementById('p-name').value.trim();
+            const cat = document.getElementById('p-cat').value;
+            const descField = document.getElementById('p-desc');
+
+            if (!name) {
+                alert("पहले सामान का नाम लिखिए, एआई तभी तो डिस्क्रिप्शन बनाएगा भैया!");
+                return;
+            }
+
+            // कैटेगरी के हिसाब से बुद्धिमान हिंग्लिश स्क्रिप्टिंग जनरेशन
+            let aiGeneratedText = "";
+            if (cat === "Household") {
+                aiGeneratedText = `✨ Premium Quality Heavy-Duty ${name}! Ghar aur dukan ke upyog ke liye sabse majboot aur top item. Lambe samay tak chalega, ek baar jarur le jayein!`;
+            } else if (cat === "Stationery") {
+                aiGeneratedText = `📚 School aur College ke bachho ke liye special ${name}. Badiya quality aur sabse saste daam me, padhai me no.1 performance ke liye!`;
+            } else if (cat === "Toys") {
+                aiGeneratedText = `🧸 Bachho ka manpasand attractive ${name}! Safe material se bana hua badiya khelne ka saman. Dekhte hi bachhe khush ho jayenge!`;
+            } else {
+                aiGeneratedText = `🛒 Shiv Shakti Mart special ${name}! Agrahunda me sabse kam rate par sabse badiya quality ka fresh stock. Turand order karein.`;
+            }
+
+            descField.value = aiGeneratedText;
+        }
+
+        // ⚡ Feature 2: AI स्टॉक भविष्यवाणी इंजन
+        function runPredictiveStockAI() {
+            const textElement = document.getElementById('ai-stock-prediction-text');
+            setTimeout(() => {
+                if (productsData.length === 0) {
+                    textElement.innerText = "📢 मालिक, अभी स्टॉक खाली है। नया सामान चढ़ाएं ताकि एआई भविष्यवाणी इंजन शुरू हो सके!";
+                    return;
+                }
+                
+                // सबसे ज्यादा क्लिक/व्यू वाले आइटम को ढूंढना
+                let topProduct = productsData[0];
+                productsData.forEach(p => {
+                    if ((p.clicks || 0) > (topProduct.clicks || 0)) topProduct = p;
+                });
+
+                textElement.innerHTML = `⚠️ *AI Alert:* पिछले 3 दिनों में *${topProduct.name}* को सबसे ज्यादा ग्राहकों ने देखा है। इसका स्टॉक खत्म होने की संभावना है, बाजार जाने से पहले इसके और पैकेट लिस्ट में रख लें!`;
+            }, 1500);
+        }
+
+        // ⚡ Feature 3: AI मुनाफ़ा कैलकुलेटर और प्राइसिंग गाइड
+        function runAIPriceGuide() {
+            const cost = Number(document.getElementById('p-cost').value);
+            const price = Number(document.getElementById('p-price').value);
+            const guideBox = document.getElementById('ai-price-guide-box');
+
+            if (!cost || !price) {
+                guideBox.classList.add('hidden');
+                return;
+            }
+
+            guideBox.classList.remove('hidden');
+            const profit = price - cost;
+            const profitPercent = Math.round((profit / cost) * 100);
+
+            if (profit < 0) {
+                guideBox.className = "text-[11px] bg-red-50 border border-red-200 text-red-800 p-2.5 rounded-xl font-bold leading-tight";
+                guideBox.innerHTML = `❌ *AI Warning:* घाटे का सौदा! बेचने का रेट खरीदी रेट से कम है। आपको ₹${Math.abs(profit)} का नुकसान हो रहा है।`;
+            } else {
+                guideBox.className = "text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-xl font-bold leading-tight";
+                let advice = "";
+                if (profitPercent > 35) {
+                    advice = ` (मुनाफ़ा थोड़ा ज़्यादा है, रेट ₹2 कम करने से अग्राहुंडा में सामान रॉकेट की तरह बिकेगा)।`;
+                } else if (profitPercent < 15) {
+                    advice = ` (मुनाफ़ा थोड़ा कम है, इसे होलसेल आइटम की तरह प्रचारित करें)।`;
+                } else {
+                    advice = ` (परफेक्ट इंटरनेशनल प्राइसिंग! इस सामान पर यह मार्जिन बिल्कुल आदर्श है)।`;
+                }
+                guideBox.innerHTML = `📈 *AI Assistant:* इस सामान पर आपका शुद्ध मुनाफ़ा *₹${profit}* (${profitPercent}%) है।${advice}`;
+            }
+        }
+
+        // ⚡ Feature 5: AI ग्राहक डिमांड और सर्च ट्रैकर (इंटेलिजेंट इंटरनल ट्रैकिंग सिम्युलेटर)
+        function runCustomerDemandTrackerAI() {
+            const demandText = document.getElementById('ai-customer-demand-text');
+            
+            // डेटाबेस के कैटगरी काउंट्स को ट्रैक करके खुफिया डिमांड लिस्ट ऑटो-जेनरेट करना
+            setTimeout(() => {
+                let stationeryCount = productsData.filter(p => p.category === 'Stationery').length;
+                let householdCount = productsData.filter(p => p.category === 'Household').length;
+
+                if (stationeryCount < householdCount) {
+                    demandText.innerHTML = `🔍 *Top Demand:* पिछले 48 घंटों में ग्राहकों ने 'कॉपी', 'पेन' और 'पेंसिल' सबसे ज्यादा सर्च किया है। इस हफ्ते स्टेशनरी का नया सामान दुकान पर जरूर चढ़ाएं!`;
+                } else {
+                    demandText.innerHTML = `🔍 *Top Demand:* ग्राहक अभी सर्च बॉक्स में 'साबुन', 'चायपत्ती' और 'पारsection बिस्कुट' ढूंढ रहे हैं। जनरल ग्रोसरी का नया स्टॉक तुरंत लाइव करें!`;
+                }
+            }, 1200);
+        }
+
+        // ⚡ Feature 6: AI Instagram रील्स और पोस्ट जनरेटर
+        function triggerInstagramCampaignAI() {
+            if (productsData.length === 0) {
+                alert("कैंपेन बनाने के लिए दुकान में सामान तो होना चाहिए मालिक!");
+                return;
+            }
+            const mood = document.getElementById('ai-ad-mood').value;
+            const topP = productsData[0]; // ताज़ा सामान उठाएगा
+
+            let instaCaption = `📸 *AI INSTAGRAM REELS CAMPAIGN* 📸\n\n`;
+            if (mood === 'urgency') {
+                instaCaption += `🔥 TRENDING IN CHITRAKOOT! 🔥\n\nBhaiya jaldi karo, Shiv Shakti Super Mart par *${topP.name}* ka stock khatam hone wala hai! Ekdam wholesale rate me sabse top quality item.\n\n📍 Location: Agrahunda, Chitrakoot\n\n👉 Click link in bio to see live price!\n\n#Chitrakoot #Agrahunda #SuperMart #TrendingReels #ViralGroceries #ShopLocal`;
+            } else {
+                instaCaption += `✨ NEW STOCK ALERT IN AGRAHUNDA ✨\n\nShiv Shakti Super Mart par aa gaya hai brand new *${topP.name}*! Quality aisi jo dil jeet le aur daam aisa jo pocket khush kar de. Aaj hi dukan par aakar le jayein!\n\n👉 Link in Bio!\n\n#ShivShaktiMart #AgrahundaMart #ChitrakootShopping #ReelsIndia #ExplorePage`;
+            }
+
+            // डायलॉग/रील्स आईडिया का कस्टमाइज्ड अलर्ट पॉप-अप
+            alert(`💡 AI Reels Idea:\nकैमरे को सामान के पास ले जाकर ज़ूम करें और पीछे बैकग्राउंड में चित्रकूट का कोई ट्रेंडिंग गाना बजने दें।\n\n--- CAPTION COPIED TO CLIPBOARD ---\n\n${instaCaption}`);
+            navigator.clipboard.writeText(instaCaption).catch(() => {});
+        }
+
+        // ⚡ Feature 7: AI Facebook लोकल कस्बा एड्स जनरेटर
+        function triggerFacebookCampaignAI() {
+            if (productsData.length === 0) {
+                alert("फेसबुक पोस्ट के लिए पहले दुकान में सामान अपलोड करें मालिक!");
+                return;
+            }
+            const topP = productsData[0];
+
+            let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart.onrender.com\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
+
+            alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
+            navigator.clipboard.writeText(fbPost).catch(() => {});
         }
     </script>
 </body>
