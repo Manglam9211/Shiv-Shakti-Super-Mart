@@ -214,10 +214,10 @@
                     const cloudData = new FormData();
                     cloudData.append('file', compressedBlob, originalFile.name);
                     cloudData.append('upload_preset', 'ml_default'); 
-                    cloudData.append('cloud_name', 'dl93m9v8p');
+                    cloudData.append('cloud_name', 'dmtafwfxg'); // ✅ सुधार दिया: आपकी असली आईडी सेट है
 
-                    // 💥 रेंडर को बायपास करके सीधे क्लाउडिनरी हिट किया
-                    const cloudRes = await fetch('https://api.cloudinary.com/v1_1/dl93m9v8p/image/upload', {
+                    // 💥 सीधे आपकी नई आईडी 'dmtafwfxg' पर हिट जाएगा
+                    const cloudRes = await fetch('https://api.cloudinary.com/v1_1/dmtafwfxg/image/upload', {
                         method: 'POST',
                         body: cloudData
                     });
@@ -241,7 +241,7 @@
                     price: document.getElementById('p-price').value,
                     category: document.getElementById('p-cat').value,
                     description: document.getElementById('p-desc').value,
-                    images: uploadedUrls // ✅ यहाँ बदलाव कर दिया - अब तिजोरी का नाम एकदम सही मैच करेगा
+                    images: uploadedUrls // ✅ तिजोरी का नाम एकदम सही मैच करेगा
                 };
 
                 const response = await fetch('/api/products', { 
