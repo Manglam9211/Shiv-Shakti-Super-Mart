@@ -52,6 +52,22 @@
             50% { transform: scale(1.06); box-shadow: 0 0 15px rgba(249, 115, 22, 0.6); }
         }
         .ai-welcome-pulse { animation: subtle-bounce 2s infinite ease-in-out; }
+
+        /* ✨ ग्राहकों को दिखने वाला एआई 3D सॉफ्ट ग्लो एनीमेशन (Breathing Blink Effect) */
+        @keyframes customer-owner-3d {
+            0%, 100% { 
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.2), 0 0 6px rgba(245, 158, 11, 0.3);
+                opacity: 0.9;
+            }
+            50% { 
+                text-shadow: 1px 2px 3px rgba(0,0,0,0.3), 0 0 14px rgba(245, 158, 11, 0.7), 0 0 20px rgba(239, 68, 68, 0.4);
+                opacity: 1;
+            }
+        }
+        .customer-owner-glow { 
+            animation: customer-owner-3d 2.5s infinite ease-in-out;
+            display: inline-block;
+        }
     </style>
 </head>
 <body id="main-body" class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen text-slate-700 font-sans pb-24 transition-all duration-500">
@@ -85,7 +101,10 @@
                     </div>
                     <div>
                         <h1 id="brand-title" class="font-black text-2xl premium-dark-text tracking-tight">SHIV SHAKTI</h1>
-                        <p class="text-[10px] text-orange-600 font-black uppercase tracking-widest">SUPER MART • AGRAHUNDA</p>
+                        <p id="brand-sub-text" class="text-[10px] text-orange-600 font-black uppercase tracking-widest">SUPER MART • AGRAHUNDA</p>
+                        <p id="customer-owner-title" class="text-[9px] font-black mt-0.5 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-500 to-red-600 customer-owner-glow">
+                            <i class="fa-solid fa-crown text-amber-500 text-[8px] mr-0.5"></i>मार्ट ओनर - विष्णु दत्त मिश्रा
+                        </p>
                     </div>
                 </div>
                 <a href="/admin" class="bg-white border border-slate-200 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 ctrl-btn">
@@ -384,7 +403,7 @@
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये ITEM खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ye ITEM खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -405,7 +424,6 @@
             renderProducts();
         }
 
-        // 🛠️ सुधार: माइक अब एकदम शांत रहेगा, खुद से कुछ नहीं बोलेगा (फॉल्ट जड़ से साफ़)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
@@ -620,7 +638,7 @@
                 if(brandTitle) { brandTitle.className = "font-black text-2xl text-white tracking-tight"; }
                 if(ctrlBtn) { ctrlBtn.className = "bg-slate-800 border border-slate-700 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5 ctrl-btn"; }
                 if(secBar) { secBar.className = "bg-slate-800 p-2 rounded-2xl mb-5 border border-slate-700 flex items-center justify-between shadow-sm text-white"; }
-                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
+                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[95vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
                 
                 const descMod = document.getElementById('modal-desc'); if(descMod) descMod.className = "text-xs text-slate-300 mt-1 bg-slate-800 p-3 rounded-xl border border-slate-700 leading-relaxed desc-modal";
                 const nameMod = document.getElementById('modal-name'); if(nameMod) nameMod.className = "text-lg font-black text-white mt-2 tracking-tight name-modal";
