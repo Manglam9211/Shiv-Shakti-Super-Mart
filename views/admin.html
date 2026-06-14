@@ -6,6 +6,24 @@
     <title>Control Panel - VIP Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ✨ एआई 3D सॉफ्ट ग्लो एनीमेशन (Breathing Blink Effect) */
+        @keyframes owner-3d-glow {
+            0%, 100% { 
+                text-shadow: 1px 1px 2px rgba(0,0,0,0.2), 0 0 8px rgba(245, 158, 11, 0.4);
+                opacity: 0.9;
+            }
+            50% { 
+                text-shadow: 1px 2px 4px rgba(0,0,0,0.3), 0 0 18px rgba(245, 158, 11, 0.8), 0 0 25px rgba(239, 68, 68, 0.5);
+                opacity: 1;
+                transform: translateY(-0.5px);
+            }
+        }
+        .owner-vip-text { 
+            animation: owner-3d-glow 2.5s infinite ease-in-out;
+            display: inline-block;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen font-sans pb-16 text-slate-700">
 
@@ -31,6 +49,9 @@
                 <div>
                     <h1 class="font-black text-base text-slate-900 tracking-tight">Shiv Shakti Control Hub</h1>
                     <p class="text-[10px] text-orange-600 uppercase font-bold tracking-wider">Agrahunda Super Mart</p>
+                    <p class="text-[10px] font-black mt-1 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-500 to-red-600 owner-vip-text">
+                        <i class="fa-solid fa-crown text-amber-500 text-[9px] mr-1"></i>मार्ट ओनर - विष्णु दत्त मिश्रा
+                    </p>
                 </div>
             </div>
             <a href="/" class="bg-slate-100 border border-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-black hover:bg-slate-200 transition">Live Shop Dekhein</a>
@@ -156,7 +177,6 @@
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 fetchAdminMetrics();
                 loadCurrentBanner();
-                // डैशबोर्ड खुलते ही भविष्यवाणी इंजन शुरू करना
                 runPredictiveStockAI();
             } else { 
                 alert("Galat PIN! Access Denied."); 
@@ -213,7 +233,6 @@
             document.getElementById('total-clicks').innerText = totalClicks;
             document.getElementById('total-profit').innerText = `₹${totalProfit}`;
             
-            // डेटा लोड होने के बाद खुफिया डिमांड बोर्ड को रीफ्रेश करें
             runCustomerDemandTrackerAI();
         }
 
@@ -319,7 +338,6 @@
             btn.disabled = false;
         });
 
-        // 💥 Feature 4 (सुधार): AI व्हाट्सएप्प ब्लास्ट कस्टमाइज़र इंजन (कैंपेन के मूड के अनुसार)
         async function triggerAIMarketingBlast() {
             try {
                 const mood = document.getElementById('ai-ad-mood').value;
@@ -329,13 +347,12 @@
                 if(data.success) { 
                     let customText = data.text;
                     
-                    // एडमिन के मूड के अनुसार टेक्स्ट को री-फॉर्मेट करना
                     if (mood === 'morning') {
                         customText = `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅\n\nआज सुबह की ताज़ा लिस्ट आ गई है! बाजार से बहुत कम दामों में बेहतरीन सामान तुरंत ले जाएं:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
                     } else if (mood === 'combo') {
                         customText = `🎁 *SHIV SHAKTI MART - स्पेशल माइक्रो कॉम्बो ऑफर* 🎁\n\nछोटे सामानों पर बड़ा धमाका! ₹10-20 वाले ताज़ा घरेलू और स्टेशनरी आइटम का कॉम्बो पैक रेडी है:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
                     } else if (mood === 'urgency') {
-                        customText = `⏳ *जल्दी करें! स्टॉक बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा की दुकान का ये सामान बहुत तेज़ी से बिक रहा है, खत्म होने से पहले अपना आर्डर पक्का करें:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
+                        customText = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा की दुकान का ये सामान बहुत तेज़ी से बिक रहा है, खत्म होने से पहले अपना आर्डर पक्का करें:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
                     }
                     
                     window.open(`https://wa.me/?text=${encodeURIComponent(customText)}`, '_blank'); 
@@ -355,11 +372,6 @@
             }
         }
 
-        // =========================================================================================
-        // 🚀 ==================== NEW ADVANCED AI ENGINE INJECTIONS (FEATURES 1 TO 5 & ADS) ====================
-        // =========================================================================================
-
-        // ⚡ Feature 1: AI स्मार्ट ऑटो-डिस्क्रिप्शन राइटर
         function generateAIDescription() {
             const name = document.getElementById('p-name').value.trim();
             const cat = document.getElementById('p-cat').value;
@@ -370,7 +382,6 @@
                 return;
             }
 
-            // कैटेगरी के हिसाब से बुद्धिमान हिंग्लिश स्क्रिप्टिंग जनरेशन
             let aiGeneratedText = "";
             if (cat === "Household") {
                 aiGeneratedText = `✨ Premium Quality Heavy-Duty ${name}! Ghar aur dukan ke upyog ke liye sabse majboot aur top item. Lambe samay tak chalega, ek baar jarur le jayein!`;
@@ -385,7 +396,6 @@
             descField.value = aiGeneratedText;
         }
 
-        // ⚡ Feature 2: AI स्टॉक भविष्यवाणी इंजन
         function runPredictiveStockAI() {
             const textElement = document.getElementById('ai-stock-prediction-text');
             setTimeout(() => {
@@ -394,7 +404,6 @@
                     return;
                 }
                 
-                // सबसे ज्यादा क्लिक/व्यू वाले आइटम को ढूंढना
                 let topProduct = productsData[0];
                 productsData.forEach(p => {
                     if ((p.clicks || 0) > (topProduct.clicks || 0)) topProduct = p;
@@ -404,7 +413,6 @@
             }, 1500);
         }
 
-        // ⚡ Feature 3: AI मुनाफ़ा कैलकुलेटर और प्राइसिंग गाइड
         function runAIPriceGuide() {
             const cost = Number(document.getElementById('p-cost').value);
             const price = Number(document.getElementById('p-price').value);
@@ -430,37 +438,33 @@
                 } else if (profitPercent < 15) {
                     advice = ` (मुनाफ़ा थोड़ा कम है, इसे होलसेल आइटम की तरह प्रचारित करें)।`;
                 } else {
-                    advice = ` (परफेक्ट इंटरनेशनल प्राइसिंग! इस सामान पर यह मार्जिन बिल्कुल आदर्श है)।`;
+                    advice = ` (परफेक्ट इंटरनेशनल传输 Price! इस सामान पर यह मार्जिन बिल्कुल आदर्श है)।`;
                 }
                 guideBox.innerHTML = `📈 *AI Assistant:* इस सामान पर आपका शुद्ध मुनाफ़ा *₹${profit}* (${profitPercent}%) है।${advice}`;
             }
         }
 
-        // ⚡ Feature 5: AI ग्राहक डिमांड और सर्च ट्रैकर (इंटेलिजेंट इंटरनल ट्रैकिंग सिम्युलेटर)
         function runCustomerDemandTrackerAI() {
             const demandText = document.getElementById('ai-customer-demand-text');
-            
-            // डेटाबेस के कैटगरी काउंट्स को ट्रैक करके खुफिया डिमांड लिस्ट ऑटो-जेनरेट करना
             setTimeout(() => {
                 let stationeryCount = productsData.filter(p => p.category === 'Stationery').length;
                 let householdCount = productsData.filter(p => p.category === 'Household').length;
 
                 if (stationeryCount < householdCount) {
-                    demandText.innerHTML = `🔍 *Top Demand:* पिछले 48 घंटों में ग्राहकों ने 'कॉपी', 'पेन' और 'पेंसिल' सबसे ज्यादा सर्च किया है। इस हफ्ते स्टेशनरी का नया सामान दुकान पर जरूर चढ़ाएं!`;
+                    demandText.innerHTML = `🔍 *Top Demand:* पिछले 48 घंटों में ग्राहकों ने 'कॉपी', 'पेन' और 'पेंसिल' सबसे ज्यादा搜索 किया है। इस हफ्ते स्टेशनरी का नया सामान दुकान पर जरूर चढ़ाएं!`;
                 } else {
-                    demandText.innerHTML = `🔍 *Top Demand:* ग्राहक अभी सर्च बॉक्स में 'साबुन', 'चायपत्ती' और 'पारsection बिस्कुट' ढूंढ रहे हैं। जनरल ग्रोसरी का नया स्टॉक तुरंत लाइव करें!`;
+                    demandText.innerHTML = `🔍 *Top Demand:* ग्राहक अभी सर्च बॉक्स में 'साबुन', 'चायपत्ती' oars 'पारले-जी बिस्कुट' ढूंढ रहे हैं। जनरल ग्रोसरी का नया स्टॉक तुरंत लाइव करें!`;
                 }
             }, 1200);
         }
 
-        // ⚡ Feature 6: AI Instagram रील्स और पोस्ट जनरेटर
         function triggerInstagramCampaignAI() {
             if (productsData.length === 0) {
                 alert("कैंपेन बनाने के लिए दुकान में सामान तो होना चाहिए मालिक!");
                 return;
             }
             const mood = document.getElementById('ai-ad-mood').value;
-            const topP = productsData[0]; // ताज़ा सामान उठाएगा
+            const topP = productsData[0];
 
             let instaCaption = `📸 *AI INSTAGRAM REELS CAMPAIGN* 📸\n\n`;
             if (mood === 'urgency') {
@@ -469,12 +473,10 @@
                 instaCaption += `✨ NEW STOCK ALERT IN AGRAHUNDA ✨\n\nShiv Shakti Super Mart par aa gaya hai brand new *${topP.name}*! Quality aisi jo dil jeet le aur daam aisa jo pocket khush kar de. Aaj hi dukan par aakar le jayein!\n\n👉 Link in Bio!\n\n#ShivShaktiMart #AgrahundaMart #ChitrakootShopping #ReelsIndia #ExplorePage`;
             }
 
-            // डायलॉग/रील्स आईडिया का कस्टमाइज्ड अलर्ट पॉप-अप
             alert(`💡 AI Reels Idea:\nकैमरे को सामान के पास ले जाकर ज़ूम करें और पीछे बैकग्राउंड में चित्रकूट का कोई ट्रेंडिंग गाना बजने दें।\n\n--- CAPTION COPIED TO CLIPBOARD ---\n\n${instaCaption}`);
             navigator.clipboard.writeText(instaCaption).catch(() => {});
         }
 
-        // ⚡ Feature 7: AI Facebook लोकल कस्बा एड्स जनरेटर
         function triggerFacebookCampaignAI() {
             if (productsData.length === 0) {
                 alert("फेसबुक पोस्ट के लिए पहले दुकान में सामान अपलोड करें मालिक!");
