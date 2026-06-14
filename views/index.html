@@ -47,17 +47,17 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen text-slate-700 font-sans pb-24">
+<body id="main-body" class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen text-slate-700 font-sans pb-24 transition-all duration-500">
 
     <div class="max-w-md mx-auto px-4 pt-4">
-        <div class="relative overflow-hidden bg-[#1e293b] rounded-[28px] p-5 border border-slate-700 shadow-xl">
+        <div id="top-deal-card" class="relative overflow-hidden bg-[#1e293b] rounded-[28px] p-5 border border-slate-700 shadow-xl">
             <div class="absolute -right-10 -top-10 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
             
             <div class="flex items-center justify-between mb-2">
                 <span class="live-pulse flex items-center gap-1.5 bg-red-500/20 border border-red-500/40 text-red-400 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full">
                     <span class="w-1.5 h-1.5 bg-red-500 rounded-full animate-ping"></span> Limited Time Offer
                 </span>
-                <span class="text-[10px] text-orange-400 font-black bg-orange-50/10 px-2.5 py-1 rounded-lg border border-orange-500/20">🔥 TODAY'S DEAL</span>
+                <span id="deal-badge" class="text-[10px] text-orange-400 font-black bg-orange-50/10 px-2.5 py-1 rounded-lg border border-orange-500/20">🔥 TODAY'S DEAL</span>
             </div>
             
             <div class="mt-2.5">
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <header class="sticky top-0 bg-[#f8fafc]/90 backdrop-blur-xl z-40 px-4 py-4 border-b border-slate-200">
+    <header class="sticky top-0 bg-[#f8fafc]/90 backdrop-blur-xl z-40 px-4 py-4 border-b border-slate-200 navbar-blur">
         <div class="max-w-md mx-auto flex flex-col gap-4">
             <div class="flex items-center justify-between mt-1">
                 <div class="flex items-center gap-3">
@@ -77,11 +77,11 @@
                         <i class="fa-solid fa-shop text-orange-400 font-black text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="font-black text-2xl premium-dark-text tracking-tight">SHIV SHAKTI</h1>
+                        <h1 id="brand-title" class="font-black text-2xl premium-dark-text tracking-tight">SHIV SHAKTI</h1>
                         <p class="text-[10px] text-orange-600 font-black uppercase tracking-widest">SUPER MART • AGRAHUNDA</p>
                     </div>
                 </div>
-                <a href="/admin" class="bg-white border border-slate-200 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5">
+                <a href="/admin" class="bg-white border border-slate-200 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5 ctrl-btn">
                     <i class="fa-solid fa-user-gear text-slate-500"></i> Control
                 </a>
             </div>
@@ -99,7 +99,7 @@
     </header>
 
     <main class="max-w-md mx-auto px-4 pt-4">
-        <div class="bg-white p-2 rounded-2xl mb-5 border border-slate-200 flex items-center justify-between shadow-sm">
+        <div id="section-bar" class="bg-white p-2 rounded-2xl mb-5 border border-slate-200 flex items-center justify-between shadow-sm">
             <span class="text-xs font-black text-slate-800 px-2 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-orange-500"></i> Sabhi Saman (All Stock)</span>
             <i class="fa-solid fa-chevron-down text-xs text-slate-400 px-2"></i>
         </div>
@@ -123,31 +123,41 @@
     </main>
 
     <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-end justify-center p-0 hidden">
-        <div class="bg-white w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-200">
+        <div id="modal-content-card" class="bg-white w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-200">
             <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer" onclick="closeModal()"></div>
             
-            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm">
+            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm img-modal-bg">
                 <div id="slider-container" class="w-full h-full flex transition-transform duration-300 ease-out"></div>
                 <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
             
-            <p class="text-[10px] text-center text-orange-600 font-bold bg-orange-50/80 py-1.5 rounded-lg border border-orange-200"><i class="fa-solid fa-expand mr-1"></i> Tip: Photo par click karke Bada (Full Screen) dekhein</p>
+            <p class="text-[10px] text-center text-orange-600 font-bold bg-orange-50/80 py-1.5 rounded-lg border border-orange-200 modal-tip-bar"><i class="fa-solid fa-expand mr-1"></i> Tip: Photo par click karke Bada (Full Screen) dekhein</p>
 
             <div>
                 <span id="modal-cat" class="text-[9px] font-black tracking-widest uppercase text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-200">General</span>
-                <h2 id="modal-name" class="text-lg font-black text-slate-900 mt-2 tracking-tight">Saman ka Naam</h2>
-                <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed">Description...</p>
+                <h2 id="modal-name" class="text-lg font-black text-slate-900 mt-2 tracking-tight name-modal">Saman ka Naam</h2>
+                <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed desc-modal">Description...</p>
             </div>
 
-            <div class="flex flex-col gap-2 border-t border-slate-200 pt-2">
+            <div id="ai-combo-box" class="hidden border-2 border-dashed border-orange-400 bg-orange-50/50 p-3 rounded-xl">
+                <div class="flex items-center gap-1.5 text-orange-700 font-black text-xs uppercase tracking-wider mb-1">
+                    <i class="fa-solid fa-gift animate-bounce"></i> AI Smart Combo Deal
+                </div>
+                <p id="ai-combo-text" class="text-[11px] text-slate-600 font-bold leading-tight">Loading intelligent deal...</p>
+            </div>
+
+            <div class="flex flex-col gap-2 border-t border-slate-200 pt-2 border-modal-sep">
                 <div class="flex items-center justify-between mb-1">
                     <div>
                         <span class="text-[10px] text-slate-400 block font-bold uppercase">Best Price</span>
                         <div class="flex items-baseline gap-1.5">
-                            <span id="modal-price" class="text-2xl font-black text-slate-900">₹0</span>
+                            <span id="modal-price" class="text-2xl font-black text-slate-900 price-modal">₹0</span>
                             <span id="modal-fake-price" class="text-xs text-slate-400 line-through font-bold">₹0</span>
                         </div>
                     </div>
+                    <button onclick="triggerPriceDropAlert()" class="border border-orange-300 bg-orange-50 text-orange-600 px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1 active:scale-95 transition">
+                        <i class="fa-solid fa-bell"></i> Notify Price Drop
+                    </button>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
@@ -159,8 +169,8 @@
                 </div>
             </div>
 
-            <div class="border-t border-slate-200 pt-4 mt-2">
-                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <div class="border-t border-slate-200 pt-4 mt-2 border-modal-sep">
+                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title">
                     <i class="fa-solid fa-layer-group text-orange-500"></i> Usi Category Ke Aur Saman:
                 </h3>
                 <div id="related-products-container" class="flex gap-3 overflow-x-auto pb-2 custom-scroll"></div>
@@ -196,7 +206,7 @@
         let currentSlideIndex = 0;
         let startX = 0;
 
-        window.onload = () => { loadBanner(); loadProducts(); };
+        window.onload = () => { loadBanner(); loadProducts(); runSmartThemeEngine(); startDynamicBannerAI(); };
 
         async function loadBanner() {
             const res = await fetch('/api/ai-banner').catch(() => {});
@@ -215,7 +225,10 @@
             const empty = document.getElementById('empty-state');
             grid.innerHTML = '';
 
-            const searchWord = document.getElementById('search-input').value.toLowerCase();
+            const rawInput = document.getElementById('search-input').value;
+            // ⚡ AI स्पेलिंग सुधारक (Fuzzy Match Engine Injection)
+            const searchWord = runFuzzySpellCorrector(rawInput);
+
             const filtered = allProducts.filter(p => {
                 const matchesCat = currentCategory === 'All' || p.category === currentCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchWord);
@@ -229,25 +242,25 @@
                     const mainImg = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/600';
                     const fakePrice = Math.round(p.price * 1.25);
                     const card = document.createElement('div');
-                    card.className = "bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm cursor-pointer hover:scale-[1.01] transition";
+                    card.className = "bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm product-card cursor-pointer hover:scale-[1.01] transition";
                     
                     card.innerHTML = `
-                        <div onclick="openModalById('${p._id}')" class="relative bg-slate-50 rounded-xl p-2 h-32 flex items-center justify-center overflow-hidden border border-slate-100">
+                        <div onclick="openModalById('${p._id}')" class="relative bg-slate-50 rounded-xl p-2 h-32 flex items-center justify-center overflow-hidden border border-slate-100 img-wrap-bg">
                             <img src="${mainImg}" class="max-w-full max-h-full object-contain rounded-lg">
                         </div>
                         <div onclick="openModalById('${p._id}')" class="px-0.5 mt-1">
-                            <span class="text-[9px] uppercase font-black text-slate-400 block">${p.category || 'General'}</span>
-                            <h3 class="font-black text-xs text-slate-800 truncate mt-0.5">${p.name}</h3>
+                            <span class="text-[9px] uppercase font-black text-slate-400 block card-cat">${p.category || 'General'}</span>
+                            <h3 class="font-black text-xs text-slate-800 truncate mt-0.5 card-title">${p.name}</h3>
                             <div class="flex items-baseline gap-1 mt-1">
-                                <span class="text-sm font-black text-orange-600">₹${p.price}</span>
+                                <span class="text-sm font-black text-orange-600 card-price">₹${p.price}</span>
                                 <span class="text-[10px] text-slate-400 line-through">₹${fakePrice}</span>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-1.5 mt-2 pt-1 border-t border-slate-100">
+                        <div class="grid grid-cols-2 gap-1.5 mt-2 pt-1 border-t border-slate-100 card-sep">
                             <button onclick="directWhatsAppOrder('${p._id}', '${p.name}', '${p.price}')" class="bg-emerald-500 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
                                 <i class="fa-brands fa-whatsapp text-xs"></i> Shop
                             </button>
-                            <a href="tel:919450222868" class="bg-blue-600 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1">
+                            <a href="tel:919450222868" class="bg-blue-600 text-white text-[10px] font-black py-2 rounded-lg flex items-center justify-center gap-1 call-btn-card">
                                 <i class="fa-solid fa-phone text-[9px]"></i> Call
                             </a>
                         </div>
@@ -255,6 +268,7 @@
                     grid.appendChild(card);
                 });
             }
+            runSmartThemeEngine(); // रंग सिंक रखने के लिए
         }
 
         function openModalById(id) {
@@ -274,6 +288,9 @@
             document.getElementById('modal-price').innerText = `₹${product.price}`;
             document.getElementById('modal-fake-price').innerText = `₹${Math.round(product.price * 1.25)}`;
 
+            // ⚡ AI माइक्रो-कार्ट कॉम्बो इंजन ट्रिगर
+            runMicroCartComboAI(product);
+
             const slider = document.getElementById('slider-container');
             const dotsContainer = document.getElementById('slider-dots');
             slider.innerHTML = '';
@@ -284,7 +301,6 @@
             imgs.forEach((imgUrl, idx) => {
                 const imgWrap = document.createElement('div');
                 imgWrap.className = "w-full h-full flex-shrink-0 flex items-center justify-center p-2 cursor-zoom-in";
-                // 📸 फोटो पर क्लिक करते ही फुल-स्क्रीन लाइटबॉक्स खुल जाएगा
                 imgWrap.onclick = () => openLightbox(idx);
                 imgWrap.innerHTML = `<img src="${imgUrl}" class="zoom-image max-w-full max-h-full object-contain rounded-xl">`;
                 slider.appendChild(imgWrap);
@@ -305,6 +321,7 @@
 
             document.getElementById('product-modal').classList.remove('hidden');
             initPinchZoomEngine();
+            runSmartThemeEngine(); // मोडल का रंग सिंक करने के लिए
         }
 
         function renderRelatedProducts(cat, currentId) {
@@ -320,13 +337,13 @@
             related.forEach(p => {
                 const img = p.images && p.images.length > 0 ? p.images[0] : 'https://via.placeholder.com/600';
                 const div = document.createElement('div');
-                div.className = "bg-slate-50 border border-slate-200 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center cursor-pointer hover:bg-slate-100 transition";
+                div.className = "bg-slate-50 border border-slate-200 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center rel-card cursor-pointer hover:bg-slate-100 transition";
                 div.onclick = () => { closeModal(); openModal(p); };
                 div.innerHTML = `
-                    <div class="w-16 h-16 bg-white rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-100">
+                    <div class="w-16 h-16 bg-white rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-100 rel-img-wrap">
                         <img src="${img}" class="max-w-full max-h-full object-contain">
                     </div>
-                    <h4 class="text-[10px] font-black text-slate-700 truncate w-full mt-1">${p.name}</h4>
+                    <h4 class="text-[10px] font-black text-slate-700 truncate w-full mt-1 rel-title">${p.name}</h4>
                     <span class="text-[11px] font-black text-orange-600">₹${p.price}</span>
                 `;
                 container.appendChild(div);
@@ -365,7 +382,7 @@
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामან का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -393,7 +410,13 @@
             rec.lang = 'hi-IN';
             
             const icon = document.getElementById('mic-icon');
-            rec.onstart = () => icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
+            
+            // ⚡ AI रोबोट वॉइस असिस्टेंट ('शिव शक्ति' आवाज़ ट्यूनिंग)
+            rec.onstart = () => {
+                icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
+                speakVoiceRobotAssistant("राम राम भैया! आज क्या पैक कर दें?");
+            };
+            
             rec.onend = () => icon.className = "fa-solid fa-microphone text-base text-orange-400";
             
             rec.onresult = (e) => {
@@ -432,7 +455,6 @@
         
         function filterProducts() { renderProducts(); }
 
-        // 🚀 ==================== फ्लिपकार्ट/शॉपसी स्पेशल: फुल स्क्रीन लाइटबॉक्स ज़ूम गैलरी इंजन ====================
         let lightboxIndex = 0;
         let lbStartX = 0;
 
@@ -448,13 +470,11 @@
                 const item = document.createElement('div');
                 item.className = "w-full h-full flex-shrink-0 flex items-center justify-center p-2 overflow-hidden select-none";
                 
-                // 📱 दो उंगलियों से पिंच ज़ूम करने वाला मोबाइल स्पेशल इमेज टैग
                 const img = document.createElement('img');
                 img.src = imgUrl;
                 img.className = "max-w-full max-h-full object-contain transition-transform duration-200 ease-out pointer-events-auto";
                 img.style.transform = "scale(1)";
                 
-                // मोबाइल के लिए पिंच ज़ूम लॉजिक (Touch Events)
                 let evHistory = [];
                 let prevDist = -1;
                 let currentScale = 1;
@@ -474,9 +494,9 @@
 
                         if (prevDist > 0) {
                             if (dist > prevDist) {
-                                currentScale = Math.min(currentScale + 0.05, 4); // ज़ूम इन (अधिकतम 4 गुना)
+                                currentScale = Math.min(currentScale + 0.05, 4);
                             } else if (dist < prevDist) {
-                                currentScale = Math.max(currentScale - 0.05, 1); // ज़ूम आउट (न्यूनतम वापस 1)
+                                currentScale = Math.max(currentScale - 0.05, 1);
                             }
                             img.style.transform = `scale(${currentScale})`;
                         }
@@ -505,7 +525,6 @@
                 let diff = lbStartX - endX;
                 const maxImgs = activeProduct.images ? activeProduct.images.length : 1;
 
-                // स्लाइड करने पर केवल तभी स्लाइड होगा जब फोटो ज़ूम न हुई हो (scale 1 हो)
                 if (diff > 50 && lightboxIndex < maxImgs - 1) { lightboxIndex++; } 
                 else if (diff < -50 && lightboxIndex > 0) { lightboxIndex--; }
                 
@@ -518,9 +537,9 @@
             const container = document.getElementById('lightbox-slider');
             const total = activeProduct.images ? activeProduct.images.length : 1;
             container.style.transform = `translateX(-${lightboxIndex * 100}%)`;
+            document.getElementById('fullscreen-lightbox').style.backgroundColor = "black";
             document.getElementById('lightbox-counter').innerText = `${lightboxIndex + 1} / ${total}`;
             
-            // स्लाइड बदलने पर बाकी इमेज का ज़ूम वापस नॉर्मल 1 कर देगा
             const allImages = container.querySelectorAll('img');
             allImages.forEach((img, idx) => {
                 if(idx !== lightboxIndex) img.style.transform = "scale(1)";
@@ -529,6 +548,135 @@
 
         function closeLightbox() {
             document.getElementById('fullscreen-lightbox').classList.add('hidden');
+        }
+
+        // =========================================================================================
+        // 🚀 ==================== NEW ADVANCED AI ENGINE INJECTIONS (FEATURES 1 TO 6) ====================
+        // =========================================================================================
+
+        // ⚡ Feature 1: AI स्पेलिंग सुधारक (Fuzzy Search Engine)
+        function runFuzzySpellCorrector(text) {
+            let input = text.toLowerCase().trim();
+            if(!input) return "";
+
+            // देसी डिक्शनरी मैपिंग और गलत अंग्रेजी स्पेलिंग सुधार पैकेट
+            const dictionary = {
+                'viper': 'wiper', 'vaipar': 'wiper', 'waipar': 'wiper', 'waper': 'wiper',
+                'dastbin': 'dustbin', 'dasbin': 'dustbin', 'dustben': 'dustbin', 'kachra': 'dustbin',
+                'pensil': 'pencil', 'pencal': 'pencil', 'pencel': 'pencil',
+                'pene': 'pen', 'pain': 'pen', 'peen': 'pen',
+                'khilona': 'toy', 'gadi': 'toy', 'gudiya': 'toy'
+            };
+
+            for (let key in dictionary) {
+                if (input.includes(key)) {
+                    return dictionary[key];
+                }
+            }
+            return input;
+        }
+
+        // ⚡ Feature 2: AI रोबोट वॉइस असिस्टेंट आवाज़ आउटपुट मैनेजर
+        function speakVoiceRobotAssistant(phrase) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(phrase);
+                utterance.lang = 'hi-IN';
+                utterance.rate = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // ⚡ Feature 3: AI टाइम-सेंसिटिव बैनर इंजन (Dynamic Offer Banner)
+        function startDynamicBannerAI() {
+            const currentHour = new Date().getHours();
+            const bannerElement = document.getElementById('top-marquee-text');
+            const badgeElement = document.getElementById('deal-badge');
+
+            // शाम 6 से रात 11 बजे का बिहेवियर कैचिंग
+            if (currentHour >= 18 && currentHour <= 23) {
+                bannerElement.innerText = "💥 शाम का स्पेशल डिस्काउंट: अगले 20 मिनट में दुकान आएं और हर सामान पर स्पेशल छूट पाएं! 🏃‍♂️";
+                bannerElement.className = "floating-text-deal text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-300 to-red-500 leading-tight tracking-tight";
+                badgeElement.innerText = "⏳ TIME RUNNING OUT";
+                badgeElement.className = "text-[10px] text-red-400 font-black bg-red-50/10 px-2.5 py-1 rounded-lg border border-red-500/20";
+            }
+        }
+
+        // ⚡ Feature 4: AI व्हाट्सएप दाम घटे घंटी अलर्ट मैनेजर
+        function triggerPriceDropAlert() {
+            if(!activeProduct) return;
+            const dropMsg = `नमस्ते शिव शक्ति सुपर मार्ट, जब इस आइटम (*${activeProduct.name}*) का दाम कम हो जाए या कोई ऑफर आए, तो मुझे मेरे इस नंबर पर तुरंत व्हाट्सएप्प घंटी बजाकर सूचित करें!`;
+            window.open(`https://wa.me/919450222868?text=${encodeURIComponent(dropMsg)}`, '_blank');
+        }
+
+        // ⚡ Feature 5: AI मौसम और समय थीम इंजन (Smart Dark/Local Mode)
+        function runSmartThemeEngine() {
+            const currentHour = new Date().getHours();
+            const body = document.getElementById('main-body');
+            const header = document.querySelector('header');
+            const secBar = document.getElementById('section-bar');
+            const cards = document.querySelectorAll('.product-card');
+            const relCards = document.querySelectorAll('.rel-card');
+            const brandTitle = document.getElementById('brand-title');
+            const ctrlBtn = document.querySelector('.ctrl-btn');
+            const modCard = document.getElementById('modal-content-card');
+
+            // रात 7 से सुबह 6 बजे तक VIP डार्क मोड ऑटो-ट्रिगर
+            if (currentHour >= 19 || currentHour < 6) {
+                body.className = "bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] min-h-screen text-slate-200 font-sans pb-24 transition-all duration-500";
+                if(header) { header.className = "sticky top-0 bg-[#0f172a]/90 backdrop-blur-xl z-40 px-4 py-4 border-b border-slate-800 navbar-blur"; }
+                if(brandTitle) { brandTitle.className = "font-black text-2xl text-white tracking-tight"; }
+                if(ctrlBtn) { ctrlBtn.className = "bg-slate-800 border border-slate-700 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5 ctrl-btn"; }
+                if(secBar) { secBar.className = "bg-slate-800 p-2 rounded-2xl mb-5 border border-slate-700 flex items-center justify-between shadow-sm text-white"; }
+                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
+                
+                // मोडल के अंदरूनी पार्ट्स डार्क करना
+                const descMod = document.getElementById('modal-desc'); if(descMod) descMod.className = "text-xs text-slate-300 mt-1 bg-slate-800 p-3 rounded-xl border border-slate-700 leading-relaxed desc-modal";
+                const nameMod = document.getElementById('modal-name'); if(nameMod) nameMod.className = "text-lg font-black text-white mt-2 tracking-tight name-modal";
+                const priceMod = document.getElementById('modal-price'); if(priceMod) priceMod.className = "text-2xl font-black text-white price-modal";
+                const imgModBg = document.querySelector('.img-modal-bg'); if(imgModBg) imgModBg.className = "zoom-image-wrapper relative w-full bg-slate-800 rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-700 shadow-sm img-modal-bg";
+                const modTip = document.querySelector('.modal-tip-bar'); if(modTip) modTip.className = "text-[10px] text-center text-orange-400 font-bold bg-orange-950/40 py-1.5 rounded-lg border border-orange-900/40 modal-tip-bar";
+                document.querySelectorAll('.border-modal-sep').forEach(el => el.className = "flex flex-col gap-2 border-t border-slate-800 pt-2 border-modal-sep");
+                document.querySelectorAll('.sub-modal-title').forEach(el => el.className = "text-xs font-black text-white uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title");
+
+                // ग्रिड कार्ड्स को डार्क करना
+                cards.forEach(card => {
+                    card.className = "bg-slate-800 border border-slate-700 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm product-card cursor-pointer hover:scale-[1.01] transition text-white";
+                    const t = card.querySelector('.card-title'); if(t) t.className = "font-black text-xs text-white truncate mt-0.5 card-title";
+                    const p = card.querySelector('.card-price'); if(p) p.className = "text-sm font-black text-orange-400 card-price";
+                    const s = card.querySelector('.card-sep'); if(s) s.className = "grid grid-cols-2 gap-1.5 mt-2 pt-1 border-t border-slate-700 card-sep";
+                    const imgBg = card.querySelector('.img-wrap-bg'); if(imgBg) imgBg.className = "relative bg-slate-900 rounded-xl p-2 h-32 flex items-center justify-center overflow-hidden border border-slate-800 img-wrap-bg";
+                });
+
+                // रिलेटेड रेकमेंडेशन कार्ड्स को डार्क करना
+                relCards.forEach(rc => {
+                    rc.className = "bg-slate-800 border border-slate-700 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center rel-card cursor-pointer hover:bg-slate-700 transition";
+                    const rt = rc.querySelector('.rel-title'); if(rt) rt.className = "text-[10px] font-black text-slate-300 truncate w-full mt-1 rel-title";
+                    const riw = rc.querySelector('.rel-img-wrap'); if(riw) riw.className = "w-16 h-16 bg-slate-900 rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-700 rel-img-wrap";
+                });
+            }
+        }
+
+        // ⚡ Feature 6: AI सस्ते सामान का जोड़ीदार (Micro-Cart & Combo Maker Engine)
+        function runMicroCartComboAI(product) {
+            const comboBox = document.getElementById('ai-combo-box');
+            const comboText = document.getElementById('ai-combo-text');
+            const price = Number(product.price);
+
+            // अगर सामान ₹1 से ₹30 के बीच का है (सस्ते माइक्रो आइटम्स ट्रैकिंग)
+            if (price > 0 && price <= 30) {
+                comboBox.classList.remove('hidden');
+                
+                // आइटम के नाम के हिसाब से कस्टमाइज्ड बंडल तैयार करना
+                if (product.name.toLowerCase().includes('pencil') || product.name.toLowerCase().includes('पेंसिल')) {
+                    comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹10 की रबर और ₹20 का कटर मिलाने पर ₹50 का पूरा पढ़ाई सेट सिर्फ *₹42* में अपनी दुकान पर ही पैक करवाएं!`;
+                } else if (product.name.toLowerCase().includes('pen') || product.name.toLowerCase().includes('पेन')) {
+                    comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹20 की एक कड़क नोटबुक (कॉपी) अटैच करने पर पूरा पैकेट सिर्फ *₹5 एक्स्ट्रा छूट* के साथ पैक करवाएं!`;
+                } else {
+                    comboText.innerHTML = `💡 *AI Smart Combo:* इस ₹${price} वाले छोटे आइटम के साथ ₹15 का पारsection-बिस्कुट कॉम्बो मिलाने पर कुल बिल पर *₹4 की सीधी छूट* पाएं!`;
+                }
+            } else {
+                comboBox.classList.add('hidden');
+            }
         }
     </script>
 </body>
