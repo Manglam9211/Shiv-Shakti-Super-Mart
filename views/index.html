@@ -134,10 +134,10 @@
     </main>
 
     <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-end justify-center p-0 hidden">
-        <div id="modal-content-card" class="bg-white w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-200">
-            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer" onclick="closeModal()"></div>
+        <div id="modal-content-card" class="bg-white w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[95vh] overflow-y-auto custom-scroll border-t border-slate-200">
+            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer mb-1" onclick="closeModal()"></div>
             
-            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm img-modal-bg">
+            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-80 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm img-modal-bg">
                 <div id="slider-container" class="w-full h-full flex transition-transform duration-300 ease-out"></div>
                 <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
             </div>
@@ -291,8 +291,6 @@
             document.getElementById('modal-price').innerText = `₹${product.price}`;
             document.getElementById('modal-fake-price').innerText = `₹${Math.round(product.price * 1.25)}`;
 
-            runMicroCartComboAI(product);
-
             const slider = document.getElementById('slider-container');
             const dotsContainer = document.getElementById('slider-dots');
             slider.innerHTML = '';
@@ -326,6 +324,8 @@
             runSmartThemeEngine();
         }
 
+        function runProducts() {}
+
         function renderRelatedProducts(cat, currentId) {
             const container = document.getElementById('related-products-container');
             container.innerHTML = '';
@@ -345,7 +345,7 @@
                     <div class="w-16 h-16 bg-white rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-100 rel-img-wrap">
                         <img src="${img}" class="max-w-full max-h-full object-contain">
                     </div>
-                    <h4 class="text-[10px] font-black text-slate-700 truncate w-full mt-1 rel-title">${p.name}</h4>
+                    <h4 class="text-[10px] font-black text-slate-300 truncate w-full mt-1 rel-title">${p.name}</h4>
                     <span class="text-[11px] font-black text-orange-600">₹${p.price}</span>
                 `;
                 container.appendChild(div);
@@ -384,7 +384,7 @@
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये ITEM खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -405,6 +405,7 @@
             renderProducts();
         }
 
+        // 🛠️ सुधार: माइक अब एकदम शांत रहेगा, खुद से कुछ नहीं बोलेगा (फॉल्ट जड़ से साफ़)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
@@ -619,12 +620,12 @@
                 if(brandTitle) { brandTitle.className = "font-black text-2xl text-white tracking-tight"; }
                 if(ctrlBtn) { ctrlBtn.className = "bg-slate-800 border border-slate-700 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5 ctrl-btn"; }
                 if(secBar) { secBar.className = "bg-slate-800 p-2 rounded-2xl mb-5 border border-slate-700 flex items-center justify-between shadow-sm text-white"; }
-                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
+                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
                 
                 const descMod = document.getElementById('modal-desc'); if(descMod) descMod.className = "text-xs text-slate-300 mt-1 bg-slate-800 p-3 rounded-xl border border-slate-700 leading-relaxed desc-modal";
                 const nameMod = document.getElementById('modal-name'); if(nameMod) nameMod.className = "text-lg font-black text-white mt-2 tracking-tight name-modal";
                 const priceMod = document.getElementById('modal-price'); if(priceMod) priceMod.className = "text-2xl font-black text-white price-modal";
-                const imgModBg = document.querySelector('.img-modal-bg'); if(imgModBg) imgModBg.className = "zoom-image-wrapper relative w-full bg-slate-800 rounded-2xl p-2 h-64 flex flex-col justify-between overflow-hidden border border-slate-700 shadow-sm img-modal-bg";
+                const imgModBg = document.querySelector('.img-modal-bg'); if(imgModBg) imgModBg.className = "zoom-image-wrapper relative w-full bg-slate-800 rounded-2xl p-2 h-80 flex flex-col justify-between overflow-hidden border border-slate-700 shadow-sm img-modal-bg";
                 const modTip = document.querySelector('.modal-tip-bar'); if(modTip) modTip.className = "text-[10px] text-center text-orange-400 font-bold bg-orange-950/40 py-1.5 rounded-lg border border-orange-900/40 modal-tip-bar";
                 document.querySelectorAll('.border-modal-sep').forEach(el => el.className = "flex flex-col gap-2 border-t border-slate-800 pt-2 border-modal-sep");
                 document.querySelectorAll('.sub-modal-title').forEach(el => el.className = "text-xs font-black text-white uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title");
@@ -645,7 +646,6 @@
             }
         }
 
-        // ⚡ इस फंक्शन को पूरी तरह शांत (Disable) कर दिया गया है
         function runMicroCartComboAI(product) {}
     </script>
 </body>
