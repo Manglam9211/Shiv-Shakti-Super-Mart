@@ -45,6 +45,13 @@
             transform-origin: center center;
             cursor: zoom-in;
         }
+
+        /* ✨ नए स्वागत बटन के लिए आकर्षक एनिमेशन */
+        @keyframes subtle-bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); box-shadow: 0 0 15px rgba(249, 115, 22, 0.6); }
+        }
+        .ai-welcome-pulse { animation: subtle-bounce 2s infinite ease-in-out; }
     </style>
 </head>
 <body id="main-body" class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen text-slate-700 font-sans pb-24 transition-all duration-500">
@@ -91,6 +98,10 @@
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="Saman ka naam dhoondhein..." class="w-full bg-white border border-slate-300 py-3.5 pl-12 pr-4 rounded-2xl text-sm text-slate-900 placeholder-slate-400 shadow-sm outline-none focus:border-orange-500 transition">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                 </div>
+                <button id="ai-welcome-btn" onclick="triggerAIWelcomeSpeech()" type="button" class="ai-welcome-pulse w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl flex flex-col items-center justify-center text-white shadow-md active:scale-95 transition cursor-pointer z-50 border border-orange-400">
+                    <i class="fa-solid fa-robot text-xs mb-0.5"></i>
+                    <span class="text-[7px] font-black uppercase tracking-tighter">AI राम-राम</span>
+                </button>
                 <button id="mic-button" onclick="startVoiceSearch()" type="button" class="w-12 h-12 bg-white border border-slate-300 rounded-2xl flex items-center justify-center text-orange-600 shadow-sm active:bg-slate-100 transition cursor-pointer z-50">
                     <i id="mic-icon" class="fa-solid fa-microphone text-base"></i>
                 </button>
@@ -226,7 +237,6 @@
             grid.innerHTML = '';
 
             const rawInput = document.getElementById('search-input').value;
-            // ⚡ AI स्पेलिंग सुधारक (Fuzzy Match Engine Injection)
             const searchWord = runFuzzySpellCorrector(rawInput);
 
             const filtered = allProducts.filter(p => {
@@ -268,7 +278,7 @@
                     grid.appendChild(card);
                 });
             }
-            runSmartThemeEngine(); // रंग सिंक रखने के लिए
+            runSmartThemeEngine();
         }
 
         function openModalById(id) {
@@ -288,7 +298,6 @@
             document.getElementById('modal-price').innerText = `₹${product.price}`;
             document.getElementById('modal-fake-price').innerText = `₹${Math.round(product.price * 1.25)}`;
 
-            // ⚡ AI माइक्रो-कार्ट कॉम्बो इंजन ट्रिगर
             runMicroCartComboAI(product);
 
             const slider = document.getElementById('slider-container');
@@ -321,7 +330,7 @@
 
             document.getElementById('product-modal').classList.remove('hidden');
             initPinchZoomEngine();
-            runSmartThemeEngine(); // मोडल का रंग सिंक करने के लिए
+            runSmartThemeEngine();
         }
 
         function renderRelatedProducts(cat, currentId) {
@@ -382,7 +391,7 @@
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामან का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -403,6 +412,7 @@
             renderProducts();
         }
 
+        // 🛠️ सुधार: माइक अब एकदम शांत रहेगा, खुद से कुछ नहीं बोलेगा (फॉल्ट जड़ से साफ़)
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
@@ -410,13 +420,7 @@
             rec.lang = 'hi-IN';
             
             const icon = document.getElementById('mic-icon');
-            
-            // ⚡ AI रोबोट वॉइस असिस्टेंट ('शिव शक्ति' आवाज़ ट्यूनिंग)
-            rec.onstart = () => {
-                icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
-                speakVoiceRobotAssistant("राम राम भैया! आज क्या पैक कर दें?");
-            };
-            
+            rec.onstart = () => icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
             rec.onend = () => icon.className = "fa-solid fa-microphone text-base text-orange-400";
             
             rec.onresult = (e) => {
@@ -551,15 +555,29 @@
         }
 
         // =========================================================================================
-        // 🚀 ==================== NEW ADVANCED AI ENGINE INJECTIONS (FEATURES 1 TO 6) ====================
+        // 🚀 ==================== ADVANCED AI ENGINE INJECTIONS ====================
         // =========================================================================================
 
-        // ⚡ Feature 1: AI स्पेलिंग सुधारक (Fuzzy Search Engine)
+        // ⚡ नया एआई राम-राम स्वागत बटन फंक्शन (ऑप्शन 3 कस्टमाइज़्ड - हुक्म की जगह ऑर्डर करिए)
+        function triggerAIWelcomeSpeech() {
+            if ('speechSynthesis' in window) {
+                // अगर पुराना कोई वॉइस भाषण चल रहा हो तो उसे तुरंत शांत करें
+                window.speechSynthesis.cancel();
+                
+                const welcomePhrase = "जय श्री राम भैया! शिव शक्ति सुपर मार्ट में पधारने के लिए बहुत-बहुत धन्यवाद। आपके घर-परिवार, बच्चों के खिलौने और पढ़ाई लिखाई का सारा सामान अब अपनी दुकान पर आ चुका है। आराम से रेट देखिए और ऑर्डर करिए, हम सामान रेडी रखेंगे!";
+                const utterance = new SpeechSynthesisUtterance(welcomePhrase);
+                utterance.lang = 'hi-IN';
+                utterance.rate = 0.95; // एकदम साफ और मीठी आवाज़ के लिए हल्की सी स्पीड कम
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("AI Voice Welcome is not supported in this browser.");
+            }
+        }
+
         function runFuzzySpellCorrector(text) {
             let input = text.toLowerCase().trim();
             if(!input) return "";
 
-            // देसी डिक्शनरी मैपिंग और गलत अंग्रेजी स्पेलिंग सुधार पैकेट
             const dictionary = {
                 'viper': 'wiper', 'vaipar': 'wiper', 'waipar': 'wiper', 'waper': 'wiper',
                 'dastbin': 'dustbin', 'dasbin': 'dustbin', 'dustben': 'dustbin', 'kachra': 'dustbin',
@@ -576,23 +594,15 @@
             return input;
         }
 
-        // ⚡ Feature 2: AI रोबोट वॉइस असिस्टेंट आवाज़ आउटपुट मैनेजर
         function speakVoiceRobotAssistant(phrase) {
-            if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(phrase);
-                utterance.lang = 'hi-IN';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }
+            // नोट: यह फंक्शन अब माइक के ऑन होने पर ट्रिगर नहीं हो रहा है (फॉल्ट क्लीन)
         }
 
-        // ⚡ Feature 3: AI टाइम-सेंसिटिव बैनर इंजन (Dynamic Offer Banner)
         function startDynamicBannerAI() {
             const currentHour = new Date().getHours();
             const bannerElement = document.getElementById('top-marquee-text');
             const badgeElement = document.getElementById('deal-badge');
 
-            // शाम 6 से रात 11 बजे का बिहेवियर कैचिंग
             if (currentHour >= 18 && currentHour <= 23) {
                 bannerElement.innerText = "💥 शाम का स्पेशल डिस्काउंट: अगले 20 मिनट में दुकान आएं और हर सामान पर स्पेशल छूट पाएं! 🏃‍♂️";
                 bannerElement.className = "floating-text-deal text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-yellow-300 to-red-500 leading-tight tracking-tight";
@@ -601,14 +611,12 @@
             }
         }
 
-        // ⚡ Feature 4: AI व्हाट्सएप दाम घटे घंटी अलर्ट मैनेजर
         function triggerPriceDropAlert() {
             if(!activeProduct) return;
-            const dropMsg = `नमस्ते शिव शक्ति सुपर मार्ट, जब इस आइटम (*${activeProduct.name}*) का दाम कम हो जाए या कोई ऑफर आए, तो मुझे मेरे इस नंबर पर तुरंत व्हाट्सएप्प घंटी बजाकर सूचित करें!`;
+            const dropMsg = `नमस्ते शिव शक्ति सुपर मार्ट, जब इस आइटम (*${activeProduct.name}*) का दाम कम हो जाए या कोई oferta आए, तो मुझे मेरे इस नंबर पर तुरंत व्हाट्सएप्प घंटी बजाकर सूचित करें!`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(dropMsg)}`, '_blank');
         }
 
-        // ⚡ Feature 5: AI मौसम और समय थीम इंजन (Smart Dark/Local Mode)
         function runSmartThemeEngine() {
             const currentHour = new Date().getHours();
             const body = document.getElementById('main-body');
@@ -620,7 +628,6 @@
             const ctrlBtn = document.querySelector('.ctrl-btn');
             const modCard = document.getElementById('modal-content-card');
 
-            // रात 7 से सुबह 6 बजे तक VIP डार्क मोड ऑटो-ट्रिगर
             if (currentHour >= 19 || currentHour < 6) {
                 body.className = "bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] min-h-screen text-slate-200 font-sans pb-24 transition-all duration-500";
                 if(header) { header.className = "sticky top-0 bg-[#0f172a]/90 backdrop-blur-xl z-40 px-4 py-4 border-b border-slate-800 navbar-blur"; }
@@ -629,7 +636,6 @@
                 if(secBar) { secBar.className = "bg-slate-800 p-2 rounded-2xl mb-5 border border-slate-700 flex items-center justify-between shadow-sm text-white"; }
                 if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-6 shadow-2xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
                 
-                // मोडल के अंदरूनी पार्ट्स डार्क करना
                 const descMod = document.getElementById('modal-desc'); if(descMod) descMod.className = "text-xs text-slate-300 mt-1 bg-slate-800 p-3 rounded-xl border border-slate-700 leading-relaxed desc-modal";
                 const nameMod = document.getElementById('modal-name'); if(nameMod) nameMod.className = "text-lg font-black text-white mt-2 tracking-tight name-modal";
                 const priceMod = document.getElementById('modal-price'); if(priceMod) priceMod.className = "text-2xl font-black text-white price-modal";
@@ -638,7 +644,6 @@
                 document.querySelectorAll('.border-modal-sep').forEach(el => el.className = "flex flex-col gap-2 border-t border-slate-800 pt-2 border-modal-sep");
                 document.querySelectorAll('.sub-modal-title').forEach(el => el.className = "text-xs font-black text-white uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title");
 
-                // ग्रिड कार्ड्स को डार्क करना
                 cards.forEach(card => {
                     card.className = "bg-slate-800 border border-slate-700 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm product-card cursor-pointer hover:scale-[1.01] transition text-white";
                     const t = card.querySelector('.card-title'); if(t) t.className = "font-black text-xs text-white truncate mt-0.5 card-title";
@@ -647,7 +652,6 @@
                     const imgBg = card.querySelector('.img-wrap-bg'); if(imgBg) imgBg.className = "relative bg-slate-900 rounded-xl p-2 h-32 flex items-center justify-center overflow-hidden border border-slate-800 img-wrap-bg";
                 });
 
-                // रिलेटेड रेकमेंडेशन कार्ड्स को डार्क करना
                 relCards.forEach(rc => {
                     rc.className = "bg-slate-800 border border-slate-700 p-2 rounded-xl flex flex-col items-center justify-between gap-1 w-24 flex-shrink-0 text-center rel-card cursor-pointer hover:bg-slate-700 transition";
                     const rt = rc.querySelector('.rel-title'); if(rt) rt.className = "text-[10px] font-black text-slate-300 truncate w-full mt-1 rel-title";
@@ -656,23 +660,20 @@
             }
         }
 
-        // ⚡ Feature 6: AI सस्ते सामान का जोड़ीदार (Micro-Cart & Combo Maker Engine)
         function runMicroCartComboAI(product) {
             const comboBox = document.getElementById('ai-combo-box');
             const comboText = document.getElementById('ai-combo-text');
             const price = Number(product.price);
 
-            // अगर सामान ₹1 से ₹30 के बीच का है (सस्ते माइक्रो आइटम्स ट्रैकिंग)
             if (price > 0 && price <= 30) {
                 comboBox.classList.remove('hidden');
                 
-                // आइटम के नाम के हिसाब से कस्टमाइज्ड बंडल तैयार करना
                 if (product.name.toLowerCase().includes('pencil') || product.name.toLowerCase().includes('पेंसिल')) {
                     comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹10 की रबर और ₹20 का कटर मिलाने पर ₹50 का पूरा पढ़ाई सेट सिर्फ *₹42* में अपनी दुकान पर ही पैक करवाएं!`;
                 } else if (product.name.toLowerCase().includes('pen') || product.name.toLowerCase().includes('पेन')) {
                     comboText.innerHTML = `💡 *AI Smart Combo:* इसके साथ ₹20 की एक कड़क नोटबुक (कॉपी) अटैच करने पर पूरा पैकेट सिर्फ *₹5 एक्स्ट्रा छूट* के साथ पैक करवाएं!`;
                 } else {
-                    comboText.innerHTML = `💡 *AI Smart Combo:* इस ₹${price} वाले छोटे आइटम के साथ ₹15 का पारsection-बिस्कुट कॉम्बो मिलाने पर कुल बिल पर *₹4 की सीधी छूट* पाएं!`;
+                    comboText.innerHTML = `💡 *AI Smart Combo:* इस ₹${price} वाले छोटे आइटम के साथ ₹15 का पारले-जी बिस्कुट कॉम्बो मिलाने पर कुल बिल पर *₹4 की सीधी छूट* पाएं!`;
                 }
             } else {
                 comboBox.classList.add('hidden');
