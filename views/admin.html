@@ -120,6 +120,7 @@
                     <option value="Stationery">Stationery & Books</option>
                     <option value="Toys">Toys & Games</option>
                     <option value="Household">Household Goods</option>
+                    <option value="Beauty">Beauty Products</option>
                 </select>
 
                 <textarea id="p-desc" placeholder="Saman ki Quality / Description" rows="3" class="w-full bg-slate-50 border border-slate-300 p-3.5 text-sm text-slate-900 rounded-xl outline-none resize-none focus:border-orange-500 transition"></textarea>
@@ -170,6 +171,8 @@
 
     <script>
         let productsData = [];
+        // 🔄 जादुई ट्रैकर: रिपीटेशन रोकने के लिए शफल इंडेक्स पॉइंटर
+        let lastAdProductIndex = -1;
 
         function verifyPin() {
             if(document.getElementById('pin-input').value === '7181') {
@@ -338,29 +341,39 @@
             btn.disabled = false;
         });
 
+        // 🚀 नया अपग्रेड: जादुई एआई शफल विज्ञापन सुइट (हर बार क्लिक करने पर नया आइटम + असली फोटो + डायरेक्ट शॉप लिंक)
         async function triggerAIMarketingBlast() {
+            if (productsData.length === 0) {
+                alert("मालिक, दुकान खाली है! पहले सामान चढाएं तभी तो एआई विज्ञापन बनाएगा।");
+                return;
+            }
+
             try {
                 const mood = document.getElementById('ai-ad-mood').value;
-                const res = await fetch('/api/ai-marketing/blast');
-                const data = await res.json();
                 
-                if(data.success) { 
-                    let customText = data.text;
-                    
-                    if (mood === 'morning') {
-                        customText = `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅\n\nआज सुबह की ताज़ा लिस्ट आ गई है! बाजार से बहुत कम दामों में बेहतरीन सामान तुरंत ले जाएं:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
-                    } else if (mood === 'combo') {
-                        customText = `🎁 *SHIV SHAKTI MART - स्पेशल माइक्रो कॉम्बो ऑफर* 🎁\n\nछोटे सामानों पर बड़ा धमाका! ₹10-20 वाले ताज़ा घरेलू और स्टेशनरी आइटम का कॉम्बो पैक रेडी है:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
-                    } else if (mood === 'urgency') {
-                        customText = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा की दुकान का ये सामान बहुत तेज़ी से बिक रहा है, खत्म होने से पहले अपना आर्डर पक्का करें:\n\n` + customText.split('\n\n').slice(1).join('\n\n');
-                    }
-                    
-                    window.open(`https://wa.me/?text=${encodeURIComponent(customText)}`, '_blank'); 
-                } else { 
-                    alert("Stock khali hai."); 
+                // 🔄 शफ्लिंग लॉजिक: हर बार क्लिक करने पर अगला सामान ऑटो-सिलेक्ट होगा
+                lastAdProductIndex = (lastAdProductIndex + 1) % productsData.length;
+                const chosenProduct = productsData[lastAdProductIndex];
+                
+                // पहली असली फोटो का क्लाउडिनरी लिंक उठाना
+                const productPhoto = chosenProduct.images && chosenProduct.images.length > 0 ? chosenProduct.images[0] : '';
+                
+                // 🎯 नया अपग्रेड: सीधे इसी प्रोडक्ट के पेज पर ग्राहकों को भेजने वाला डायरेक्ट लिंक
+                const directShopLink = `https://shiv-shakti-super-mart.onrender.com`;
+                
+                let adScript = "";
+
+                if (mood === 'morning') {
+                    adScript = `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅\n\nआज सुबह का स्पेशल धमाका! सीधे दुकान पधारें और बाजार से कम रेट पर ले जाएं:\n\n🛍️ *आइटम:* ${chosenProduct.name}\n💰 *कीमत:* सिर्फ ₹${chosenProduct.price}\n\n✨ *क्वालिटी:* ${chosenProduct.description || 'Premium Fresh Stock!'}\n\n📸 *सामान की असली फोटो:* ${productPhoto}\n\n🎯 *सामान को डायरेक्ट खरीदने के लिए इस लिंक पर क्लिक करें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
+                } else if (mood === 'combo') {
+                    adScript = `🎁 *SHIV SHAKTI MART - स्पेशल बजट ब्लास्ट* 🎁\n\nकम दाम में सबसे बढ़िया सामान! आपके घर परिवार और बचत के लिए ताज़ा स्टॉक रेडी है:\n\n🛒 *सामान का नाम:* ${chosenProduct.name}\n Thok Rate: *₹${chosenProduct.price}*\n\n🔥 *एआई सलाह:* ${chosenProduct.description || 'Sabse Sasta Sabse Badiya!'}\n\n📸 *सामान की फोटो देखें:* ${productPhoto}\n\n🎯 *सीधे आर्डर बुक करने के लिए यहाँ क्लिक करें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान:* ${directShopLink}`;
+                } else if (mood === 'urgency') {
+                    adScript = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा और चित्रकूट के भाई-बहनों ध्यान दें! यह सामान दुकान पर बहुत तेजी से बिक रहा है, खत्म होने से पहले आर्डर करें:\n\n🔥 *हॉट आइटम:* ${chosenProduct.name}\n💰 *ऑफर प्राइस:* ₹${chosenProduct.price}\n\n⏱️ *विवरण:* ${chosenProduct.description || 'Jaldi aayein ya order pakka karein!'}\n\n📸 *सामान की लाइव फोटो:* ${productPhoto}\n\n🎯 *स्टॉक ख़त्म होने से पहले यहाँ क्लिक करके तुरंत खरीदें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
                 }
+                
+                window.open(`https://wa.me/?text=${encodeURIComponent(adScript)}`, '_blank'); 
             } catch(e) { 
-                alert("AI Engine error."); 
+                alert("AI Advertising Engine code error."); 
             }
         }
 
@@ -371,6 +384,10 @@
                 fetchAdminMetrics();
             }
         }
+
+        // =========================================================================================
+        // 🚀 ==================== ADVANCED AI ENGINE INJECTIONS ====================
+        // =========================================================================================
 
         function generateAIDescription() {
             const name = document.getElementById('p-name').value.trim();
@@ -389,6 +406,9 @@
                 aiGeneratedText = `📚 School aur College ke bachho ke liye special ${name}. Badiya quality aur sabse saste daam me, padhai me no.1 performance ke liye!`;
             } else if (cat === "Toys") {
                 aiGeneratedText = `🧸 Bachho ka manpasand attractive ${name}! Safe material se bana hua badiya khelne ka saman. Dekhte hi bachhe khush ho jayenge!`;
+            } else if (cat === "Beauty") {
+                // 💄 नया एआई माइंडसेट: ब्यूटी प्रोडक्ट्स के लिए शानदार हिंग्लिश स्क्रिप्ट राइटिंग
+                aiGeneratedText = `💄 High-Quality Premium ${name}! Chehre ki rounak aur skin care ke liye sabse badiya trusted product. Shiv Shakti Mart par market se saste rate me available.`;
             } else {
                 aiGeneratedText = `🛒 Shiv Shakti Mart special ${name}! Agrahunda me sabse kam rate par sabse badiya quality ka fresh stock. Turand order karein.`;
             }
@@ -409,7 +429,7 @@
                     if ((p.clicks || 0) > (topProduct.clicks || 0)) topProduct = p;
                 });
 
-                textElement.innerHTML = `⚠️ *AI Alert:* पिछले 3 दिनों में *${topProduct.name}* को सबसे ज्यादा ग्राहकों ने देखा है। इसका स्टॉक खत्म होने की संभावना है, बाजार जाने से पहले इसके और पैकेट लिस्ट में रख लें!`;
+                textElement.innerHTML = `⚠️ *AI Alert:* पिछले 3 दिनों में *${topProduct.name}* को सबसे ज्यादा ग्राहकों ने देखा है। इसका STOCK खत्म होने की संभावना है, बाजार जाने से पहले इसके और पैकेट摆放在 सामने रख लें!`;
             }, 1500);
         }
 
@@ -438,7 +458,7 @@
                 } else if (profitPercent < 15) {
                     advice = ` (मुनाफ़ा थोड़ा कम है, इसे होलसेल आइटम की तरह प्रचारित करें)।`;
                 } else {
-                    advice = ` (परफेक्ट इंटरनेशनल传输 Price! इस सामान पर यह मार्जिन बिल्कुल आदर्श है)।`;
+                    advice = ` (परफेक्ट इंटरनेशनल प्राइसिंग! इस सामान पर यह मार्जिन बिल्कुल आदर्श है)।`;
                 }
                 guideBox.innerHTML = `📈 *AI Assistant:* इस सामान पर आपका शुद्ध मुनाफ़ा *₹${profit}* (${profitPercent}%) है।${advice}`;
             }
@@ -448,12 +468,12 @@
             const demandText = document.getElementById('ai-customer-demand-text');
             setTimeout(() => {
                 let stationeryCount = productsData.filter(p => p.category === 'Stationery').length;
-                let householdCount = productsData.filter(p => p.category === 'Household').length;
+                let beautyCount = productsData.filter(p => p.category === 'Beauty').length;
 
-                if (stationeryCount < householdCount) {
-                    demandText.innerHTML = `🔍 *Top Demand:* पिछले 48 घंटों में ग्राहकों ने 'कॉपी', 'पेन' और 'पेंसिल' सबसे ज्यादा搜索 किया है। इस हफ्ते स्टेशनरी का नया सामान दुकान पर जरूर चढ़ाएं!`;
+                if (beautyCount < stationeryCount) {
+                    demandText.innerHTML = `🔍 *Top Demand:* पिछले 48 घंटों में माताओं-बहनों ने 'क्रीम', 'काजल' और 'ब्यूटी प्रोडक्ट' सबसे ज्यादा सर्च किया है। ब्यूटी कैटेगरी का नया सामान दुकान पर तुरंत लाइव करें!`;
                 } else {
-                    demandText.innerHTML = `🔍 *Top Demand:* ग्राहक अभी सर्च बॉक्स में 'साबुन', 'चायपत्ती' oars 'पारले-जी बिस्कुट' ढूंढ रहे हैं। जनरल ग्रोसरी का नया स्टॉक तुरंत लाइव करें!`;
+                    demandText.innerHTML = `🔍 *Top Demand:* ग्राहक अभी सर्च बॉक्स में 'साबुन', 'चायपत्ती' और 'पारले-जी बिस्कुट' ढूंढ रहे हैं। जनरल ग्रोसरी का नया स्टॉक तुरंत लाइव करें!`;
                 }
             }, 1200);
         }
@@ -473,7 +493,7 @@
                 instaCaption += `✨ NEW STOCK ALERT IN AGRAHUNDA ✨\n\nShiv Shakti Super Mart par aa gaya hai brand new *${topP.name}*! Quality aisi jo dil jeet le aur daam aisa jo pocket khush kar de. Aaj hi dukan par aakar le jayein!\n\n👉 Link in Bio!\n\n#ShivShaktiMart #AgrahundaMart #ChitrakootShopping #ReelsIndia #ExplorePage`;
             }
 
-            alert(`💡 AI Reels Idea:\nकैमरे को सामान के पास ले जाकर ज़ूम करें और पीछे बैकग्राउंड में चित्रकूट का कोई ट्रेंडिंग गाना बजने दें।\n\n--- CAPTION COPIED TO CLIPBOARD ---\n\n${instaCaption}`);
+            alert(`💡 AI Reels Idea:\nकैमरे को सामान के पास ले जाकर ज़ूम करें और पीछे阶 बैकग्राउंड में चित्रकूट का कोई ट्रेंडिंग गाना बजने दें।\n\n--- CAPTION COPIED TO CLIPBOARD ---\n\n${instaCaption}`);
             navigator.clipboard.writeText(instaCaption).catch(() => {});
         }
 
@@ -486,7 +506,7 @@
 
             let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart.onrender.com\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
 
-            alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
+            alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए破解 परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
             navigator.clipboard.writeText(fbPost).catch(() => {});
         }
     </script>
