@@ -140,6 +140,7 @@
             <button onclick="switchCategory('Stationery')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Stationery</button>
             <button onclick="switchCategory('Toys')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Toys</button>
             <button onclick="switchCategory('Household')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Household</button>
+            <button onclick="switchCategory('Beauty')" class="cat-btn px-5 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap bg-white border border-slate-200 text-slate-600 shadow-sm">Beauty</button>
         </div>
 
         <div id="products-grid" class="grid grid-cols-2 gap-4"></div>
@@ -153,50 +154,53 @@
     </main>
 
     <div id="product-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-end justify-center p-0 hidden">
-        <div id="modal-content-card" class="bg-white w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[95vh] overflow-y-auto custom-scroll border-t border-slate-200">
-            <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer mb-1" onclick="closeModal()"></div>
+        <div id="modal-content-card" class="bg-white w-full max-w-md rounded-t-[32px] shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scroll border-t border-slate-200 relative">
             
-            <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl p-2 h-80 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm img-modal-bg">
-                <div id="slider-container" class="w-full h-full flex transition-transform duration-300 ease-out"></div>
-                <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
+            <div class="w-full bg-white sticky top-0 z-20 border-b border-slate-100 shadow-sm p-4 pt-6">
+                <div class="w-12 h-1 bg-slate-300 rounded-full mx-auto cursor-pointer absolute top-2.5 left-1/2 -translate-x-1/2" onclick="closeModal()"></div>
+                <div class="zoom-image-wrapper relative w-full bg-white rounded-2xl h-80 flex flex-col justify-between overflow-hidden border border-slate-200 shadow-sm img-modal-bg">
+                    <div id="slider-container" class="w-full h-full flex transition-transform duration-300 ease-out"></div>
+                    <div id="slider-dots" class="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10"></div>
+                </div>
+                <p class="text-[10px] text-center text-orange-600 font-bold mt-2"><i class="fa-solid fa-expand mr-1"></i> Tip: Photo par click karke Bada (Full Screen) dekhein</p>
             </div>
             
-            <p class="text-[10px] text-center text-orange-600 font-bold bg-orange-50/80 py-1.5 rounded-lg border border-orange-200 modal-tip-bar"><i class="fa-solid fa-expand mr-1"></i> Tip: Photo par click karke Bada (Full Screen) dekhein</p>
+            <div class="p-5 pt-2 flex flex-col gap-4">
+                <div>
+                    <span id="modal-cat" class="text-[9px] font-black tracking-widest uppercase text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-200">General</span>
+                    <h2 id="modal-name" class="text-lg font-black text-slate-900 mt-2 tracking-tight name-modal">Saman ka Naam</h2>
+                    <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed desc-modal">Description...</p>
+                </div>
 
-            <div>
-                <span id="modal-cat" class="text-[9px] font-black tracking-widest uppercase text-orange-600 bg-orange-100 px-2.5 py-0.5 rounded border border-orange-200">General</span>
-                <h2 id="modal-name" class="text-lg font-black text-slate-900 mt-2 tracking-tight name-modal">Saman ka Naam</h2>
-                <p id="modal-desc" class="text-xs text-slate-500 mt-1 bg-slate-50 p-3 rounded-xl border border-slate-200 leading-relaxed desc-modal">Description...</p>
-            </div>
-
-            <div class="flex flex-col gap-2 border-t border-slate-200 pt-2 border-modal-sep">
-                <div class="flex items-center justify-between mb-1">
-                    <div>
-                        <span class="text-[10px] text-slate-400 block font-bold uppercase">Best Price</span>
-                        <div class="flex items-baseline gap-1.5">
-                            <span id="modal-price" class="text-2xl font-black text-slate-900 price-modal">₹0</span>
-                            <span id="modal-fake-price" class="text-xs text-slate-400 line-through font-bold">₹0</span>
+                <div class="flex flex-col gap-2 border-t border-slate-200 pt-2 border-modal-sep">
+                    <div class="flex items-center justify-between mb-1">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block font-bold uppercase">Best Price</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span id="modal-price" class="text-2xl font-black text-slate-900 price-modal">₹0</span>
+                                <span id="modal-fake-price" class="text-xs text-slate-400 line-through font-bold">₹0</span>
+                            </div>
                         </div>
+                        <button onclick="triggerPriceDropAlert()" class="border border-orange-300 bg-orange-50 text-orange-600 px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1 active:scale-95 transition">
+                            <i class="fa-solid fa-bell"></i> Notify Price Drop
+                        </button>
                     </div>
-                    <button onclick="triggerPriceDropAlert()" class="border border-orange-300 bg-orange-50 text-orange-600 px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1 active:scale-95 transition">
-                        <i class="fa-solid fa-bell"></i> Notify Price Drop
-                    </button>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
+                            <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Shop
+                        </button>
+                        <a id="modal-call-link" href="tel:919450222868" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-phone text-xs"></i> Direct Call
+                        </a>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="orderViaWhatsApp()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition">
-                        <i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Shop
-                    </button>
-                    <a id="modal-call-link" href="tel:919450222868" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs py-3.5 rounded-xl flex items-center justify-center gap-2 transition">
-                        <i class="fa-solid fa-phone text-xs"></i> Direct Call
-                    </a>
-                </div>
-            </div>
 
-            <div class="border-t border-slate-200 pt-4 mt-2 border-modal-sep">
-                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title">
-                    <i class="fa-solid fa-layer-group text-orange-500"></i> Usi Category Ke Aur Saman:
-                </h3>
-                <div id="related-products-container" class="flex gap-3 overflow-x-auto pb-2 custom-scroll"></div>
+                <div class="border-t border-slate-200 pt-4 mt-2 border-modal-sep">
+                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5 sub-modal-title">
+                        <i class="fa-solid fa-layer-group text-orange-500"></i> Usi Category Ke Aur Saman:
+                    </h3>
+                    <div id="related-products-container" class="flex gap-3 overflow-x-auto pb-2 custom-scroll"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -334,16 +338,25 @@
             
             renderRelatedProducts(product.category, product._id);
 
+            // ⚡ बैक बटन हिस्ट्री इंजन इंजेक्शन (क्रोम पेज कटने से रोकने का १००% पक्का इलाज)
+            document.getElementById('product-modal').classList.remove('hidden');
+            window.history.pushState({ modalOpen: true }, "");
+
             const sliderWrapper = document.getElementById('slider-container');
             sliderWrapper.addEventListener('touchstart', handleTouchStart, {passive: true});
             sliderWrapper.addEventListener('touchend', handleTouchEnd, {passive: true});
 
-            document.getElementById('product-modal').classList.remove('hidden');
             initPinchZoomEngine();
             runSmartThemeEngine();
         }
 
-        function runProducts() {}
+        // ⚡ बैक बटन दबाते ही ब्राउज़र इवेंट को कैच करके केवल मोडल बंद करना
+        window.onpopstate = function(event) {
+            const modal = document.getElementById('product-modal');
+            if (modal && !modal.classList.contains('hidden')) {
+                modal.classList.add('hidden');
+            }
+        };
 
         function renderRelatedProducts(cat, currentId) {
             const container = document.getElementById('related-products-container');
@@ -364,7 +377,7 @@
                     <div class="w-16 h-16 bg-white rounded-lg p-1 flex items-center justify-center overflow-hidden border border-slate-100 rel-img-wrap">
                         <img src="${img}" class="max-w-full max-h-full object-contain">
                     </div>
-                    <h4 class="text-[10px] font-black text-slate-300 truncate w-full mt-1 rel-title">${p.name}</h4>
+                    <h4 class="text-[10px] font-black text-slate-700 truncate w-full mt-1 rel-title">${p.name}</h4>
                     <span class="text-[11px] font-black text-orange-600">₹${p.price}</span>
                 `;
                 container.appendChild(div);
@@ -398,12 +411,18 @@
             }
         }
 
-        function closeModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        // 🛠️ मोडल बंद होने पर हिस्ट्री स्टेट को भी साफ़ करना ताकि बैक बटन नॉर्मल काम करे
+        function closeModal() { 
+            document.getElementById('product-modal').classList.add('hidden');
+            if(window.history.state && window.history.state.modalOpen) {
+                window.history.back();
+            }
+        }
 
         async function orderViaWhatsApp() {
             if(!activeProduct) return;
             await fetch(`/api/products/${activeProduct._id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ye ITEM खरीदना है:\n\n*सामан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ye ITEM खरीदना है:\n\n*सामлан का नाम:* ${activeProduct.name}\n*कीमत:* ₹${activeProduct.price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -424,11 +443,14 @@
             renderProducts();
         }
 
+        // 🛠️ कड़क सुधार: माइक अब 'en-IN' ट्रैक करेगा जिससे बोलते ही इंग्लिश स्पेलिंग (Wiper, Soap) टाइप होगी!
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
             const rec = new SpeechRecognition();
-            rec.lang = 'hi-IN';
+            
+            // 🎯 भाषा सेटिंग अब हिंग्लिश/इंग्लिश स्क्रिप्ट आधारित लॉक कर दी गई है
+            rec.lang = 'en-IN';
             
             const icon = document.getElementById('mic-icon');
             rec.onstart = () => icon.className = "fa-solid fa-circle-dot text-red-500 animate-pulse";
@@ -437,14 +459,18 @@
             rec.onresult = (e) => {
                 let spokenText = e.results[0][0].transcript.toLowerCase().replace(/[.।]/g, '').trim();
                 
-                if(spokenText.includes("झाड़ू") || spokenText.includes("पोछा") || spokenText.includes("डंडा") || spokenText.includes("साफ करने") || spokenText.includes("वाइपर")) {
+                if(spokenText.includes("jhadu") || spokenText.includes("pocha") || spokenText.includes("wiper") || spokenText.includes("vaipar")) {
                     spokenText = "wiper";
-                } else if(spokenText.includes("किताब") || spokenText.includes("कॉपी") || spokenText.includes("पेन") || spokenText.includes("पेंसिल") || spokenText.includes("पढ़ने")) {
+                } else if(spokenText.includes("book") || spokenText.includes("copy") || spokenText.includes("pen") || spokenText.includes("pencil")) {
                     switchCategory('Stationery');
                     document.getElementById('search-input').value = "";
                     return;
-                } else if(spokenText.includes("खिलौना") || spokenText.includes("गाड़ी") || spokenText.includes("गुड़िया") || spokenText.includes("खेलने")) {
+                } else if(spokenText.includes("toy") || spokenText.includes("car") || spokenText.includes("doll")) {
                     switchCategory('Toys');
+                    document.getElementById('search-input').value = "";
+                    return;
+                } else if(spokenText.includes("beauty") || spokenText.includes("cream") || spokenText.includes("kajal") || spokenText.includes("powder")) {
+                    switchCategory('Beauty');
                     document.getElementById('search-input').value = "";
                     return;
                 }
@@ -591,7 +617,8 @@
                 'dastbin': 'dustbin', 'dasbin': 'dustbin', 'dustben': 'dustbin', 'kachra': 'dustbin',
                 'pensil': 'pencil', 'pencal': 'pencil', 'pencel': 'pencil',
                 'pene': 'pen', 'pain': 'pen', 'peen': 'pen',
-                'khilona': 'toy', 'gadi': 'toy', 'gudiya': 'toy'
+                'khilona': 'toy', 'gadi': 'toy', 'gudiya': 'toy',
+                'beauty': 'beauty', 'cream': 'beauty', 'kajal': 'beauty'
             };
 
             for (let key in dictionary) {
@@ -638,7 +665,7 @@
                 if(brandTitle) { brandTitle.className = "font-black text-2xl text-white tracking-tight"; }
                 if(ctrlBtn) { ctrlBtn.className = "bg-slate-800 border border-slate-700 shadow-sm px-3 py-2 rounded-xl text-xs font-black text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5 ctrl-btn"; }
                 if(secBar) { secBar.className = "bg-slate-800 p-2 rounded-2xl mb-5 border border-slate-700 flex items-center justify-between shadow-sm text-white"; }
-                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] p-4 shadow-2xl flex flex-col gap-3 max-h-[95vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200"; }
+                if(modCard) { modCard.className = "bg-slate-900 w-full max-w-md rounded-t-[32px] shadow-2xl flex flex-col max-h-[92vh] overflow-y-auto custom-scroll border-t border-slate-800 text-slate-200 relative"; }
                 
                 const descMod = document.getElementById('modal-desc'); if(descMod) descMod.className = "text-xs text-slate-300 mt-1 bg-slate-800 p-3 rounded-xl border border-slate-700 leading-relaxed desc-modal";
                 const nameMod = document.getElementById('modal-name'); if(nameMod) nameMod.className = "text-lg font-black text-white mt-2 tracking-tight name-modal";
