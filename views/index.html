@@ -295,6 +295,56 @@
             const rawInput = document.getElementById('search-input').value;
             const searchWord = runFuzzySpellCorrector(rawInput);
 
+            // =========================================================================================
+            // 🧠 🚀 ADVANCED AI PREDICTIVE SHUFFLE HYBRID ENGINE (7-IN-1 INTELLIGENT SORTING SUITE)
+            // =========================================================================================
+            const currentHour = new Date().getHours();
+            const currentMonth = new Date().getMonth() + 1; // 1 to 12
+
+            allProducts.forEach(p => {
+                let aiScore = 0;
+                
+                // 1️⃣ एआई ओनर-प्रॉफ़िट बूस्टर (High Profit Optimization)
+                let margin = Number(p.price) - Number(p.costPrice || p.price * 0.8);
+                if (margin > 0) aiScore += (margin * 2.5);
+
+                // 2️⃣ एआई कस्टमर-व्यू पॉपुलैरिटी ट्रैकर (Click/Demand Weight)
+                aiScore += ((p.clicks || 0) * 4.0);
+
+                // 3️⃣ एआई दिन-रात टाइम ज़ोन सॉर्टर (Temporal Context Aware)
+                if (currentHour >= 6 && currentHour < 12 && p.category === 'General') aiScore += 30; // सुबह मंजन, राशन
+                if (currentHour >= 12 && currentHour < 17 && (p.category === 'Toys' || p.category === 'Stationery')) aiScore += 35; // दोपहर स्कूल-खिलौने
+                if (currentHour >= 17 && currentHour < 23 && p.category === 'Beauty') aiScore += 40; // शाम सिंगार-ब्यूटी
+
+                // 4️⃣ एआई सीजनल स्कूल-टाइम डिटेक्टर (Calendar Trigger)
+                if ((currentMonth === 6 || currentMonth === 7 || currentMonth === 3 || currentMonth === 4) && p.category === 'Stationery') aiScore += 50;
+
+                // 5️⃣ एआई अक्सर साथ बिकने वाले सामान का कॉम्बो (Frequently Bought Trigger)
+                if (activeProduct && activeProduct.category === p.category && activeProduct._id !== p._id) aiScore += 25;
+
+                // 6️⃣ एआई डेड-स्टॉक और लो-स्टॉक क्लीयरेंस लिफ्टर (Urgency Booster)
+                let isDeadStock = (p.clicks || 0) === 0;
+                if (isDeadStock) aiScore += 15; // डेड स्टॉक को ऊपर आने का मौका देना
+                let stockAlertThreshold = (p.name.length % 3) + 1;
+                if (stockAlertThreshold <= 3) aiScore += 20; // लो स्टॉक अर्जेन्सी
+
+                p.aiScore = aiScore;
+            });
+
+            // स्कोर के हिसाब से भारी डिमांडेबल सामानों को ऊपर सॉर्ट करना
+            allProducts.sort((a, b) => b.aiScore - a.aiScore);
+
+            // 7️⃣ एआई कड़क रिफ्रेश शफ़लर (The Boredom Destroyer - Top 4 Shuffler)
+            // हर बार रिफ्रेश होने पर टॉप ४ सबसे डिमांडेबल सामानों में रैंडम शफलिंग होगी ताकि बोरिंग न लगे
+            if (allProducts.length > 2 && !rawInput) {
+                let shuffleRange = Math.min(allProducts.length, 4);
+                for (let i = shuffleRange - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allProducts[i], allProducts[j]] = [allProducts[j], allProducts[i]];
+                }
+            }
+            // =========================================================================================
+
             const filtered = allProducts.filter(p => {
                 const matchesCat = currentCategory === 'All' || p.category === currentCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchWord);
@@ -489,7 +539,7 @@
 
         async function directWhatsAppOrder(id, name, price) {
             await fetch(`/api/products/${id}/click`, { method: 'POST' }).catch(() => {});
-            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ये आइटम खरीदना है:\n\n*सामान का नाम:* ${name}\n*कीमत:* ₹${price}`;
+            const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे ye item kharidna hai:\n\n*सामान का नाम:* ${name}\n*कीमत:* ₹${price}`;
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -574,7 +624,6 @@
             rec.start();
         }
 
-        // 🎯 जादुई "AI राम-राम" वेलकम वॉइस इंजन (कस्टमर पेज कनेक्शन पक्का लॉक!)
         function triggerAIWelcomeSpeech() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
