@@ -259,7 +259,7 @@
         let activeProduct = null;
         let currentSlideIndex = 0;
         let startX = 0;
-        let speechCancelTimeout = null; // एआई वॉइस स्पीच को रोकने के लिए टाइमर ट्रैकर
+        let speechCancelTimeout = null;
 
         window.onload = () => { loadBanner(); loadProducts(); runSmartThemeEngine(); startDynamicBannerAI(); };
 
@@ -272,13 +272,10 @@
         async function loadProducts() {
             const res = await fetch('/api/products');
             allProducts = await res.json();
-            
-            // ⚡ फीचर 6: प्रोडक्ट्स लोड होते ही कैटेगरी संख्या बैज अपडेट करना
             updateCategoryBadges();
             renderProducts();
         }
 
-        // ⚡ फीचर 6: कैटेगरी काउंटर नंबर बैज काउंटिंग इंजन
         function updateCategoryBadges() {
             const categories = ['All', 'General', 'Stationery', 'Toys', 'Household', 'Beauty'];
             categories.forEach(cat => {
@@ -306,15 +303,12 @@
 
             if(filtered.length === 0) { 
                 empty.classList.remove('hidden'); 
-                // ⚡ फीचर 7: सामान न मिलने पर एआई खुद बोलकर कस्टमर को व्हाट्सएप्प आर्डर का रास्ता बताएगा
                 triggerAINoResultSpeech();
             } 
             else {
                 empty.classList.add('hidden');
-                // सामान मिलने पर अगर पहले से एआई कुछ बोल रहा है तो उसे चुप कराना
                 if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 
-                // ⚡ फीचर 4: ट्रेंडिंग टुडे हॉट बैज के लिए सबसे ज्यादा व्यूज/क्लिक्स वाला आइटम खोजना
                 let maxClicks = -1;
                 filtered.forEach(p => { if((p.clicks || 0) > maxClicks) maxClicks = p.clicks || 0; });
 
@@ -324,7 +318,6 @@
                     const card = document.createElement('div');
                     card.className = "bg-white border border-slate-200 rounded-2xl p-3 flex flex-col justify-between gap-2 shadow-sm product-card cursor-pointer hover:scale-[1.01] transition relative overflow-hidden";
                     
-                    // ⚡ फीचर 4: ट्रेंडिंग टुडे हॉट बैज इंजेक्शन (अगर आइटम के व्यूज सबसे ज्यादा हैं और क्लिक्स 0 से ऊपर हैं)
                     let trendingBadgeHTML = "";
                     if (maxClicks > 0 && (p.clicks || 0) === maxClicks) {
                         trendingBadgeHTML = `<span class="absolute top-2 left-2 bg-gradient-to-r from-red-600 to-orange-500 text-white font-black text-[8px] uppercase px-2 py-0.5 rounded-md shadow border border-white/10 z-10 animate-pulse tracking-tight"><i class="fa-solid fa-fire mr-0.5"></i>Trending Today</span>`;
@@ -375,11 +368,9 @@
             document.getElementById('modal-price').innerText = `₹${product.price}`;
             document.getElementById('modal-fake-price').innerText = `₹${Math.round(product.price * 1.25)}`;
 
-            // ⚡ फीचर 5: स्मार्ट स्टॉक अलर्ट लो स्टॉक इंडिकेटर का इंजेक्शन (अगर माल 2 या 3 पीस बचा हो, तो डेटाबेस फ़ील्ड p.costPrice या p.stock के अनुसार सिम्युलेटर अलर्ट दिखाएगा)
             const stockAlertTag = document.getElementById('modal-stock-alert');
             if(stockAlertTag) {
-                // डमी स्टॉक रैंडमाइज़र या डेटाबेस सिमुलेशन के आधार पर लो स्टॉक की स्थिति बनाना
-                let currentItemStock = (product.name.length % 3) + 1; // ३ पीस से कम का सेफ सिम्युलेटर
+                let currentItemStock = (product.name.length % 3) + 1;
                 if (currentItemStock <= 3) {
                     stockAlertTag.innerText = `⏳ Only ${currentItemStock} Left! (जल्दी करें)`;
                     stockAlertTag.classList.remove('hidden');
@@ -411,7 +402,6 @@
             updateSliderPosition();
             renderRelatedProducts(product.category, product._id);
 
-            // ⚡ बैक बटन हिस्ट्री इंजन इंजेक्शन (क्रोम पेज कटने से रोकने का १००% पक्का इलाज)
             document.getElementById('product-modal').classList.remove('hidden');
             window.history.pushState({ modalOpen: true }, "");
 
@@ -503,7 +493,6 @@
             window.open(`https://wa.me/919450222868?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // ⚡ फीचर 7: नो रिजल्ट की स्थिति में व्हाट्सएप्प पर ऑर्डर ट्रांसफर करने का कस्टमाइज्ड फंक्शन
         function orderMissingProductViaWhatsApp() {
             const missingName = document.getElementById('search-input').value.trim();
             const msg = `नमस्ते शिव शक्ति सुपर मार्ट, मुझे यह सामान खरीदना है जो वेबसाइट लिस्ट में नहीं मिला:\n\n*सामान का नाम (Missing Item):* ${missingName || 'Special Item'}\n\nकृपया इसे मंगाकर मुझे सूचित करें!`;
@@ -521,14 +510,12 @@
             renderProducts();
         }
 
-        // ⚡ फीचर 3: स्मार्ट ऑटो-सजेशन ड्रॉपडाउन इनपुट ट्रैकर
         function handleSearchInput() {
             const txt = document.getElementById('search-input').value.toLowerCase().trim();
             const box = document.getElementById('ai-suggestion-box');
             
             if(!txt) { box.classList.add('hidden'); renderProducts(); return; }
 
-            // दुकान के स्टॉक लिस्ट से मैचिंग आइटम्स खोजना
             const matches = allProducts.filter(p => p.name.toLowerCase().includes(txt));
             
             if(matches.length === 0) { box.classList.add('hidden'); renderProducts(); return; }
@@ -536,7 +523,6 @@
             box.innerHTML = '';
             box.classList.remove('hidden');
 
-            // टॉप 4 बेस्ट मैच सजेस्ट करना पट्टी में
             matches.slice(0, 4).forEach(m => {
                 const row = document.createElement('div');
                 row.className = "p-3 text-xs font-black text-slate-800 hover:bg-orange-50 rounded-xl cursor-pointer transition flex items-center gap-2 border-b border-slate-50 last:border-0";
@@ -552,13 +538,11 @@
             renderProducts();
         }
 
-        // ⚡ फीचर 1 और फीचर 2: कस्टमाइज्ड वॉयस-टू-इंग्लिश हाइब्रिड एआई सर्च सुधारक + ब्यूटी कैटेगरी वॉयस मैच
         function startVoiceSearch() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) { alert("Voice Search Not Supported."); return; }
             const rec = new SpeechRecognition();
             
-            // 🎯 भाषा शुद्ध हिंदी लिपि 'hi-IN' ही रहेगी ताकि गाँव-देसी बोली आराम से रिकॉर्ड हो सके
             rec.lang = 'hi-IN';
             
             const icon = document.getElementById('mic-icon');
@@ -567,8 +551,6 @@
             
             rec.onresult = (e) => {
                 let spokenText = e.results[0][0].transcript.toLowerCase().replace(/[.।]/g, '').trim();
-                
-                // 🎯 एआई ट्रांसलेटर इंजन: सर्च बॉक्स में हिंदी स्क्रिप्ट नहीं छपेगी, सिर्फ साफ़ इंग्लिश अक्षर ही टाइप होंगे
                 let convertedEnglishText = spokenText;
 
                 if(spokenText.includes("झाड़ू") || spokenText.includes("पोछा") || spokenText.includes("डंडा") || spokenText.includes("साफ करने") || spokenText.includes("वाइपर")) {
@@ -581,24 +563,33 @@
                     switchCategory('Toys');
                 } else if(spokenText.includes("डस्टबिन") || spokenText.includes("कचरा") || spokenText.includes("बाल्टी")) {
                     convertedEnglishText = "dustbin";
-                } 
-                // 🎯 फीचर 2: ब्यूटी कैटेगरी वॉयस मैच अपग्रेड
-                else if(spokenText.includes("क्रीम") || spokenText.includes("काजल") || spokenText.includes("पाउडर") || spokenText.includes("फेयर") || spokenText.includes("फेसवाश") || spokenText.includes("सिंगार")) {
+                } else if(spokenText.includes("क्रीम") || spokenText.includes("काजल") || spokenText.includes("पाउडर") || spokenText.includes("फेयर") || spokenText.includes("फेसवाश") || spokenText.includes("सिंगार")) {
                     convertedEnglishText = "beauty";
                     switchCategory('Beauty');
                 }
 
-                // इंग्लिश कनवर्टेड टेक्स्ट को ही बॉक्स में सेट करके फ़िल्टर करना
                 document.getElementById('search-input').value = convertedEnglishText;
                 renderProducts(); 
             };
             rec.start();
         }
 
-        // ⚡ फीचर 7: सामान न मिलने पर बोलकर बताने वाला कड़क एआई वॉइस स्पीच इंजन
+        // 🎯 जादुई "AI राम-राम" वेलकम वॉइस इंजन (कस्टमर पेज कनेक्शन पक्का लॉक!)
+        function triggerAIWelcomeSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const welcomePhrase = "जय श्री राम भैया! शिव शक्ति सुपर मार्ट में पधारने के लिए बहुत-बहुत धन्यवाद। आपके घर-परिवार, बच्चों के खिलौने और पढ़ाई लिखाई का सारा सामान अब अपनी दुकान पर आ चुका है। आराम से रेट देखिए और ऑर्डर करिए, हम सामान रेडी रखेंगे!";
+                const utterance = new SpeechSynthesisUtterance(welcomePhrase);
+                utterance.lang = 'hi-IN';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("AI Voice Welcome is not supported in this browser.");
+            }
+        }
+
         function triggerAINoResultSpeech() {
             if ('speechSynthesis' in window) {
-                // पुराने टाइमर को रिसेट करना ताकि बार-बार ओवरलैप न हो आवाज़
                 if (speechCancelTimeout) clearTimeout(speechCancelTimeout);
                 
                 speechCancelTimeout = setTimeout(() => {
@@ -608,7 +599,7 @@
                     utterance.lang = 'hi-IN';
                     utterance.rate = 0.95;
                     window.speechSynthesis.speak(utterance);
-                }, 400); // 400ms का छोटा बफर ताकि टाइपिंग के दौरान तुरंत इरिटेट न करे
+                }, 400);
             }
         }
 
