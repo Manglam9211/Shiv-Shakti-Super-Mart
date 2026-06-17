@@ -23,6 +23,13 @@
             animation: owner-3d-glow 2.5s infinite ease-in-out;
             display: inline-block;
         }
+
+        /* 👑 नए वीआईपी एआई सफलता पॉप-अप मोडल के लिए सुंदर एनीमेशन */
+        @keyframes modalScaleIn {
+            0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-modal-vip { animation: modalScaleIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
     </style>
 </head>
 <body class="bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0] min-h-screen font-sans pb-16 text-slate-700">
@@ -36,6 +43,19 @@
             <p class="text-xs text-slate-500 mb-6">VIP Control Panel kholne ke liye PIN dalein</p>
             <input type="password" id="pin-input" placeholder="••••" maxlength="4" class="w-full bg-slate-50 border-2 border-slate-300 text-center py-3 rounded-xl mb-6 text-3xl font-black text-slate-900 tracking-widest outline-none focus:border-orange-500 transition">
             <button onclick="verifyPin()" type="button" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3.5 rounded-xl font-black text-sm shadow-md transition">Verify Access</button>
+        </div>
+    </div>
+
+    <div id="vip-success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-[32px] p-6 w-full max-w-sm text-center shadow-2xl border border-emerald-100 animate-modal-vip">
+            <div class="w-20 h-24 bg-emerald-500/10 rounded-3xl flex items-center justify-center mx-auto mb-4 border border-emerald-500/20 shadow-inner">
+                <i class="fa-solid fa-circle-check text-emerald-500 text-4xl animate-bounce"></i>
+            </div>
+            <h3 class="text-lg font-black text-slate-900 tracking-tight">सफलतापूर्वक लोड हो गया!</h3>
+            <p class="text-xs text-slate-600 font-bold mt-1.5 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+                मालिक, आपका नया स्टॉक सीधे गैलरी से उड़कर लाइव दुकान की काउंटर लिस्ट पर चकाचक चढ़ गया है।
+            </p>
+            <button onclick="closeSuccessModal()" class="w-full bg-gradient-to-r from-emerald-500 to-green-600 text-white py-3.5 rounded-2xl font-black text-xs shadow-md shadow-emerald-500/20 active:scale-95 transition mt-4">ठीक है मालिक, आगे बढ़ें</button>
         </div>
     </div>
 
@@ -148,6 +168,17 @@
                 </select>
             </div>
 
+            <div class="mb-4 bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
+                <div>
+                    <label class="block text-[10px] font-black uppercase text-slate-300 tracking-wider">Ad Share Destination Mode</label>
+                    <p id="group-mode-status-text" class="text-[9px] text-emerald-400 font-bold mt-0.5 uppercase tracking-tight"><i class="fa-solid fa-users mr-1"></i> Mode Locked: My Mart WhatsApp Group</p>
+                </div>
+                <select id="ai-whatsapp-dest-mode" onchange="toggleWhatsAppTargetText()" class="bg-slate-800 border border-slate-700 p-2 rounded-lg text-[10px] text-white font-black outline-none">
+                    <option value="group">📢 WhatsApp Group Mode</option>
+                    <option value="personal">👤 Personal Chat Mode</option>
+                </select>
+            </div>
+
             <label class="block text-[10px] font-black uppercase text-slate-400 mb-2 tracking-wider">2. Launch Single-Click AI Blast</label>
             <div class="grid grid-cols-3 gap-2">
                 <button onclick="triggerAIMarketingBlast()" class="bg-gradient-to-r from-emerald-500 to-green-600 text-white py-3 rounded-xl text-[10px] font-black flex flex-col items-center justify-center gap-1 shadow-sm active:scale-95 transition">
@@ -229,7 +260,10 @@
                         <h4 class="font-black text-xs text-slate-800 truncate">${p.name}</h4>
                         <p class="text-[10px] text-slate-500 mt-0.5">Rate: ₹${p.price} | Profit: <span class="text-emerald-600 font-bold">₹${profitPerClick}</span></p>
                     </div>
-                    <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white font-black text-[11px] py-2.5 rounded-xl transition">Hatayein</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="deleteProduct('${p._id}')" class="w-full bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white font-black text-[10px] py-2.5 rounded-xl transition">Hatayein</button>
+                        <button onclick="triggerSingleProductAIAd('${p._id}')" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-[10px] py-2.5 rounded-xl flex items-center justify-center gap-1 hover:scale-[1.02] active:scale-95 transition shadow-sm"><i class="fa-solid fa-rocket text-[9px]"></i> AI प्रचार</button>
+                    </div>
                 `;
                 list.appendChild(card);
             });
@@ -324,7 +358,8 @@
                 
                 const result = await response.json();
                 if (response.ok && result.success) {
-                    alert("सफलता! गैलरी से सामान सीधे लाइव दुकान पर चढ़ गया। 🛍️");
+                    // ⚡ नया अपग्रेड: पुराने साधारण alert की छुट्टी, वीआईपी ३डी सफलता पॉप-अप एक्टिवेट होगा
+                    openSuccessModal();
                     document.getElementById('advanced-upload-form').reset();
                     document.getElementById('ai-price-guide-box').classList.add('hidden');
                     fetchAdminMetrics();
@@ -341,7 +376,24 @@
             btn.disabled = false;
         });
 
-        // 🚀 नया अपग्रेड: जादुई एआई शफल विज्ञापन सुइट (हर बार क्लिक करने पर नया आइटम + असली फोटो + डायरेक्ट शॉप लिंक)
+        // 🌟 ३डी सफलता मोडल खोलने और बंद करने के कस्टमाइज्ड फंक्शन्स
+        function openSuccessModal() { document.getElementById('vip-success-modal').classList.remove('hidden'); }
+        function closeSuccessModal() { document.getElementById('vip-success-modal').classList.add('hidden'); }
+
+        // ⚡ ग्रुप डेस्टिनेशन मोड का स्टेटस टेक्स्ट हैंडलर
+        function toggleWhatsAppTargetText() {
+            const dest = document.getElementById('ai-whatsapp-dest-mode').value;
+            const statusTxt = document.getElementById('group-mode-status-text');
+            if (dest === 'group') {
+                statusTxt.innerHTML = `<i class="fa-solid fa-users mr-1"></i> Mode Locked: My Mart WhatsApp Group`;
+                statusTxt.className = "text-[9px] text-emerald-400 font-bold mt-0.5 uppercase tracking-tight";
+            } else {
+                statusTxt.innerHTML = `<i class="fa-solid fa-user mr-1"></i> Mode Locked: Personal Chat Broadcasting`;
+                statusTxt.className = "text-[9px] text-orange-400 font-bold mt-0.5 uppercase tracking-tight";
+            }
+        }
+
+        // जादुई एआई शफल विज्ञापन सुइट (ग्रुप/पर्सनल मोड अनुकूलित)
         async function triggerAIMarketingBlast() {
             if (productsData.length === 0) {
                 alert("मालिक, दुकान खाली है! पहले सामान चढाएं तभी तो एआई विज्ञापन बनाएगा।");
@@ -350,31 +402,76 @@
 
             try {
                 const mood = document.getElementById('ai-ad-mood').value;
+                const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
                 
-                // 🔄 शफ्लिंग लॉजिक: हर बार क्लिक करने पर अगला सामान ऑटो-सिलेक्ट होगा
                 lastAdProductIndex = (lastAdProductIndex + 1) % productsData.length;
                 const chosenProduct = productsData[lastAdProductIndex];
-                
-                // पहली असली फोटो का क्लाउडिनरी लिंक उठाना
                 const productPhoto = chosenProduct.images && chosenProduct.images.length > 0 ? chosenProduct.images[0] : '';
-                
-                // 🎯 नया अपग्रेड: सीधे इसी प्रोडक्ट के पेज पर ग्राहकों को भेजने वाला डायरेक्ट लिंक
                 const directShopLink = `https://shiv-shakti-super-mart.onrender.com`;
                 
                 let adScript = "";
+                // ग्रुप मोड के हिसाब से वीआईपी हेडर का चुनाव
+                let introHeader = destMode === 'group' ? `📢 *राम-राम भाइयों और बहनों! हमारे व्हाट्सएप्प ग्रुप परिवार के लिए स्पेशल डील* 📢` : `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅`;
 
                 if (mood === 'morning') {
-                    adScript = `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅\n\nआज सुबह का स्पेशल धमाका! सीधे दुकान पधारें और बाजार से कम रेट पर ले जाएं:\n\n🛍️ *आइटम:* ${chosenProduct.name}\n💰 *कीमत:* सिर्फ ₹${chosenProduct.price}\n\n✨ *क्वालिटी:* ${chosenProduct.description || 'Premium Fresh Stock!'}\n\n📸 *सामान की असली फोटो:* ${productPhoto}\n\n🎯 *सामान को डायरेक्ट खरीदने के लिए इस लिंक पर क्लिक करें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
+                    adScript = `${introHeader}\n\nआज सुबह का स्पेशल धमाका! सीधे दुकान पधारें और बाजार से कम रेट पर ले जाएं:\n\n🛍️ *आइटम:* ${chosenProduct.name}\n💰 *कीमत:* सिर्फ ₹${chosenProduct.price}\n\n✨ *क्वालिटी:* ${chosenProduct.description || 'Premium Fresh Stock!'}\n\n📸 *सामान की असली फोटो:* ${productPhoto}\n\n🎯 *सामान को डायरेक्ट खरीदने के लिए इस लिंक पर क्लिक करें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
                 } else if (mood === 'combo') {
                     adScript = `🎁 *SHIV SHAKTI MART - स्पेशल बजट ब्लास्ट* 🎁\n\nकम दाम में सबसे बढ़िया सामान! आपके घर परिवार और बचत के लिए ताज़ा स्टॉक रेडी है:\n\n🛒 *सामान का नाम:* ${chosenProduct.name}\n Thok Rate: *₹${chosenProduct.price}*\n\n🔥 *एआई सलाह:* ${chosenProduct.description || 'Sabse Sasta Sabse Badiya!'}\n\n📸 *सामान की फोटो देखें:* ${productPhoto}\n\n🎯 *सीधे आर्डर बुक करने के लिए यहाँ क्लिक करें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान:* ${directShopLink}`;
                 } else if (mood === 'urgency') {
-                    adScript = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा और चित्रकूट के भाई-बहनों ध्यान दें! यह सामान दुकान पर बहुत तेजी से बिक रहा है, खत्म होने से पहले आर्डर करें:\n\n🔥 *हॉट आइटम:* ${chosenProduct.name}\n💰 *ऑफर प्राइस:* ₹${chosenProduct.price}\n\n⏱️ *विवरण:* ${chosenProduct.description || 'Jaldi aayein ya order pakka karein!'}\n\n📸 *सामान की लाइव फोटो:* ${productPhoto}\n\n🎯 *स्टॉक ख़त्म होने से पहले यहाँ क्लिक करके तुरंत खरीदें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
+                    adScript = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा और चित्रकूट के भाई-बहनों ध्यान दें! यह सामान दुकान पर बहुत तेजी से बिक रहा है, खत्म होने से पहले आर्डर करें:\n\n🔥 *हॉट आइटम:* ${chosenProduct.name}\n💰 *ऑफर传输 प्राइस:* ₹${chosenProduct.price}\n\n⏱️ *विवरण:* ${chosenProduct.description || 'Jaldi aayein ya order pakka karein!'}\n\n📸 *सामान की लाइव फोटो:* ${productPhoto}\n\n🎯 *स्टॉक ख़त्म होने से पहले यहाँ क्लिक करके तुरंत खरीदें:* ${directShopLink}\n\n🔗 *पूरी लाइव दुकान की रेट लिस्ट:* ${directShopLink}`;
                 }
                 
                 window.open(`https://wa.me/?text=${encodeURIComponent(adScript)}`, '_blank'); 
             } catch(e) { 
                 alert("AI Advertising Engine code error."); 
             }
+        }
+
+        // ⚡ नया खतरनाक अपग्रेड: पर्सनल सिंगल आइटम "🚀 AI प्रचार" ऑटो-कॉपी फोटो डाउनलोड इंजन (वेरिएंट शफल कूपन सुइट)
+        function triggerSingleProductAIAd(productId) {
+            const p = productsData.find(prod => prod._id === productId);
+            if(!p) return;
+
+            const productPhoto = p.images && p.images.length > 0 ? p.images[0] : '';
+            const directShopLink = `https://shiv-shakti-super-mart.onrender.com`;
+            const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
+
+            // रैंडम कूपन कोड जनरेटर सिम्युलेटर
+            const couponCodes = ['VIP_SHAKTI_5', 'MART_SPECIAL_10', 'AGRAHUNDA_BEST_7', 'FAMILY_SUPER_4'];
+            const randomCoupon = couponCodes[Math.floor(Math.random() * couponCodes.length)];
+
+            // वेरिएंट शफल स्क्रिप्टिंग इंजन (हर बार क्लिक करने पर दो अलग स्टाइल का कंटेंट रेंडर होगा)
+            let adScript = "";
+            let shuffleVariantToggle = new Date().getSeconds() % 2 === 0;
+
+            let groupGreeting = destMode === 'group' ? `👨‍👩‍👧‍👦 *हमारे व्हाट्सएप्प ग्रुप परिवार के लिए खास धमाका!* 👨‍👩‍👧‍👦` : `🔥 *शिव शक्ति सुपर मार्ट - वीआईपी सिंगल आइटम डील* 🔥`;
+
+            if (shuffleVariantToggle) {
+                // वेरिएंट 1: कूपन कोड और वीआईपी डिस्काउंट वाला विज्ञापन
+                adScript = `${groupGreeting}\n\nसीधे हमारे स्टॉक रूम से निकलकर एकदम कड़क नया माल दुकान पर सज चुका है मालिक!\n\n🛍️ *सामान का नाम:* ${p.name}\n💰 *सुपर स्पेशल रेट:* ₹${p.price}\n\n🎁 *ग्रुप स्पेशल कूपन कोड:* ${randomCoupon}\n(काउंटर पर यह मैसेज दिखाकर अपनी एक्स्ट्रा छूट तुरंत हासिल करें!)\n\n⏱️ *विवरण:* ${p.description || 'Top Premium Quality Stock!'}\n\n🎯 *वेबसाइट पर पूरी दुकान की लाइव रेट लिस्ट देखें:* ${directShopLink}`;
+            } else {
+                // वेरिएंट 2: कूपन हटाकर 'सीमित स्टॉक' और 'भारी डिमांड' वाला अर्जेन्सी विज्ञापन
+                adScript = `⏳ *जल्दी करें! अग्राहुंडा में यह सामान बहुत तेजी से खत्म हो रहा है* ⏳\n\nपड़ोस के लोग इसे फटाफट खरीद कर ले जा रहे हैं, स्टॉक खत्म होने की पूरी चेतावनी है:\n\n🛒 *आइटम:* ${p.name}\n💰 *बेस्ट ऑफर प्राइस:* ₹${p.price}\n\n🔥 *एआई स्टॉक रिपोर्ट:* ${p.description || 'Sasta aur sabse badiya fresh mal!'}\n\n🚀 *सामान खत्म होने से पहले यहाँ क्लिक करके तुरंत बुक करें:* ${directShopLink}`;
+            }
+
+            // फोटो डाउनलोड को ट्रिगर करने का सेफ कोडिंग बाईपास (गैलरी में सबसे ऊपर लाने के लिए)
+            if (productPhoto) {
+                const link = document.createElement('a');
+                link.href = productPhoto;
+                link.download = `${p.name.replace(/\s+/g, '_')}_photo.jpg`;
+                link.target = '_blank'; // सिक्योर मोबाइल एनवायरनमेंट बाईपास
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // क्लिपबोर्ड पर पूरा विज्ञापन टेक्स्ट ऑटोमैटिक कॉपी करना
+            navigator.clipboard.writeText(adScript).then(() => {
+                alert(`🚀 एआई प्रचार इंजन एक्टिवेटेड!\n\n1. इस सामान (${p.name}) की असली फोटो आपके फोन में डाउनलोड होने के लिए भेज दी गई है ताकि गैलरी में ऊपर दिखे।\n2. कड़क कूपन विज्ञापन आपके क्लिपबोर्ड पर खुद-ब-खुद कॉपी हो गया है!\n\nअब सीधे व्हाट्सएप्प ग्रुप खोलें, गैलरी से फोटो चुनें और नीचे विज्ञापन पेस्ट (Paste) करके सेंड कर दें मालिक!`);
+                window.open(`https://wa.me/`, '_blank');
+            }).catch(() => {
+                alert("Clipboard auto-copy failed. Please copy text manually.");
+            });
         }
 
         async function deleteProduct(id) {
@@ -407,7 +504,6 @@
             } else if (cat === "Toys") {
                 aiGeneratedText = `🧸 Bachho ka manpasand attractive ${name}! Safe material se bana hua badiya khelne ka saman. Dekhte hi bachhe khush ho jayenge!`;
             } else if (cat === "Beauty") {
-                // 💄 नया एआई माइंडसेट: ब्यूटी प्रोडक्ट्स के लिए शानदार हिंग्लिश स्क्रिप्ट राइटिंग
                 aiGeneratedText = `💄 High-Quality Premium ${name}! Chehre ki rounak aur skin care ke liye sabse badiya trusted product. Shiv Shakti Mart par market se saste rate me available.`;
             } else {
                 aiGeneratedText = `🛒 Shiv Shakti Mart special ${name}! Agrahunda me sabse kam rate par sabse badiya quality ka fresh stock. Turand order karein.`;
@@ -429,7 +525,7 @@
                     if ((p.clicks || 0) > (topProduct.clicks || 0)) topProduct = p;
                 });
 
-                textElement.innerHTML = `⚠️ *AI Alert:* पिछले 3 दिनों में *${topProduct.name}* को सबसे ज्यादा ग्राहकों ने देखा है। इसका STOCK खत्म होने की संभावना है, बाजार जाने से पहले इसके और पैकेट摆放在 सामने रख लें!`;
+                textElement.innerHTML = `⚠️ *AI Alert:* पिछले 3 दिनों में *${topProduct.name}* को सबसे ज्यादा ग्राहकों ने देखा है। इसका STOCK खत्म होने की संभावना है, बाजार जाने से पहले इसके और पैकेट擺放在 सामने रख लें!`;
             }, 1500);
         }
 
@@ -504,9 +600,9 @@
             }
             const topP = productsData[0];
 
-            let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart.onrender.com\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
+            let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों and परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart.onrender.com\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
 
-            alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए破解 परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
+            alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए फेसबुक परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
             navigator.clipboard.writeText(fbPost).catch(() => {});
         }
     </script>
