@@ -643,7 +643,7 @@
                 
                 speechCancelTimeout = setTimeout(() => {
                     window.speechSynthesis.cancel();
-                    const noResultMsg = "भैया, यह सामान अभी लिस्ट में नहीं है, लेकिन आप सीधे नीचे बटन दबाकर मालिक को व्हाट्सएप्प पर ऑर्डर कर दें। हम आपके लिए तुरंत मंगा देंगे!";
+                    const noResultMsg = "प्रिय ग्राहक, यह सामान अभी लिस्ट में नहीं है, लेकिन आप सीधे नीचे बटन दबाकर मालिक को व्हाट्सएप्प पर ऑर्डर कर दें। हम आपके लिए तुरंत मंगवा देंगे!";
                     const utterance = new SpeechSynthesisUtterance(noResultMsg);
                     utterance.lang = 'hi-IN';
                     utterance.rate = 0.95;
