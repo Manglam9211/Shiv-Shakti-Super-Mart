@@ -220,9 +220,7 @@
 
     <script>
         let productsData = [];
-        // 🔄 जादुई ट्रैकर: रिपीटेशन रोकने के लिए शफ्लिंग इंडेक्स पॉइंटर
-        let lastAdProductIndex = -1;
-
+        
         function verifyPin() {
             if(document.getElementById('pin-input').value === '7181') {
                 document.getElementById('security-gate').classList.add('hidden');
@@ -393,11 +391,9 @@
             btn.disabled = false;
         });
 
-        // 🌟 ३डी सफलता मोडल खोलने और बंद करने के कस्टमाइज्ड फंक्शन्स
         function openSuccessModal() { document.getElementById('vip-success-modal').classList.remove('hidden'); }
         function closeSuccessModal() { document.getElementById('vip-success-modal').classList.add('hidden'); }
 
-        // 🌟 प्रीव्यू मोडल के फंक्शन्स
         function openAdPreviewModal(text) {
             document.getElementById('ai-ad-preview-text-box').innerText = text;
             document.getElementById('ai-ad-preview-modal').classList.remove('hidden');
@@ -406,7 +402,6 @@
             document.getElementById('ai-ad-preview-modal').classList.add('hidden');
         }
 
-        // ⚡ ग्रुप डेस्टिनेशन मोड का स्टेटस टेक्स्ट हैंडलर
         function toggleWhatsAppTargetText() {
             const dest = document.getElementById('ai-whatsapp-dest-mode').value;
             const statusTxt = document.getElementById('group-mode-status-text');
@@ -419,7 +414,30 @@
             }
         }
 
-        // जादुई एआई शफल विज्ञापन सुइट (ग्रुप/पर्सनल मोड अनुकूलित + Amazon Features)
+        // 🚀 ==================== THE REAL AI DYNAMIC GIFT ENGINE ====================
+        // यह फंक्शन खुद तुम्हारी दुकान छानकर रेट के हिसाब से असली फ्री आइटम निकालेगा
+        function getDynamicGiftText(mainPrice) {
+            if (productsData.length < 2 || mainPrice < 60) return ""; 
+
+            let giftPool = [];
+            if (mainPrice >= 60 && mainPrice <= 119) {
+                giftPool = productsData.filter(p => p.price <= 20 && p.price > 0);
+            } else if (mainPrice >= 120 && mainPrice <= 299) {
+                giftPool = productsData.filter(p => p.price <= 35 && p.price > 0);
+            } else if (mainPrice >= 300) {
+                giftPool = productsData.filter(p => p.price <= 50 && p.price > 0);
+            }
+
+            let giftName = "एक शानदार सरप्राइज गिफ्ट";
+            if (giftPool.length > 0) {
+                const randomGiftIndex = Math.floor(Math.random() * giftPool.length);
+                giftName = giftPool[randomGiftIndex].name;
+            }
+
+            return `🎁 *मुफ़्त उपहार:* यह कूपन मैसेज काउंटर पर दिखाएं और *${giftName}* बिल्कुल मुफ्त पाएं!\n✨ (हमारे यहाँ से खरीदारी करने पर आपको कई और फ्री सामान जीतने का अवसर मिलेगा)\n`;
+        }
+
+        // जादुई एआई शफल विज्ञापन सुइट (True Randomizer & Dynamic Gift)
         async function triggerAIMarketingBlast() {
             if (productsData.length === 0) {
                 alert("मालिक, दुकान खाली है! पहले सामान चढाएं तभी तो एआई विज्ञापन बनाएगा।");
@@ -430,50 +448,42 @@
                 const mood = document.getElementById('ai-ad-mood').value;
                 const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
                 
-                lastAdProductIndex = (lastAdProductIndex + 1) % productsData.length;
-                const chosenProduct = productsData[lastAdProductIndex];
+                // 🔥 TRUE RANDOMIZER: हर बार कोई नया रैंडम आइटम छांटेगा
+                const randomItemIndex = Math.floor(Math.random() * productsData.length);
+                const chosenProduct = productsData[randomItemIndex];
+                
                 const productPhoto = chosenProduct.images && chosenProduct.images.length > 0 ? chosenProduct.images[0] : '';
                 const directShopLink = `https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
                 
-                // Amazon Features AI Logic Integration
                 let price = Number(chosenProduct.price) || 0;
                 let cost = Number(chosenProduct.costPrice) || (price * 0.8);
                 let flashPrice = price;
                 let specialTag = "";
-                let giftText = "";
+                
+                // Dynamic Gift Caller
+                let giftText = getDynamicGiftText(flashPrice);
 
-                // 1. Hype Engine
                 if ((chosenProduct.clicks || 0) > 5) {
                     specialTag += "🔥 *Trending!* पूरे इलाके में लोग इसे देख रहे हैं!\n";
                 }
 
-                // 2. Flash Sale 
                 if (price > cost * 1.15) {
-                    let discount = Math.floor(price * 0.05); // 5% discount
+                    let discount = Math.floor(price * 0.05); 
                     flashPrice = price - discount;
                     specialTag += `⚡ *Flash Sale:* ₹${price} की जगह सिर्फ ₹${flashPrice} में!\n`;
                 } else {
                     specialTag += `💰 *ऑफर रेट:* सिर्फ ₹${price} में!\n`;
                 }
 
-                // 3. Tiered Rewards
-                if (flashPrice >= 60 && flashPrice <= 119) {
-                    giftText = "🎁 *FREE:* बच्चों का फैंसी स्टीकर (एक पत्ता)!\n";
-                } else if (flashPrice >= 120 && flashPrice <= 299) {
-                    giftText = "🎁 *FREE:* ₹20 तक की एक बढ़िया कॉपी/स्टेशनरी!\n";
-                } else if (flashPrice >= 300) {
-                    giftText = "🎁 *FREE:* एक क्रिकेट बॉल या ₹30 तक का सुपर आइटम!\n";
-                }
-
                 let adScript = "";
                 let introHeader = destMode === 'group' ? `📢 *राम-राम भाइयों और बहनों! हमारे व्हाट्सएप्प ग्रुप परिवार के लिए स्पेशल डील* 📢` : `🌅 *राम-राम भैया! शिव शक्ति मार्ट (अग्राहुंडा) मॉर्निंग डील* 🌅`;
 
                 if (mood === 'morning') {
-                    adScript = `${introHeader}\n\nआज सुबह का स्पेशल धमाका! सीधे दुकान पधारें और बाजार से कम रेट पर ले जाएं:\n\n🛍️ *आइटम:* ${chosenProduct.name}\n${specialTag}${giftText}\n✨ *क्वालिटी:* ${chosenProduct.description || 'Premium Fresh Stock!'}\n\n🎯 *सामान को डायरेक्ट खरीदने के लिए इस लिंक पर क्लिक करें:*\n🔗 ${directShopLink}`;
+                    adScript = `${introHeader}\n\nआज सुबह का स्पेशल धमाका! सीधे दुकान पधारें और बाजार से कम रेट पर ले जाएं:\n\n🛍️ *आइटम:* ${chosenProduct.name}\n${specialTag}\n${giftText}\n✨ *क्वालिटी:* ${chosenProduct.description || 'Premium Fresh Stock!'}\n\n🎯 *सामान को डायरेक्ट खरीदने के लिए इस लिंक पर क्लिक करें:*\n🔗 ${directShopLink}`;
                 } else if (mood === 'combo') {
-                    adScript = `🎁 *SHIV SHAKTI MART - स्पेशल बजट ब्लास्ट* 🎁\n\nकम दाम में सबसे बढ़िया सामान! आपके घर परिवार और बचत के लिए ताज़ा स्टॉक रेडी है:\n\n🛒 *सामान का नाम:* ${chosenProduct.name}\n${specialTag}${giftText}\n🔥 *एआई सलाह:* ${chosenProduct.description || 'Sabse Sasta Sabse Badiya!'}\n\n🎯 *सीधे आर्डर बुक करने के लिए यहाँ क्लिक करें:*\n🔗 ${directShopLink}`;
+                    adScript = `🎁 *SHIV SHAKTI MART - स्पेशल बजट ब्लास्ट* 🎁\n\nकम दाम में सबसे बढ़िया सामान! आपके घर परिवार और बचत के लिए ताज़ा स्टॉक रेडी है:\n\n🛒 *सामान का नाम:* ${chosenProduct.name}\n${specialTag}\n${giftText}\n🔥 *एआई सलाह:* ${chosenProduct.description || 'Sabse Sasta Sabse Badiya!'}\n\n🎯 *सीधे आर्डर बुक करने के लिए यहाँ क्लिक करें:*\n🔗 ${directShopLink}`;
                 } else if (mood === 'urgency') {
-                    adScript = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा और चित्रकूट के भाई-बहनों ध्यान दें! यह सामान दुकान पर बहुत तेजी से बिक रहा है, खत्म होने से पहले आर्डर करें:\n\n🔥 *हॉट आइटम:* ${chosenProduct.name}\n${specialTag}${giftText}\n⏱️ *विवरण:* ${chosenProduct.description || 'Jaldi aayein ya order pakka karein!'}\n\n🎯 *स्टॉक ख़त्म होने से पहले यहाँ क्लिक करके तुरंत खरीदें:*\n🔗 ${directShopLink}`;
+                    adScript = `⏳ *जल्दी करें! STOCK बहुत लिमिटेड बचा है* ⏳\n\nअग्राहुंडा और चित्रकूट के भाई-बहनों ध्यान दें! यह सामान दुकान पर बहुत तेजी से बिक रहा है, खत्म होने से पहले आर्डर करें:\n\n🔥 *हॉट आइटम:* ${chosenProduct.name}\n${specialTag}\n${giftText}\n⏱️ *विवरण:* ${chosenProduct.description || 'Jaldi aayein ya order pakka karein!'}\n\n🎯 *स्टॉक ख़त्म होने से पहले यहाँ क्लिक करके तुरंत खरीदें:*\n🔗 ${directShopLink}`;
                 }
                 
                 setupAdConfirmButton(adScript, productPhoto, chosenProduct.name);
@@ -482,7 +492,7 @@
             }
         }
 
-        // ⚡ नया खतरनाक अपग्रेड: पर्सनल सिंगल आइटम "🚀 AI प्रचार" (Amazon Features Integration)
+        // ⚡ नया खतरनाक अपग्रेड: पर्सनल सिंगल आइटम (True Dynamic Gift & Correct URL)
         function triggerSingleProductAIAd(productId) {
             const p = productsData.find(prod => prod._id === productId);
             if(!p) return;
@@ -491,12 +501,13 @@
             const directShopLink = `https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
             const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
 
-            // Amazon Features AI Logic Integration
             let price = Number(p.price) || 0;
             let cost = Number(p.costPrice) || (price * 0.8);
             let flashPrice = price;
             let specialTag = "";
-            let giftText = "";
+            
+            // Dynamic Gift Caller
+            let giftText = getDynamicGiftText(flashPrice);
 
             if ((p.clicks || 0) > 5) {
                 specialTag += "🔥 *Trending!* पूरे इलाके में लोग इसे देख रहे हैं!\n";
@@ -510,14 +521,6 @@
                 specialTag += `💰 *ऑफर रेट:* सिर्फ ₹${price} में!\n`;
             }
 
-            if (flashPrice >= 60 && flashPrice <= 119) {
-                giftText = "🎁 *FREE:* बच्चों का फैंसी स्टीकर (एक पत्ता)!\n";
-            } else if (flashPrice >= 120 && flashPrice <= 299) {
-                giftText = "🎁 *FREE:* ₹20 तक की एक बढ़िया कॉपी/स्टेशनरी!\n";
-            } else if (flashPrice >= 300) {
-                giftText = "🎁 *FREE:* एक क्रिकेट बॉल या ₹30 तक का सुपर आइटम!\n";
-            }
-
             const couponCodes = ['VIP_SHAKTI_5', 'MART_SPECIAL_10', 'AGRAHUNDA_BEST_7', 'FAMILY_SUPER_4'];
             const randomCoupon = couponCodes[Math.floor(Math.random() * couponCodes.length)];
 
@@ -526,24 +529,22 @@
             let groupGreeting = destMode === 'group' ? `👨‍👩‍👧‍👦 *हमारे व्हाट्सएप्प ग्रुप परिवार के लिए खास धमाका!* 👨‍👩‍👧‍👦` : `🔥 *शिव शक्ति सुपर मार्ट - वीआईपी सिंगल आइटम डील* 🔥`;
 
             if (shuffleVariantToggle) {
-                adScript = `${groupGreeting}\n\nसीधे हमारे स्टॉक रूम से निकलकर एकदम कड़क नया माल दुकान पर सज चुका है मालिक!\n\n🛍️ *सामान का नाम:* ${p.name}\n${specialTag}${giftText}\n🎁 *ग्रुप स्पेशल कूपन कोड:* ${randomCoupon}\n(काउंटर पर यह मैसेज दिखाकर अपनी एक्स्ट्रा छूट तुरंत हासिल करें!)\n\n⏱️ *विवरण:* ${p.description || 'Top Premium Quality Stock!'}\n\n🎯 *वेबसाइट पर लाइव रेट देखें:*\n🔗 ${directShopLink}`;
+                adScript = `${groupGreeting}\n\nसीधे हमारे स्टॉक रूम से निकलकर एकदम कड़क नया माल दुकान पर सज चुका है मालिक!\n\n🛍️ *सामान का नाम:* ${p.name}\n${specialTag}\n${giftText}\n🎁 *ग्रुप स्पेशल कूपन कोड:* ${randomCoupon}\n(काउंटर पर यह कूपन कोड दिखाकर अपनी एक्स्ट्रा छूट तुरंत हासिल करें!)\n\n⏱️ *विवरण:* ${p.description || 'Top Premium Quality Stock!'}\n\n🎯 *वेबसाइट पर लाइव रेट देखें:*\n🔗 ${directShopLink}`;
             } else {
-                adScript = `⏳ *जल्दी करें! अग्राहुंडा में यह सामान बहुत तेजी से खत्म हो रहा है* ⏳\n\nपड़ोस के लोग इसे फटाफट खरीद कर ले जा रहे हैं, स्टॉक खत्म होने की पूरी चेतावनी है:\n\n🛒 *आइटम:* ${p.name}\n${specialTag}${giftText}\n🔥 *एआई स्टॉक रिपोर्ट:* ${p.description || 'Sasta aur sabse badiya fresh mal!'}\n\n🚀 *स्टॉक ख़त्म होने से पहले यहाँ बुक करें:*\n🔗 ${directShopLink}`;
+                adScript = `⏳ *जल्दी करें! अग्राहुंडा में यह सामान बहुत तेजी से खत्म हो रहा है* ⏳\n\nपड़ोस के लोग इसे फटाफट खरीद कर ले जा रहे हैं, स्टॉक खत्म होने की पूरी चेतावनी है:\n\n🛒 *आइटम:* ${p.name}\n${specialTag}\n${giftText}\n🔥 *एआई स्टॉक रिपोर्ट:* ${p.description || 'Sasta aur sabse badiya fresh mal!'}\n\n🚀 *स्टॉक ख़त्म होने से पहले यहाँ बुक करें:*\n🔗 ${directShopLink}`;
             }
 
             setupAdConfirmButton(adScript, productPhoto, p.name);
         }
 
-        // 🛠️ जादुई फिक्स: यूजर के बटन क्लिक एक्शन से कॉपी, डाउनलोड और व्हाट्सएप रूट तीनों को बाइंड करने का कम्पलीट इंजन
+        // 🛠️ जादुई फिक्स: कॉपी, डाउनलोड और व्हाट्सएप रूट का कम्पलीट इंजन
         function setupAdConfirmButton(scriptText, photoUrl, productName) {
             openAdPreviewModal(scriptText);
             
             const actionBtn = document.getElementById('ai-ad-copy-confirm-btn');
             actionBtn.onclick = function() {
-                // १. क्लिपबोर्ड पर स्क्रिप्ट कॉपी करना (यूजर क्लिक के सीधे प्रभाव में होने के कारण ब्राउज़र ब्लॉक नहीं करेगा)
                 navigator.clipboard.writeText(scriptText).then(() => {
                     
-                    // २. फोटो डाउनलोड को ट्रिगर करना
                     if (photoUrl) {
                         const link = document.createElement('a');
                         link.href = photoUrl;
@@ -556,7 +557,6 @@
 
                     closeAdPreviewModal();
                     
-                    // ३. व्हाट्सएप विंडो ओपन करना (सिक्योर एनवायरनमेंट टाइमआउट के साथ)
                     setTimeout(() => {
                         window.open(`https://wa.me/`, '_blank');
                     }, 300);
@@ -570,7 +570,7 @@
         async function deleteProduct(id) {
             if(confirm("क्या आप वाकई इस सामान को दुकान से हटाना चाहते हैं?")) {
                 await fetch(`/api/products/${id}`, { method: 'DELETE' });
-                alert("सामान दुकान से हटा दिया गया है! 🗑️");
+                alert("सामान दुकान से हटा दिया गया জ্ঞा है! 🗑️");
                 fetchAdminMetrics();
             }
         }
@@ -673,7 +673,8 @@
                 return;
             }
             const mood = document.getElementById('ai-ad-mood').value;
-            const topP = productsData[0];
+            // 🔥 TRUE RANDOMIZER FOR INSTAGRAM
+            const topP = productsData[Math.floor(Math.random() * productsData.length)];
 
             let instaCaption = `📸 *AI INSTAGRAM REELS CAMPAIGN* 📸\n\n`;
             if (mood === 'urgency') {
@@ -691,7 +692,8 @@
                 alert("फेसबुक पोस्ट के लिए पहले दुकान में सामान अपलोड करें मालिक!");
                 return;
             }
-            const topP = productsData[0];
+            // 🔥 TRUE RANDOMIZER FOR FACEBOOK
+            const topP = productsData[Math.floor(Math.random() * productsData.length)];
 
             let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
 
