@@ -1,13 +1,14 @@
 {
   "name": "ShivShaktiNew",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Shiv Shakti Super Mart Backend",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Manglam Mishra",
   "license": "ISC",
   "dependencies": {
     "cloudinary": "^2.10.0",
