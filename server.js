@@ -12,8 +12,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-// 🛜 डेटाबेस कनेक्शन (आपकी मंगोडीबी तिजोरी)
-mongoose.connect("mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0")
+// 🛜 डेटाबेस कनेक्शन (Vercel Environment Variable के साथ सुरक्षित सपोर्ट)
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://Manglam9211:Manglam9211@cluster0.pnhpxpj.mongodb.net/shiv_shakti_mart?retryWrites=true&w=majority&appName=Cluster0";
+
+mongoose.connect(MONGO_URI)
   .then(() => console.log("Database Synced Successfully"))
   .catch(err => console.log(err));
 
@@ -125,7 +127,8 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
     products.forEach(p => {
       text += `🛍️ *${p.name}* - Sirf ₹${p.price}\n👉 ${p.description || 'Badiya item'}\n\n`;
     });
-    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\nhttps://shiv-shakti-super-mart.onrender.com`;
+    // ध्यान दें: मैंने रेंडर वाला लिंक हटाकर आपका फ्यूचर Vercel/मेन लिंक सेट करने की जगह छोड़ दी है
+    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\nWebsite par check karein`;
     
     res.json({ success: true, text: text });
   } catch (e) {
@@ -140,5 +143,12 @@ app.delete('/api/products/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: true }); }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
+// 🚀 VERCEL SERVERLESS MODIFICATION (सबसे जरूरी हिस्सा)
+// अगर कोड लोकल पीसी पर चल रहा है, तो listen करेगा, वरना Vercel के लिए ऐप एक्सपोर्ट करेगा
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
+}
+
+// यह लाइन Vercel सर्वर को 24 घंटे एक्टिव रखने का काम करेगी
+module.exports = app;
