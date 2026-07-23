@@ -24,7 +24,7 @@
             display: inline-block;
         }
 
-        /* 👑 नए वीआईपी एआई सफलता पॉप-अप मोडल के  लिए सुंदर एनीमेशन */
+        /* 👑 नए वीआईपी एआई सफलता पॉप-अप मोडल के लिए सुंदर एनीमेशन */
         @keyframes modalScaleIn {
             0% { transform: scale(0.9) translateY(20px); opacity: 0; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
@@ -415,7 +415,6 @@
         }
 
         // 🚀 ==================== THE REAL AI DYNAMIC GIFT ENGINE ====================
-        // यह फंक्शन खुद तुम्हारी दुकान छानकर रेट के हिसाब से असली फ्री आइटम निकालेगा
         function getDynamicGiftText(mainPrice) {
             if (productsData.length < 2 || mainPrice < 60) return ""; 
 
@@ -448,19 +447,17 @@
                 const mood = document.getElementById('ai-ad-mood').value;
                 const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
                 
-                // 🔥 TRUE RANDOMIZER: हर बार कोई नया रैंडम आइटम छांटेगा
                 const randomItemIndex = Math.floor(Math.random() * productsData.length);
                 const chosenProduct = productsData[randomItemIndex];
                 
                 const productPhoto = chosenProduct.images && chosenProduct.images.length > 0 ? chosenProduct.images[0] : '';
-                const directShopLink = `https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
+                const directShopLink = `https://shiv-shakti-super-mart.vercel.app/`;
                 
                 let price = Number(chosenProduct.price) || 0;
                 let cost = Number(chosenProduct.costPrice) || (price * 0.8);
                 let flashPrice = price;
                 let specialTag = "";
                 
-                // Dynamic Gift Caller
                 let giftText = getDynamicGiftText(flashPrice);
 
                 if ((chosenProduct.clicks || 0) > 5) {
@@ -492,13 +489,12 @@
             }
         }
 
-        // ⚡ नया खतरनाक अपग्रेड: पर्सनल सिंगल आइटम (True Dynamic Gift & Correct URL)
         function triggerSingleProductAIAd(productId) {
             const p = productsData.find(prod => prod._id === productId);
             if(!p) return;
 
             const productPhoto = p.images && p.images.length > 0 ? p.images[0] : '';
-            const directShopLink = `https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
+            const directShopLink = `https://shiv-shakti-super-mart.vercel.app/`;
             const destMode = document.getElementById('ai-whatsapp-dest-mode').value;
 
             let price = Number(p.price) || 0;
@@ -506,7 +502,6 @@
             let flashPrice = price;
             let specialTag = "";
             
-            // Dynamic Gift Caller
             let giftText = getDynamicGiftText(flashPrice);
 
             if ((p.clicks || 0) > 5) {
@@ -537,7 +532,6 @@
             setupAdConfirmButton(adScript, productPhoto, p.name);
         }
 
-        // 🛠️ जादुई फिक्स: कॉपी, डाउनलोड और व्हाट्सएप रूट का कम्पलीट इंजन
         function setupAdConfirmButton(scriptText, photoUrl, productName) {
             openAdPreviewModal(scriptText);
             
@@ -570,14 +564,10 @@
         async function deleteProduct(id) {
             if(confirm("क्या आप वाकई इस सामान को दुकान से हटाना चाहते हैं?")) {
                 await fetch(`/api/products/${id}`, { method: 'DELETE' });
-                alert("सामान दुकान से हटा दिया गया জ্ঞा है! 🗑️");
+                alert("सामान दुकान से हटा दिया गया है! 🗑️");
                 fetchAdminMetrics();
             }
         }
-
-        // =========================================================================================
-        // 🚀 ==================== ADVANCED AI ENGINE INJECTIONS ====================
-        // =========================================================================================
 
         function generateAIDescription() {
             const name = document.getElementById('p-name').value.trim();
@@ -673,14 +663,13 @@
                 return;
             }
             const mood = document.getElementById('ai-ad-mood').value;
-            // 🔥 TRUE RANDOMIZER FOR INSTAGRAM
             const topP = productsData[Math.floor(Math.random() * productsData.length)];
 
             let instaCaption = `📸 *AI INSTAGRAM REELS CAMPAIGN* 📸\n\n`;
             if (mood === 'urgency') {
-                instaCaption += `🔥 TRENDING IN CHITRAKOOT! 🔥\n\nBhaiya jaldi karo, Shiv Shakti Super Mart par *${topP.name}* ka stock khatam hone wala hai! Ekdam wholesale rate me sabse top quality item.\n\n📍 Location: Agrahunda, Chitrakoot\n\n👉 Click link in bio to see live price!\n\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/\n\n#Chitrakoot #Agrahunda #SuperMart #TrendingReels #ViralGroceries #ShopLocal`;
+                instaCaption += `🔥 TRENDING IN CHITRAKOOT! 🔥\n\nBhaiya jaldi karo, Shiv Shakti Super Mart par *${topP.name}* ka stock khatam hone wala hai! Ekdam wholesale rate me sabse top quality item.\n\n📍 Location: Agrahunda, Chitrakoot\n\n👉 Click link in bio to see live price!\n\n🔗 https://shiv-shakti-super-mart.vercel.app/\n\n#Chitrakoot #Agrahunda #SuperMart #TrendingReels #ViralGroceries #ShopLocal`;
             } else {
-                instaCaption += `✨ NEW STOCK ALERT IN AGRAHUNDA ✨\n\nShiv Shakti Super Mart par aa gaya hai brand new *${topP.name}*! Quality aisi jo dil jeet le aur daam aisa jo pocket khush kar de. Aaj hi dukan par aakar le jayein!\n\n👉 Link in Bio!\n\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/\n\n#ShivShaktiMart #AgrahundaMart #ChitrakootShopping #ReelsIndia #ExplorePage`;
+                instaCaption += `✨ NEW STOCK ALERT IN AGRAHUNDA ✨\n\nShiv Shakti Super Mart par aa gaya hai brand new *${topP.name}*! Quality aisi jo dil jeet le aur daam aisa jo pocket khush kar de. Aaj hi dukan par aakar le jayein!\n\n👉 Link in Bio!\n\n🔗 https://shiv-shakti-super-mart.vercel.app/\n\n#ShivShaktiMart #AgrahundaMart #ChitrakootShopping #ReelsIndia #ExplorePage`;
             }
 
             alert(`💡 AI Reels Idea:\nकैमरे को सामान के पास ले जाकर ज़ूम करें और पीछे बैकग्राउंड में चित्रकूट का कोई ट्रेंडिंग गाना बजने दें।\n\n--- CAPTION COPIED TO CLIPBOARD ---\n\n${instaCaption}`);
@@ -692,10 +681,9 @@
                 alert("फेसबुक पोस्ट के लिए पहले दुकान में सामान अपलोड करें मालिक!");
                 return;
             }
-            // 🔥 TRUE RANDOMIZER FOR FACEBOOK
             const topP = productsData[Math.floor(Math.random() * productsData.length)];
 
-            let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
+            let fbPost = `💙 *AI FACEBOOK LOCAL FAMILY AD* 💙\n\nजय श्री राम भाइयों और बहनों! 🙏\n\nअग्राहुंडा और चित्रकूट के सभी परिवारों के लिए बड़ी खुशखबरी। बाज़ार की महंगी दुकानों को कहें बाय-बाय! अब आपके अपने *शिव शक्ति सुपर मार्ट (अग्राहुंडा)* में सीधे थोक दामों पर नया स्टॉक आ चुका है।\n\n🛍️ *स्पेशल लाइव आइटम:* ${topP.name}\n💰 *बाजार से कम दाम:* सिर्फ ₹${topP.price} में!\n\nघर का बजट बचाएं और आज ही अपने बच्चों और परिवार के साथ हमारी दुकान पर पधारें। नीचे दिए लिंक पर क्लिक करके पूरी दुकान का रेट अपने मोबाइल पर लाइव देखें:\n\n🔗 https://shiv-shakti-super-mart.vercel.app/\n\n#अग्राहुंडा_सुपर_मार्ट #चित्रकूट_मंडल #पारिवारिक_बचत #लोकल_दुकान`;
 
             alert(`📢 AI Facebook Local Targeter:\nयह कंटेंट आपके पूरे कस्बे के पारिवारिक व्हाट्सएप ग्रुप और फेसबुक ग्रुप में वायरल करने के लिए परफेक्ट है!\n\n--- CONTENT COPIED TO CLIPBOARD ---\n\n${fbPost}`);
             navigator.clipboard.writeText(fbPost).catch(() => {});
