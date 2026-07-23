@@ -75,8 +75,17 @@ app.post('/api/products/:id/click', async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, { $inc: { clicks: 1 } });
     if (product) {
-      // सीधे आपके नंबर पर ऑर्डर भेजने का लिंक तैयार करेगा
-      const message = `Namaste Shiv Shakti Super Mart, mujhe ye saman order karna hai:\n\n*Saman:* ${product.name}\n*Rate:* ₹${product.price}\n*Description:* ${product.description || 'Badiya Quality'}`;
+      // 🛒 स्मार्ट क्रॉस-सेलिंग और गिफ्ट इंजन (WhatsApp Order ke liye)
+      let freeGift = "";
+      if (product.price >= 60 && product.price <= 119) {
+        freeGift = "🎁 [Aapke liye FREE: 1 Patta Fancy Sticker]";
+      } else if (product.price >= 120 && product.price <= 299) {
+        freeGift = "🎁 [Aapke liye FREE: Ek ₹20 tak ki Copy/Stationery]";
+      } else if (product.price >= 300) {
+        freeGift = "🎁 [Aapke liye FREE: Ek Cricket Ball ya ₹30 tak ka item]";
+      }
+
+      const message = `Namaste Shiv Shakti Super Mart, mujhe ye saman order karna hai:\n\n*Saman:* ${product.name}\n*Rate:* ₹${product.price}\n*Description:* ${product.description || 'Badiya Quality'}\n${freeGift}\n\n🤖 *AI Suggestion:* Bhaiya, iske sath dukan ka koi trending item bhi bhej dijiye!`;
       const waLink = `https://wa.me/919450222868?text=${encodeURIComponent(message)}`;
       return res.json({ success: true, redirectUrl: waLink });
     }
@@ -115,7 +124,7 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// 💥 गायब हुआ AI WhatsApp Marketing Blast इंजन वापस आ गया
+// 💥 AI WhatsApp Marketing Blast + Amazon/Flipkart Engine
 app.get('/api/ai-marketing/blast', async (req, res) => {
   try {
     const products = await Product.find({}).sort({ _id: -1 }).limit(3);
@@ -123,12 +132,42 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
       return res.json({ success: false, text: "Stock khali hai." });
     }
     
-    let text = `💥 *SHIV SHAKTI SUPER MART (AGRAHUNDA)* 💥\n\nBhaiya dukan par naya stock aa gaya hai! Kam daam me sabse top quality item:\n\n`;
+    let text = `💥 *SHIV SHAKTI SUPER MART (AGRAHUNDA) - MEGA DEALS* 💥\n\nBhaiya dukan par naya stock aa gaya hai! Aaj ke sabse top offers:\n\n`;
+    
     products.forEach(p => {
-      text += `🛍️ *${p.name}* - Sirf ₹${p.price}\n👉 ${p.description || 'Badiya item'}\n\n`;
+      let itemPrice = p.price;
+      let specialText = "";
+
+      // 1. Amazon-Style Hype Engine
+      if (p.viewsCount > 5) {
+        specialText += `🔥 *Trending!* Pure ilake me log ise dekh rahe hain!\n`;
+      }
+
+      // 2. Flipkart-Style Flash Sale (Agar costPrice save hai aur profit margin theek hai)
+      let flashPrice = itemPrice;
+      if (p.costPrice && (itemPrice > p.costPrice * 1.15)) {
+         let discount = Math.floor(itemPrice * 0.05); // 5% chhoot
+         flashPrice = itemPrice - discount;
+         specialText += `⚡ *Flash Sale!* ₹${itemPrice} ki jagah sirf ₹${flashPrice} me!\n`;
+      } else {
+         specialText += `✅ Sirf ₹${itemPrice} me!\n`;
+      }
+
+      // 3. Smart Tiered Rewards System (Tumhara exact algorithm)
+      let freeGift = "";
+      if (flashPrice >= 60 && flashPrice <= 119) {
+        freeGift = "🎁 *FREE:* Baccho ka Fancy Sticker (Ek patta)!";
+      } else if (flashPrice >= 120 && flashPrice <= 299) {
+        freeGift = "🎁 *FREE:* ₹20 tak ki ek badiya Copy/Stationery!";
+      } else if (flashPrice >= 300) {
+        freeGift = "🎁 *FREE:* Ek Cricket Ball ya ₹30 tak ka super item!";
+      }
+
+      text += `🛍️ *${p.name}*\n${specialText}👉 ${p.description || 'Badiya item'}\n${freeGift}\n\n`;
     });
-    // ध्यान दें: मैंने रेंडर वाला लिंक हटाकर आपका फ्यूचर Vercel/मेन लिंक सेट करने की जगह छोड़ दी है
-    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\nWebsite par check karein`;
+    
+    // URL Update - Sirf link, koi image link nahi
+    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
     
     res.json({ success: true, text: text });
   } catch (e) {
@@ -143,12 +182,10 @@ app.delete('/api/products/:id', async (req, res) => {
   } catch (e) { res.status(500).json({ error: true }); }
 });
 
-// 🚀 VERCEL SERVERLESS MODIFICATION (सबसे जरूरी हिस्सा)
-// अगर कोड लोकल पीसी पर चल रहा है, तो listen करेगा, वरना Vercel के लिए ऐप एक्सपोर्ट करेगा
+// 🚀 VERCEL SERVERLESS MODIFICATION
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`Server live on port ${PORT}`));
 }
 
-// यह लाइन Vercel सर्वर को 24 घंटे एक्टिव रखने का काम करेगी
 module.exports = app;
