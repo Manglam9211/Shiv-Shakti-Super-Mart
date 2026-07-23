@@ -143,7 +143,7 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
         specialText += `🔥 *Trending!* Pure ilake me log ise dekh rahe hain!\n`;
       }
 
-      // 2. Flipkart-Style Flash Sale (Agar costPrice save hai aur profit margin theek hai)
+      // 2. Flipkart-Style Flash Sale
       let flashPrice = itemPrice;
       if (p.costPrice && (itemPrice > p.costPrice * 1.15)) {
          let discount = Math.floor(itemPrice * 0.05); // 5% chhoot
@@ -153,7 +153,7 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
          specialText += `✅ Sirf ₹${itemPrice} me!\n`;
       }
 
-      // 3. Smart Tiered Rewards System (Tumhara exact algorithm)
+      // 3. Smart Tiered Rewards System
       let freeGift = "";
       if (flashPrice >= 60 && flashPrice <= 119) {
         freeGift = "🎁 *FREE:* Baccho ka Fancy Sticker (Ek patta)!";
@@ -166,8 +166,8 @@ app.get('/api/ai-marketing/blast', async (req, res) => {
       text += `🛍️ *${p.name}*\n${specialText}👉 ${p.description || 'Badiya item'}\n${freeGift}\n\n`;
     });
     
-    // URL Update - Sirf link, koi image link nahi
-    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\n🔗 https://shiv-shakti-super-mart-3n800xqx2-manglam1.vercel.app/`;
+    // URL Update - Sabse chhoti aur sahi permanent link
+    text += `🏃‍♂️ Turnt dukan par aayein ya niche diye link se online dekhein:\n🔗 https://shiv-shakti-super-mart.vercel.app/`;
     
     res.json({ success: true, text: text });
   } catch (e) {
