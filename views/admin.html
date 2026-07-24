@@ -524,7 +524,7 @@
             let groupGreeting = destMode === 'group' ? `👨‍👩‍👧‍👦 *हमारे व्हाट्सएप्प ग्रुप परिवार के लिए खास धमाका!* 👨‍👩‍👧‍👦` : `🔥 *शिव शक्ति सुपर मार्ट - वीआईपी सिंगल आइटम डील* 🔥`;
 
             if (shuffleVariantToggle) {
-                adScript = `${groupGreeting}\n\nसीधे हमारे स्टॉक रूम से निकलकर एकदम कड़क नया माल दुकान पर सज चुका है मालिक!\n\n🛍️ *सामान का नाम:* ${p.name}\n${specialTag}\n${giftText}\n🎁 *ग्रुप स्पेशल कूपन कोड:* ${randomCoupon}\n(काउंटर पर यह कूपन कोड दिखाकर अपनी एक्स्ट्रा छूट तुरंत हासिल करें!)\n\n⏱️ *विवरण:* ${p.description || 'Top Premium Quality Stock!'}\n\n🎯 *वेबसाइट पर लाइव रेट देखें:*\n🔗 ${directShopLink}`;
+                adScript = `${groupGreeting}\n\nसीधे हमारे स्टॉक से निकलकर एकदम कड़क नया समान सीधे हमारे मार्ट पर सज चुका है। \n\n🛍️ *सामान का नाम:* ${p.name}\n${specialTag}\n${giftText}\n🎁 *ग्रुप स्पेशल कूपन कोड:* ${randomCoupon}\n(काउंटर पर यह कूपन कोड दिखाकर अपनी एक्स्ट्रा छूट तुरंत हासिल करें!)\n\n⏱️ *विवरण:* ${p.description || 'Top Premium Quality Stock!'}\n\n🎯 *वेबसाइट पर लाइव रेट देखें:*\n🔗 ${directShopLink}`;
             } else {
                 adScript = `⏳ *जल्दी करें! अग्राहुंडा में यह सामान बहुत तेजी से खत्म हो रहा है* ⏳\n\nपड़ोस के लोग इसे फटाफट खरीद कर ले जा रहे हैं, स्टॉक खत्म होने की पूरी चेतावनी है:\n\n🛒 *आइटम:* ${p.name}\n${specialTag}\n${giftText}\n🔥 *एआई स्टॉक रिपोर्ट:* ${p.description || 'Sasta aur sabse badiya fresh mal!'}\n\n🚀 *स्टॉक ख़त्म होने से पहले यहाँ बुक करें:*\n🔗 ${directShopLink}`;
             }
